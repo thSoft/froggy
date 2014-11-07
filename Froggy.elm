@@ -4,6 +4,7 @@ import Array
 import Keyboard
 import Window
 import Maybe
+import Text
 
 -- Model
 
@@ -14,7 +15,8 @@ data GameState =
 type Game = {
   frog: Frog,
   leaves: [Leaf],
-  levelNumber: Int
+  levelNumber: Int,
+  level: Level
 }
 
 type Frog = {
@@ -41,8 +43,9 @@ gameState = foldp update defaultGameState commands
 --- Levels
 
 type Level = {
-  position: Position,
-  leafMatrix: LeafMatrix
+  frogPosition: Position,
+  leafMatrix: LeafMatrix,
+  levelPosition: Position
 }
 
 type LeafMatrix = [[Bool]]
@@ -50,7 +53,7 @@ type LeafMatrix = [[Bool]]
 levels =
   Array.fromList [
     {
-      position = {
+      frogPosition = {
         x = 4,
         y = 1
       },
@@ -62,7 +65,11 @@ levels =
         [False, True , False, False, True , False, False],
         [False, True , False, False, True , False, False],
         [False, True , True , True , True , False, False]
-      ]
+      ],
+      levelPosition = {
+        x = 0,
+        y = 0
+      }
     }
   ]
 
@@ -154,7 +161,7 @@ loadLevel levelNumber =
 toGame : Int -> Level -> Game
 toGame levelNumber level =
   let leaves = loadLeafMatrix level.leafMatrix
-      maybeLeaf = leaves |> findLeaf level.position
+      maybeLeaf = leaves |> findLeaf level.frogPosition
       theLeaf = maybeLeaf |> getOrElse (leaves |> head)
   in {
     frog = {
@@ -162,7 +169,8 @@ toGame levelNumber level =
       direction = Right
     },
     levelNumber = levelNumber,
-    leaves = leaves
+    leaves = leaves,
+    level = level
   }
 
 loadLeafMatrix : LeafMatrix -> [Leaf]
@@ -220,7 +228,14 @@ viewGameState tileSize gameState = case gameState of
   Playing game ->
     let frog = viewFrog tileSize game.frog
         leaves = game.leaves |> map (viewLeaf tileSize)
-    in leaves ++ [frog]
+        level = viewLevel tileSize game
+    in leaves ++ [frog] ++ level
+
+viewLevel : Float -> Game -> [Form]
+viewLevel tileSize game =
+  let background = sprite game.level.levelPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-th.png"
+      levelNumber = textSprite game.level.levelPosition tileSize ("Level " ++ show game.levelNumber ++ " \n ") |> rotate (-1 |> degrees)
+  in [background, levelNumber]
 
 viewFrog : Float -> Frog -> Form
 viewFrog tileSize frog =
@@ -237,10 +252,26 @@ viewLeaf tileSize leaf = sprite leaf.position tileSize "https://az31353.vo.msecn
 sprite : Position -> Float -> String -> Form
 sprite position tileSize url =
   let element = image (floor tileSize) (floor tileSize) url
-      worldPosition = position |> toWorld tileSize
+  in element |> makeForm position tileSize
+
+makeForm : Position -> Float -> Element -> Form
+makeForm position tileSize element =
+  let worldPosition = position |> toWorld tileSize
   in element |> toForm |> move worldPosition
 
 toWorld : Float -> Position -> (Float, Float)
 toWorld tileSize position =
   let transform coordinate = ((coordinate |> toFloat) - mapSize / 2 + 0.5) * tileSize
   in (transform position.x, -(transform position.y))
+
+textSprite : Position -> Float -> String -> Form
+textSprite position tileSize string =
+  let element = toText string |> Text.style {
+        typeface = ["Comic Sans MS"],
+        height = Just (tileSize / 6),
+        color = red,
+        bold = True,
+        italic = False,
+        line = Nothing
+      } |> centered
+  in element |> makeForm position tileSize
