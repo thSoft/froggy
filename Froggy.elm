@@ -76,10 +76,10 @@ data Command =
 update : Command -> GameState -> GameState
 update command gameState =
   case command of
-    MoveBy direction ->
+    MoveBy positionDelta ->
       case gameState of
         GameOver -> gameState
-        Playing game -> Playing { game | frog <- game.frog |> moveBy direction game.leaves }
+        Playing game -> Playing { game | frog <- game.frog |> moveBy positionDelta game.leaves }
     MoveTo leaf ->
       case gameState of
         GameOver -> gameState
@@ -90,12 +90,12 @@ update command gameState =
         Playing game -> loadLevel game.levelNumber
 
 moveBy : Position -> [Leaf] -> Frog -> Frog
-moveBy direction leaves frog =
-  if (direction.x == 0) && (direction.y == 0)
+moveBy positionDelta leaves frog =
+  if (positionDelta.x == 0) && (positionDelta.y == 0)
   then
     frog
   else
-    let leafPosition = frog.leaf.position `translate` direction
+    let leafPosition = frog.leaf.position `translate` positionDelta
         maybeLeaf = leaves |> findLeaf leafPosition
     in case maybeLeaf of
       Nothing -> frog
@@ -186,11 +186,11 @@ getOrElse defaultValue maybeValue = maybeValue |> Maybe.maybe defaultValue ident
 
 -- Input
 
-direction : Signal Position
-direction = lift2 makeDirection Keyboard.shift Keyboard.arrows
+positionDelta : Signal Position
+positionDelta = lift2 makePositionDelta Keyboard.shift Keyboard.arrows
 
-makeDirection : Bool -> Position -> Position
-makeDirection shift arrows =
+makePositionDelta : Bool -> Position -> Position
+makePositionDelta shift arrows =
   let multiplier = if shift then 2 else 1
   in {
     x = arrows.x * multiplier,
@@ -198,7 +198,7 @@ makeDirection shift arrows =
   }
 
 commands : Signal Command
-commands = lift MoveBy direction
+commands = lift MoveBy positionDelta
 
 -- View
 
