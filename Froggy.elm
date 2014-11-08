@@ -8,10 +8,6 @@ import Text
 
 -- Model
 
-data GameState =
-  GameOver |
-  Playing Game
-
 type Game = {
   frog: Frog,
   leaves: [Leaf],
@@ -35,10 +31,10 @@ type Position = {
   y: Int
 }
 
-defaultGameState = loadLevel 0
+defaultGame = loadLevel 0
 
-gameState : Signal GameState
-gameState = foldp update defaultGameState commands
+game : Signal Game
+game = foldp update defaultGame commands
 
 --- Levels
 
@@ -76,25 +72,18 @@ levels =
 -- Commands
 
 data Command =
+  Nop |
   MoveBy Position |
   MoveTo Leaf |
-  Restart
+  Continue
 
-update : Command -> GameState -> GameState
-update command gameState =
+update : Command -> Game -> Game
+update command game =
   case command of
-    MoveBy positionDelta ->
-      case gameState of
-        GameOver -> gameState
-        Playing game -> Playing (game |> moveBy positionDelta)
-    MoveTo leaf ->
-      case gameState of
-        GameOver -> gameState
-        Playing game -> Playing (game |> moveTo leaf)
-    Restart ->
-      case gameState of
-        GameOver -> loadLevel 0
-        Playing game -> loadLevel game.levelNumber
+    Nop -> game
+    MoveBy positionDelta -> game |> moveBy positionDelta
+    MoveTo leaf -> game |> moveTo leaf
+    Continue -> game |> continue
 
 moveBy : Position -> Game -> Game
 moveBy positionDelta game =
@@ -132,13 +121,16 @@ moveTo leaf game =
   in case maybeDirection of
     Nothing -> game
     Just direction ->
-      { game |
-        frog <- {
-          leaf = leaf,
-          direction = direction
-        },
-        leaves <- remove game.leaves game.frog.leaf
-      }
+      if (game.leaves |> length) == 2
+      then loadLevel (game.levelNumber + 1)
+      else
+        { game |
+          frog <- {
+            leaf = leaf,
+            direction = direction
+          },
+          leaves <- remove game.leaves game.frog.leaf
+        }
 
 directionTo : Leaf -> Frog -> Maybe Direction
 directionTo leaf frog =
@@ -157,21 +149,16 @@ near a b = abs(a - b) <= maxDistance
 
 maxDistance = 2
 
-loadLevel : Int -> GameState
+loadLevel : Int -> Game
 loadLevel levelNumber =
-  let maybeLevel = levels |> Array.get levelNumber
-  in case maybeLevel of
-    Nothing -> GameOver
-    Just level -> Playing (level |> toGame levelNumber)
-
-toGame : Int -> Level -> Game
-toGame levelNumber level =
-  let leaves = loadLeafMatrix level.leafMatrix
+  let level0 = levels |> Array.getOrFail 0
+      level = levels |> Array.getOrElse level0 levelNumber
+      leaves = loadLeafMatrix level.leafMatrix
       maybeLeaf = leaves |> findLeaf level.frogPosition
-      theLeaf = maybeLeaf |> getOrElse (leaves |> head)
+      leaf = maybeLeaf |> getOrElse (leaves |> head)
   in {
     frog = {
-      leaf = theLeaf,
+      leaf = leaf,
       direction = Right
     },
     levelNumber = levelNumber,
@@ -198,44 +185,65 @@ loadLeafRow y row =
 getOrElse : a -> Maybe a -> a
 getOrElse defaultValue maybeValue = maybeValue |> Maybe.maybe defaultValue identity
 
+continue : Game -> Game
+continue game = 
+  if | game |> levelCompleted -> game |> nextLevel
+     | game |> stuck -> game |> restartLevel
+     | otherwise -> game
+
+levelCompleted : Game -> Bool
+levelCompleted game = (game.leaves |> length) == 1
+
+nextLevel : Game -> Game
+nextLevel game = loadLevel (game.levelNumber + 1)
+
+stuck : Game -> Bool
+stuck game =
+  let canJumpThere leaf = (game.frog |> directionTo leaf) |> Maybe.isJust
+  in not (game.leaves |> any canJumpThere)
+
+restartLevel : Game -> Game
+restartLevel game = loadLevel game.levelNumber
+
 -- Input
 
-positionDelta : Signal Position
-positionDelta = lift2 makePositionDelta Keyboard.shift Keyboard.arrows
+commands : Signal Command
+commands =
+  let moveBy = lift2 makeMoveBy Keyboard.shift Keyboard.arrows
+      continue = lift makeContinue Keyboard.enter
+  in merges [moveBy, continue]
 
-makePositionDelta : Bool -> Position -> Position
-makePositionDelta shift arrows =
+makeMoveBy : Bool -> Position -> Command
+makeMoveBy shift arrows =
   let multiplier = if shift then 2 else 1
-  in {
+  in MoveBy {
     x = arrows.x * multiplier,
     y = -arrows.y * multiplier
   }
 
-commands : Signal Command
-commands = lift MoveBy positionDelta
+makeContinue : Bool -> Command
+makeContinue pressed = if pressed then Continue else Nop
 
 -- View
 
-main = lift2 view Window.dimensions gameState
+main = lift2 view Window.dimensions game
 
-view : (Int, Int) -> GameState -> Element
-view (w, h) gameState =
+view : (Int, Int) -> Game -> Element
+view (w, h) game =
   let background = fittedImage w h "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg"
       viewSize = min w h
       tileSize = (viewSize |> toFloat) / mapSize
-      foreground = (viewGameState tileSize gameState) |> collage viewSize viewSize |> container w h middle
+      foreground = (viewGame tileSize game) |> collage viewSize viewSize |> container w h middle
   in layers [background, foreground]
 
 mapSize = 8
 
-viewGameState : Float -> GameState -> [Form]
-viewGameState tileSize gameState = case gameState of
-  GameOver -> [plainText "Game Over" |> toForm]
-  Playing game ->
-    let frog = viewFrog tileSize game.frog
-        leaves = game.leaves |> map (viewLeaf tileSize)
-        level = viewLevel tileSize game
-    in leaves ++ [frog] ++ level
+viewGame : Float -> Game -> [Form]
+viewGame tileSize game = 
+  let frog = viewFrog tileSize game.frog
+      leaves = game.leaves |> map (viewLeaf tileSize)
+      level = viewLevel tileSize game
+  in leaves ++ [frog] ++ level
 
 viewLevel : Float -> Game -> [Form]
 viewLevel tileSize game =
