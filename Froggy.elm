@@ -86,27 +86,27 @@ update command gameState =
     MoveBy positionDelta ->
       case gameState of
         GameOver -> gameState
-        Playing game -> Playing { game | frog <- game.frog |> moveBy positionDelta game.leaves }
+        Playing game -> Playing (game |> moveBy positionDelta)
     MoveTo leaf ->
       case gameState of
         GameOver -> gameState
-        Playing game -> Playing { game | frog <- game.frog |> moveTo leaf }
+        Playing game -> Playing (game |> moveTo leaf)
     Restart ->
       case gameState of
         GameOver -> loadLevel 0
         Playing game -> loadLevel game.levelNumber
 
-moveBy : Position -> [Leaf] -> Frog -> Frog
-moveBy positionDelta leaves frog =
+moveBy : Position -> Game -> Game
+moveBy positionDelta game =
   if (positionDelta.x == 0) && (positionDelta.y == 0)
   then
-    frog
+    game
   else
-    let leafPosition = frog.leaf.position `translate` positionDelta
-        maybeLeaf = leaves |> findLeaf leafPosition
+    let leafPosition = game.frog.leaf.position `translate` positionDelta
+        maybeLeaf = game.leaves |> findLeaf leafPosition
     in case maybeLeaf of
-      Nothing -> frog
-      Just leaf -> frog |> moveTo leaf
+      Nothing -> game
+      Just leaf -> game |> moveTo leaf
 
 translate : Position -> Position -> Position
 translate a b =
@@ -123,15 +123,21 @@ findLeaf position leaves =
 equals : Position -> Position -> Bool
 equals a b = (a.x == b.x) && (a.y == b.y)
 
-moveTo : Leaf -> Frog -> Frog
-moveTo leaf frog =
-  let maybeDirection = frog |> directionTo leaf
+remove : [a] -> a -> [a]
+remove xs x = xs |> filter (\element -> not (element == x))
+
+moveTo : Leaf -> Game -> Game
+moveTo leaf game =
+  let maybeDirection = game.frog |> directionTo leaf
   in case maybeDirection of
-    Nothing -> frog
+    Nothing -> game
     Just direction ->
-      { frog |
-        leaf <- leaf,
-        direction <- direction
+      { game |
+        frog <- {
+          leaf = leaf,
+          direction = direction
+        },
+        leaves <- remove game.leaves game.frog.leaf
       }
 
 directionTo : Leaf -> Frog -> Maybe Direction
