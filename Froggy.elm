@@ -69,6 +69,8 @@ levels =
     }
   ]
 
+numberOfLevels = levels |> Array.length
+
 -- Commands
 
 data Command =
@@ -121,16 +123,13 @@ moveTo leaf game =
   in case maybeDirection of
     Nothing -> game
     Just direction ->
-      if (game.leaves |> length) == 2
-      then loadLevel (game.levelNumber + 1)
-      else
-        { game |
-          frog <- {
-            leaf = leaf,
-            direction = direction
-          },
-          leaves <- remove game.leaves game.frog.leaf
-        }
+      { game |
+        frog <- {
+          leaf = leaf,
+          direction = direction
+        },
+        leaves <- remove game.leaves game.frog.leaf
+      }
 
 directionTo : Leaf -> Frog -> Maybe Direction
 directionTo leaf frog =
@@ -151,8 +150,8 @@ maxDistance = 2
 
 loadLevel : Int -> Game
 loadLevel levelNumber =
-  let level0 = levels |> Array.getOrFail 0
-      level = levels |> Array.getOrElse level0 levelNumber
+  let actualLevelNumber = if (levelNumber >= numberOfLevels) || (levelNumber < 0) then 0 else levelNumber
+      level = levels |> Array.getOrFail levelNumber
       leaves = loadLeafMatrix level.leafMatrix
       maybeLeaf = leaves |> findLeaf level.frogPosition
       leaf = maybeLeaf |> getOrElse (leaves |> head)
@@ -161,7 +160,7 @@ loadLevel levelNumber =
       leaf = leaf,
       direction = Right
     },
-    levelNumber = levelNumber,
+    levelNumber = actualLevelNumber,
     leaves = leaves,
     level = level
   }
@@ -232,24 +231,19 @@ view : (Int, Int) -> Game -> Element
 view (w, h) game =
   let background = fittedImage w h "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg"
       viewSize = min w h
-      tileSize = (viewSize |> toFloat) / mapSize
-      foreground = (viewGame tileSize game) |> collage viewSize viewSize |> container w h middle
-  in layers [background, foreground]
+      foreground = game |> viewForeground viewSize |> collage viewSize viewSize |> container w h middle
+      message = (game |> viewMessage viewSize) |> map (container w h middle)
+  in layers ([background, foreground] ++ message)
 
-mapSize = 8
-
-viewGame : Float -> Game -> [Form]
-viewGame tileSize game = 
-  let frog = viewFrog tileSize game.frog
+viewForeground : Int -> Game -> [Form]
+viewForeground viewSize game = 
+  let tileSize = (viewSize |> toFloat) / mapSize
+      frog = game.frog |> viewFrog tileSize
       leaves = game.leaves |> map (viewLeaf tileSize)
-      level = viewLevel tileSize game
+      level = game |> viewLevel tileSize
   in leaves ++ [frog] ++ level
 
-viewLevel : Float -> Game -> [Form]
-viewLevel tileSize game =
-  let background = sprite game.level.levelPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-th.png"
-      levelNumber = textSprite game.level.levelPosition tileSize ("Level " ++ show game.levelNumber ++ " \n ") |> rotate (-1 |> degrees)
-  in [background, levelNumber]
+mapSize = 8
 
 viewFrog : Float -> Frog -> Form
 viewFrog tileSize frog =
@@ -259,9 +253,6 @@ viewFrog tileSize frog =
         Down -> 180
         Left -> 90
   in sprite frog.leaf.position tileSize "https://az31353.vo.msecnd.net/pub/enuofhjd" |> rotate (angle |> degrees)
-
-viewLeaf : Float -> Leaf -> Form
-viewLeaf tileSize leaf = sprite leaf.position tileSize "https://az31353.vo.msecnd.net/pub/ebfvplpg"
 
 sprite : Position -> Float -> String -> Form
 sprite position tileSize url =
@@ -278,14 +269,37 @@ toWorld tileSize position =
   let transform coordinate = ((coordinate |> toFloat) - mapSize / 2 + 0.5) * tileSize
   in (transform position.x, -(transform position.y))
 
+viewLeaf : Float -> Leaf -> Form
+viewLeaf tileSize leaf = sprite leaf.position tileSize "https://az31353.vo.msecnd.net/pub/ebfvplpg"
+
+viewLevel : Float -> Game -> [Form]
+viewLevel tileSize game =
+  let background = sprite game.level.levelPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-th.png"
+      levelNumber = textSprite game.level.levelPosition tileSize ("Level " ++ show game.levelNumber ++ " \n ") |> rotate (-1 |> degrees)
+  in [background, levelNumber]
+
 textSprite : Position -> Float -> String -> Form
 textSprite position tileSize string =
-  let element = toText string |> Text.style {
-        typeface = ["Comic Sans MS"],
-        height = Just (tileSize / 6),
-        color = red,
-        bold = True,
-        italic = False,
-        line = Nothing
-      } |> centered
-  in element |> makeForm position tileSize
+  let textSize = (tileSize / 6)
+  in gameText textSize string |> makeForm position tileSize
+
+gameText : Float -> String -> Element
+gameText height string = toText string |> Text.style {
+    typeface = ["Comic Sans MS"],
+    height = Just height,
+    color = red,
+    bold = True,
+    italic = False,
+    line = Nothing
+  } |> centered
+
+viewMessage : Int -> Game -> [Element]
+viewMessage viewSize game =
+  let backgroundSize = ((viewSize |> toFloat) / 2) |> round
+      background = image backgroundSize backgroundSize "http://www.i2clipart.com/cliparts/9/2/6/b/clipart-bubble-256x256-926b.png"
+      textSize = (viewSize |> toFloat) / 40
+  in if | game |> levelCompleted -> [background, gameText textSize ("Level completed!\nPress " ++ continueKey ++ "\nto continue to the next level!")]
+        | game |> stuck -> [background, gameText textSize ("Uh oh, you seem to be stuck!\nPress " ++ continueKey ++ "\nto restart this level!")]
+        | otherwise -> []
+
+continueKey = "Enter"
