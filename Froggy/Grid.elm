@@ -1,4 +1,4 @@
-module Grid where
+module Froggy.Grid where
 
 type Position = {
   x: Int,

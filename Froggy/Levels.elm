@@ -1,7 +1,7 @@
-module Levels where
+module Froggy.Levels where
 
 import Array
-import Grid
+import Froggy.Grid as Grid
 
 type Level = {
   frogPosition: Grid.Position,

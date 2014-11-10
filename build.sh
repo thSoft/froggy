@@ -1,0 +1,1 @@
+elm --make Froggy/Main.elm
