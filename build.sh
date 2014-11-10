@@ -1,1 +1,1 @@
-elm --make Froggy/Main.elm
+elm --make --bundle-runtime Froggy/Main.elm
