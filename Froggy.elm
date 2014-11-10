@@ -251,7 +251,9 @@ viewMessage viewSize game =
   let backgroundSize = ((viewSize |> toFloat) / 2) |> round
       background = image backgroundSize backgroundSize "http://www.i2clipart.com/cliparts/9/2/6/b/clipart-bubble-256x256-926b.png"
       textSize = (viewSize |> toFloat) / 40
-  in if | game |> levelCompleted -> [background, gameText textSize ("Level completed!\nPress " ++ continueKey ++ "\nto continue to the next level!")]
+      lastLevel = game.levelNumber == numberOfLevels - 1
+      completedMessage = if lastLevel then "Congratulations!\nYou have completed the game!" else "Level completed!\nPress " ++ continueKey ++ "\nto continue to the next level!"
+  in if | game |> levelCompleted -> [background, gameText textSize completedMessage]
         | game |> stuck -> [background, gameText textSize ("Uh oh, you seem to be stuck!\nPress " ++ continueKey ++ "\nto restart this level!")]
         | otherwise -> []
 
