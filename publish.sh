@@ -1,6 +1,6 @@
 git stash
 git checkout gh-pages
-cp build/* .
+cp -r build/* .
 git commit -am "publish"
 git push origin gh-pages
 git checkout master
