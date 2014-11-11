@@ -6,20 +6,20 @@ import Froggy.Levels (..)
 import Froggy.Model (..)
 
 view : (Int, Int) -> Game -> Element
-view (w, h) game =
-  let background = fittedImage w h "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg"
-      viewSize = min w h
-      foreground = game |> viewForeground viewSize |> collage viewSize viewSize |> container w h middle
-      message = (game |> viewMessage viewSize) |> map (container w h middle)
+view (windowWidth, windowHeight) game =
+  let background = fittedImage windowWidth windowHeight "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg"
+      viewSize = min windowWidth windowHeight
+      foreground = game |> viewForeground viewSize |> container windowWidth windowHeight middle
+      message = game |> viewMessage viewSize |> map (container windowWidth windowHeight middle)
   in layers ([background, foreground] ++ message)
 
-viewForeground : Int -> Game -> [Form]
+viewForeground : Int -> Game -> Element
 viewForeground viewSize game = 
   let tileSize = (viewSize |> toFloat) / mapSize
       frog = game.frog |> viewFrog tileSize
       leaves = game.leaves |> map (viewLeaf tileSize)
       level = game |> viewLevel tileSize
-  in leaves ++ [frog] ++ level
+  in (leaves ++ [frog] ++ level) |> collage viewSize viewSize
 
 mapSize = 8
 
@@ -52,13 +52,14 @@ viewLeaf tileSize leaf = sprite leaf.position tileSize "https://az31353.vo.msecn
 
 viewLevel : Float -> Game -> [Form]
 viewLevel tileSize game =
-  let background = sprite game.level.levelPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-th.png"
-      levelNumber = textSprite game.level.levelPosition tileSize ("Level " ++ show game.levelNumber ++ " \n ") |> rotate (-1 |> degrees)
+  let levelPosition = (getLevel game.levelNumber) |> .levelPosition
+      background = sprite levelPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-th.png"
+      levelNumber = textSprite levelPosition tileSize ("Level " ++ show game.levelNumber ++ " \n ") |> rotate (-1 |> degrees)
   in [background, levelNumber]
 
 textSprite : Grid.Position -> Float -> String -> Form
 textSprite position tileSize string =
-  let textSize = (tileSize / 6)
+  let textSize = tileSize / 6
   in gameText textSize string |> makeForm position tileSize
 
 gameText : Float -> String -> Element

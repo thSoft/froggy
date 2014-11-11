@@ -59,7 +59,7 @@ moveTo leaf game =
 loadLevel : Int -> Game
 loadLevel levelNumber =
   let actualLevelNumber = if (levelNumber >= numberOfLevels) || (levelNumber < 0) then 0 else levelNumber
-      level = levels |> Array.getOrFail levelNumber
+      level = getLevel actualLevelNumber
       leaves = loadLeafMatrix level.leafMatrix
       maybeLeaf = leaves |> findLeaf level.frogPosition
       leaf = maybeLeaf |> getOrElse (leaves |> head)
@@ -70,7 +70,6 @@ loadLevel levelNumber =
     },
     levelNumber = actualLevelNumber,
     leaves = leaves,
-    level = level,
     instructions = False
   }
 

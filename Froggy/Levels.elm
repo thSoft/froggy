@@ -645,4 +645,7 @@ levels =
     }
   ]
 
+getLevel : Int -> Level
+getLevel levelNumber = levels |> Array.getOrFail levelNumber
+
 numberOfLevels = levels |> Array.length

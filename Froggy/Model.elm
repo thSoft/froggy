@@ -8,7 +8,6 @@ type Game = {
   frog: Frog,
   leaves: [Leaf],
   levelNumber: Int,
-  level: Level,
   instructions: Bool
 }
 
