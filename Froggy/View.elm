@@ -6,11 +6,11 @@ import Froggy.Levels (..)
 import Froggy.Model (..)
 
 view : (Int, Int) -> Game -> Element
-view (w, h) game =
-  let background = fittedImage w h "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg"
-      viewSize = min w h
-      foreground = game |> viewForeground viewSize |> collage viewSize viewSize |> container w h middle
-      message = (game |> viewMessage viewSize) |> map (container w h middle)
+view (width, height) game =
+  let background = [rect (width |> toFloat) (height |> toFloat) |> textured "http://thumbs.dreamstime.com/t/seamless-pattern-blue-water-pool-texture-surface-top-view-38918838.jpg"] |> collage width height
+      viewSize = min width height
+      foreground = game |> viewForeground viewSize |> collage viewSize viewSize |> container width height middle
+      message = (game |> viewMessage viewSize) |> map (container width height middle)
   in layers ([background, foreground] ++ message)
 
 viewForeground : Int -> Game -> [Form]
@@ -48,7 +48,7 @@ toWorld tileSize position =
   in (transform position.x, -(transform position.y))
 
 viewLeaf : Float -> Leaf -> Form
-viewLeaf tileSize leaf = sprite leaf.position tileSize "https://az31353.vo.msecnd.net/pub/ebfvplpg"
+viewLeaf tileSize leaf = sprite leaf.position tileSize "Leaf.png"
 
 viewLevel : Float -> Game -> [Form]
 viewLevel tileSize game =
