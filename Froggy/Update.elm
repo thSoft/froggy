@@ -1,4 +1,4 @@
-module Froggy.State where
+module Froggy.Update where
 
 import Array
 import Maybe
@@ -8,14 +8,6 @@ import Froggy.Grid (..)
 import Froggy.Levels (..)
 import Froggy.Model (..)
 import Froggy.Commands (..)
-import Froggy.Input (..)
-
-game : Signal Game
-game = foldp update defaultGame commands
-
-defaultGame =
-  let level0 = loadLevel 0
-  in { level0 | instructions <- True }
 
 update : Command -> Game -> Game
 update command game =
@@ -43,14 +35,14 @@ findLeaf position leaves =
 moveTo : Leaf -> Game -> Game
 moveTo leaf game =
   if playing game then
-    let maybeDirection = game.frog |> directionTo leaf
+    let maybeDirection = game.frog |> angleTo leaf
     in case maybeDirection of
       Nothing -> game
-      Just direction ->
+      Just angle ->
         { game |
           frog <- {
             leaf = leaf,
-            direction = direction
+            angle = angle
           },
           leaves <- remove game.leaves game.frog.leaf
         }
@@ -66,7 +58,7 @@ loadLevel levelNumber =
   in {
     frog = {
       leaf = leaf,
-      direction = Right
+      angle = 0
     },
     levelNumber = actualLevelNumber,
     leaves = leaves,
@@ -101,3 +93,8 @@ nextLevel game = loadLevel (game.levelNumber + 1)
 
 restartLevel : Game -> Game
 restartLevel game = loadLevel game.levelNumber
+
+newGame : Game
+newGame =
+  let level0 = loadLevel 0
+  in { level0 | instructions <- True }

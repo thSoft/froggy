@@ -24,13 +24,7 @@ viewForeground viewSize game =
 mapSize = 8
 
 viewFrog : Float -> Frog -> Form
-viewFrog tileSize frog =
-  let angle = case frog.direction of
-        Up -> 0
-        Right -> -90
-        Down -> 180
-        Left -> 90
-  in sprite frog.leaf.position tileSize "https://az31353.vo.msecnd.net/pub/enuofhjd" |> rotate (angle |> degrees)
+viewFrog tileSize frog = sprite frog.leaf.position tileSize "https://az31353.vo.msecnd.net/pub/enuofhjd" |> rotate (frog.angle |> degrees)
 
 sprite : Grid.Position -> Float -> String -> Form
 sprite position tileSize url =

@@ -8,8 +8,14 @@
 <body>
 <script type="text/javascript">
 var module = Elm.Froggy.Main;
+var storageKey = 'froggy';
 
-var component = Elm.fullscreen(module);
+var storedState = localStorage.getItem(storageKey);
+var startingState = storedState ? JSON.parse(storedState) : null;
+var component = Elm.fullscreen(module, { load: startingState });
+component.ports.save.subscribe(function(state) {
+  localStorage.setItem(storageKey, JSON.stringify(state));
+});
 </script>
 </body>
 </html>
