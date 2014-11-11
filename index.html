@@ -10365,7 +10365,7 @@ Elm.Froggy.State.make = function (_elm) {
    };
    var moveTo = F2(function (leaf,
    game) {
-      return function () {
+      return $Froggy$Model.playing(game) ? function () {
          var maybeDirection = $Froggy$Model.directionTo(leaf)(game.frog);
          return function () {
             switch (maybeDirection.ctor)
@@ -10381,9 +10381,9 @@ Elm.Froggy.State.make = function (_elm) {
                  game);
                case "Nothing": return game;}
             _E.Case($moduleName,
-            "between lines 46 and 55");
+            "between lines 47 and 57");
          }();
-      }();
+      }() : game;
    });
    var findLeaf = F2(function (position,
    leaves) {
@@ -10409,6 +10409,7 @@ Elm.Froggy.State.make = function (_elm) {
                 ,frog: {_: {}
                        ,direction: $Froggy$Model.Right
                        ,leaf: leaf}
+                ,instructions: false
                 ,leaves: leaves
                 ,level: level
                 ,levelNumber: actualLevelNumber};
@@ -10421,7 +10422,9 @@ Elm.Froggy.State.make = function (_elm) {
       return loadLevel(game.levelNumber);
    };
    var $continue = function (game) {
-      return $Froggy$Model.levelCompleted(game) ? nextLevel(game) : $Froggy$Model.stuck(game) ? restartLevel(game) : game;
+      return $Froggy$Model.levelCompleted(game) ? nextLevel(game) : $Froggy$Model.stuck(game) ? restartLevel(game) : game.instructions ? _U.replace([["instructions"
+                                                                                                                                                     ,false]],
+      game) : game;
    };
    var moveBy = F2(function (positionDelta,
    game) {
@@ -10454,10 +10457,15 @@ Elm.Froggy.State.make = function (_elm) {
             return moveTo(command._0)(game);
             case "Nop": return game;}
          _E.Case($moduleName,
-         "between lines 20 and 24");
+         "between lines 22 and 26");
       }();
    });
-   var defaultGame = loadLevel(0);
+   var defaultGame = function () {
+      var level0 = loadLevel(0);
+      return _U.replace([["instructions"
+                         ,true]],
+      level0);
+   }();
    var game = A3($Signal.foldp,
    update,
    defaultGame,
@@ -10584,6 +10592,16 @@ Elm.Froggy.View.make = function (_elm) {
    $String = Elm.String.make(_elm),
    $Text = Elm.Text.make(_elm);
    var continueKey = "Enter";
+   var instructionsMessage = _L.append("Welcome to Froggy!\n\nYour goal is to traverse all leaves.\n\nArrow key: jump to an adjacent leaf\nShift + arrow key: leap over an adjacent leaf\n\nPress ",
+   _L.append(continueKey,
+   " to start the game!"));
+   var stuckMessage = _L.append("Uh oh, you seem to be stuck!\nPress ",
+   _L.append(continueKey,
+   " to restart this level!"));
+   var levelCompletedMessage = _L.append("Level completed!\nPress ",
+   _L.append(continueKey,
+   " to continue to the next level!"));
+   var gameCompletedMessage = "Congratulations!\nYou have completed the game!";
    var gameText = F2(function (height,
    string) {
       return $Text.centered($Text.style({_: {}
@@ -10599,11 +10617,9 @@ Elm.Froggy.View.make = function (_elm) {
       return function () {
          var lastLevel = _U.eq(game.levelNumber,
          $Froggy$Levels.numberOfLevels - 1);
-         var completedMessage = lastLevel ? "Congratulations!\nYou have completed the game!" : _L.append("Level completed!\nPress ",
-         _L.append(continueKey,
-         "\nto continue to the next level!"));
+         var completedMessage = lastLevel ? gameCompletedMessage : levelCompletedMessage;
          var textSize = $Basics.toFloat(viewSize) / 40;
-         var backgroundSize = $Basics.round($Basics.toFloat(viewSize) / 2);
+         var backgroundSize = $Basics.round($Basics.toFloat(viewSize) / 1.7);
          var background = A3($Graphics$Element.image,
          backgroundSize,
          backgroundSize,
@@ -10614,9 +10630,10 @@ Elm.Froggy.View.make = function (_elm) {
                                                                   completedMessage)]) : $Froggy$Model.stuck(game) ? _L.fromArray([background
                                                                                                                                  ,A2(gameText,
                                                                                                                                  textSize,
-                                                                                                                                 _L.append("Uh oh, you seem to be stuck!\nPress ",
-                                                                                                                                 _L.append(continueKey,
-                                                                                                                                 "\nto restart this level!")))]) : _L.fromArray([]);
+                                                                                                                                 stuckMessage)]) : game.instructions ? _L.fromArray([background
+                                                                                                                                                                                    ,A2(gameText,
+                                                                                                                                                                                    textSize,
+                                                                                                                                                                                    instructionsMessage)]) : _L.fromArray([]);
       }();
    });
    var mapSize = 8;
@@ -10763,6 +10780,10 @@ Elm.Froggy.View.make = function (_elm) {
                              ,textSprite: textSprite
                              ,gameText: gameText
                              ,viewMessage: viewMessage
+                             ,gameCompletedMessage: gameCompletedMessage
+                             ,levelCompletedMessage: levelCompletedMessage
+                             ,stuckMessage: stuckMessage
+                             ,instructionsMessage: instructionsMessage
                              ,continueKey: continueKey};
    return _elm.Froggy.View.values;
 };Elm.Froggy = Elm.Froggy || {};
@@ -10785,6 +10806,9 @@ Elm.Froggy.Model.make = function (_elm) {
    $Froggy$Levels = Elm.Froggy.Levels.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm);
+   var playing = function (game) {
+      return $Basics.not(game.instructions);
+   };
    var maxDistance = 2;
    var near = F2(function (a,b) {
       return _U.cmp($Basics.abs(a - b),
@@ -10840,12 +10864,14 @@ Elm.Froggy.Model.make = function (_elm) {
              ,direction: b
              ,leaf: a};
    });
-   var Game = F4(function (a,
+   var Game = F5(function (a,
    b,
    c,
-   d) {
+   d,
+   e) {
       return {_: {}
              ,frog: a
+             ,instructions: e
              ,leaves: b
              ,level: d
              ,levelNumber: c};
@@ -10862,7 +10888,8 @@ Elm.Froggy.Model.make = function (_elm) {
                               ,stuck: stuck
                               ,directionTo: directionTo
                               ,near: near
-                              ,maxDistance: maxDistance};
+                              ,maxDistance: maxDistance
+                              ,playing: playing};
    return _elm.Froggy.Model.values;
 };Elm.Froggy = Elm.Froggy || {};
 Elm.Froggy.Levels = Elm.Froggy.Levels || {};
