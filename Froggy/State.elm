@@ -13,7 +13,9 @@ import Froggy.Input (..)
 game : Signal Game
 game = foldp update defaultGame commands
 
-defaultGame = loadLevel 0
+defaultGame =
+  let level0 = loadLevel 0
+  in { level0 | instructions <- True }
 
 update : Command -> Game -> Game
 update command game =
@@ -25,9 +27,7 @@ update command game =
 
 moveBy : Grid.Position -> Game -> Game
 moveBy positionDelta game =
-  if (positionDelta.x == 0) && (positionDelta.y == 0)
-  then
-    game
+  if (positionDelta.x == 0) && (positionDelta.y == 0) then game
   else
     let leafPosition = game.frog.leaf.position `translate` positionDelta
         maybeLeaf = game.leaves |> findLeaf leafPosition
@@ -42,17 +42,19 @@ findLeaf position leaves =
 
 moveTo : Leaf -> Game -> Game
 moveTo leaf game =
-  let maybeDirection = game.frog |> directionTo leaf
-  in case maybeDirection of
-    Nothing -> game
-    Just direction ->
-      { game |
-        frog <- {
-          leaf = leaf,
-          direction = direction
-        },
-        leaves <- remove game.leaves game.frog.leaf
-      }
+  if playing game then
+    let maybeDirection = game.frog |> directionTo leaf
+    in case maybeDirection of
+      Nothing -> game
+      Just direction ->
+        { game |
+          frog <- {
+            leaf = leaf,
+            direction = direction
+          },
+          leaves <- remove game.leaves game.frog.leaf
+        }
+  else game
 
 loadLevel : Int -> Game
 loadLevel levelNumber =
@@ -68,7 +70,8 @@ loadLevel levelNumber =
     },
     levelNumber = actualLevelNumber,
     leaves = leaves,
-    level = level
+    level = level,
+    instructions = False
   }
 
 loadLeafMatrix : LeafMatrix -> [Leaf]
@@ -91,6 +94,7 @@ continue : Game -> Game
 continue game =
   if | game |> levelCompleted -> game |> nextLevel
      | game |> stuck -> game |> restartLevel
+     | game.instructions -> { game | instructions <- False }
      | otherwise -> game
 
 nextLevel : Game -> Game

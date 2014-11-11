@@ -8,7 +8,8 @@ type Game = {
   frog: Frog,
   leaves: [Leaf],
   levelNumber: Int,
-  level: Level
+  level: Level,
+  instructions: Bool
 }
 
 type Frog = {
@@ -46,3 +47,6 @@ near : Int -> Int -> Bool
 near a b = abs(a - b) <= maxDistance
 
 maxDistance = 2
+
+playing : Game -> Bool
+playing game = not game.instructions

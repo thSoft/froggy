@@ -73,13 +73,32 @@ gameText height string = toText string |> Text.style {
 
 viewMessage : Int -> Game -> [Element]
 viewMessage viewSize game =
-  let backgroundSize = ((viewSize |> toFloat) / 2) |> round
+  let backgroundSize = ((viewSize |> toFloat) / 1.7) |> round
       background = image backgroundSize backgroundSize "http://www.i2clipart.com/cliparts/9/2/6/b/clipart-bubble-256x256-926b.png"
       textSize = (viewSize |> toFloat) / 40
       lastLevel = game.levelNumber == numberOfLevels - 1
-      completedMessage = if lastLevel then "Congratulations!\nYou have completed the game!" else "Level completed!\nPress " ++ continueKey ++ "\nto continue to the next level!"
+      completedMessage = if lastLevel then gameCompletedMessage else levelCompletedMessage
   in if | game |> levelCompleted -> [background, gameText textSize completedMessage]
-        | game |> stuck -> [background, gameText textSize ("Uh oh, you seem to be stuck!\nPress " ++ continueKey ++ "\nto restart this level!")]
+        | game |> stuck -> [background, gameText textSize stuckMessage]
+        | game.instructions -> [background, gameText textSize instructionsMessage]
         | otherwise -> []
+
+gameCompletedMessage = """Congratulations!
+You have completed the game!"""
+
+levelCompletedMessage = """Level completed!
+Press """ ++ continueKey ++ """ to continue to the next level!"""
+
+stuckMessage = """Uh oh, you seem to be stuck!
+Press """ ++ continueKey ++ """ to restart this level!"""
+
+instructionsMessage = """Welcome to Froggy!
+
+Your goal is to traverse all leaves.
+
+Arrow key: jump to an adjacent leaf
+Shift + arrow key: leap over an adjacent leaf
+
+Press """ ++ continueKey ++ """ to start the game!"""
 
 continueKey = "Enter"
