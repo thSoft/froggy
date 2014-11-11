@@ -1,1 +1,2 @@
-elm --make --bundle-runtime Froggy/Main.elm
+elm --make --bundle-runtime --only-js Froggy/Main.elm
+cp site/* build
