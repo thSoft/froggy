@@ -102,10 +102,10 @@ gameCompletedMessage = """Congratulations!
 You have completed the game!"""
 
 levelCompletedMessage = """Level completed!
-Press """ ++ continueKey ++ """ to continue to the next level!"""
+""" ++ continueInstruction ++ """ to continue to the next level!"""
 
 stuckMessage = """Uh oh, you seem to be stuck!
-Press """ ++ continueKey ++ """ to restart this level!"""
+""" ++ continueInstruction ++ """ to restart this level!"""
 
 instructionsMessage = """Welcome to Froggy!
 
@@ -114,6 +114,6 @@ Your goal is to traverse all leaves.
 Arrow key: jump to an adjacent leaf
 Shift + arrow key: leap over an adjacent leaf
 
-Press """ ++ continueKey ++ """ to start the game!"""
+""" ++ continueInstruction ++ """ to start the game!"""
 
-continueKey = "Enter or tap"
+continueInstruction = "Press Enter or tap"
