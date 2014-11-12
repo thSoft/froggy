@@ -1,9 +1,12 @@
 module Froggy.View where
 
 import Text
+import Graphics.Input (..)
+import Froggy.Util (..)
 import Froggy.Grid as Grid
 import Froggy.Levels (..)
 import Froggy.Model (..)
+import Froggy.Commands (..)
 
 view : (Int, Int) -> Game -> Element
 view (windowWidth, windowHeight) game =
@@ -18,8 +21,9 @@ viewForeground viewSize game =
   let tileSize = (viewSize |> toFloat) / mapSize
       frog = game.frog |> viewFrog tileSize
       leaves = game.leaves |> map (viewLeaf tileSize)
+      targets = game.leaves |> viewTargets game.frog tileSize
       level = game |> viewLevel tileSize
-  in (leaves ++ [frog] ++ level) |> collage viewSize viewSize
+  in (leaves ++ targets ++ [frog] ++ level) |> collage viewSize viewSize
 
 mapSize = 8
 
@@ -27,9 +31,12 @@ viewFrog : Float -> Frog -> Form
 viewFrog tileSize frog = sprite frog.leaf.position tileSize "https://az31353.vo.msecnd.net/pub/enuofhjd" |> rotate (frog.angle |> degrees)
 
 sprite : Grid.Position -> Float -> String -> Form
-sprite position tileSize url =
-  let element = image (floor tileSize) (floor tileSize) url
-  in element |> makeForm position tileSize
+sprite = customSprite identity
+
+customSprite : (Element -> Element) -> Grid.Position -> Float -> String -> Form
+customSprite transform position tileSize url =
+  let element = image (round tileSize) (round tileSize) url
+  in element |> transform |> makeForm position tileSize
 
 makeForm : Grid.Position -> Float -> Element -> Form
 makeForm position tileSize element =
@@ -43,6 +50,19 @@ toWorld tileSize position =
 
 viewLeaf : Float -> Leaf -> Form
 viewLeaf tileSize leaf = sprite leaf.position tileSize "https://az31353.vo.msecnd.net/pub/ebfvplpg"
+
+viewTargets : Frog -> Float -> [Leaf] -> [Form]
+viewTargets frog tileSize leaves =
+  let targets = leaves |> filter (reachableBy frog)
+      toClickable target = clickable moveTo.handle (MoveTo target)
+      distanceOf target = (distance target.position.x frog.leaf.position.x) + (distance target.position.y frog.leaf.position.y)
+      angle target =
+        case frog `angleTo` target of
+          Just angle -> angle
+          Nothing -> 0
+      filename target = "arrows/" ++ (distanceOf target |> show) ++ "/" ++ (angle target |> show) ++ ".png"
+      viewTarget target = customSprite (toClickable target) target.position tileSize (filename target)
+  in targets |> map viewTarget
 
 viewLevel : Float -> Game -> [Form]
 viewLevel tileSize game =

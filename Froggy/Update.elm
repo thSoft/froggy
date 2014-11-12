@@ -35,7 +35,7 @@ findLeaf position leaves =
 moveTo : Leaf -> Game -> Game
 moveTo leaf game =
   if playing game then
-    let maybeDirection = game.frog |> angleTo leaf
+    let maybeDirection = game.frog `angleTo` leaf
     in case maybeDirection of
       Nothing -> game
       Just angle ->
