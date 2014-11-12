@@ -1,9 +1,11 @@
 module Froggy.View where
 
 import Text
+import Graphics.Input (..)
 import Froggy.Grid as Grid
 import Froggy.Levels (..)
 import Froggy.Model (..)
+import Froggy.Commands (..)
 
 view : (Int, Int) -> Game -> Element
 view (windowWidth, windowHeight) game =
@@ -27,9 +29,12 @@ viewFrog : Float -> Frog -> Form
 viewFrog tileSize frog = sprite frog.leaf.position tileSize "https://az31353.vo.msecnd.net/pub/enuofhjd" |> rotate (frog.angle |> degrees)
 
 sprite : Grid.Position -> Float -> String -> Form
-sprite position tileSize url =
-  let element = image (floor tileSize) (floor tileSize) url
-  in element |> makeForm position tileSize
+sprite = customSprite identity
+
+customSprite : (Element -> Element) -> Grid.Position -> Float -> String -> Form
+customSprite transform position tileSize url =
+  let element = image (round tileSize) (round tileSize) url
+  in element |> transform |> makeForm position tileSize
 
 makeForm : Grid.Position -> Float -> Element -> Form
 makeForm position tileSize element =
@@ -42,7 +47,9 @@ toWorld tileSize position =
   in (transform position.x, -(transform position.y))
 
 viewLeaf : Float -> Leaf -> Form
-viewLeaf tileSize leaf = sprite leaf.position tileSize "https://az31353.vo.msecnd.net/pub/ebfvplpg"
+viewLeaf tileSize leaf =
+  let toClickable = clickable moveTo.handle (MoveTo leaf)
+  in customSprite toClickable leaf.position tileSize "https://az31353.vo.msecnd.net/pub/ebfvplpg"
 
 viewLevel : Float -> Game -> [Form]
 viewLevel tileSize game =

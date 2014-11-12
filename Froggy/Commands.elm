@@ -1,6 +1,7 @@
 module Froggy.Commands where
 
 import Keyboard
+import Graphics.Input (..)
 import Froggy.Grid as Grid
 import Froggy.Model (..)
 
@@ -14,7 +15,7 @@ commands : Signal Command
 commands =
   let moveBy = lift2 makeMoveBy Keyboard.shift Keyboard.arrows
       continue = lift makeContinue Keyboard.enter
-  in merges [moveBy, continue]
+  in merges [moveBy, continue, moveTo.signal]
 
 makeMoveBy : Bool -> Grid.Position -> Command
 makeMoveBy shift arrows =
@@ -26,3 +27,6 @@ makeMoveBy shift arrows =
 
 makeContinue : Bool -> Command
 makeContinue pressed = if pressed then Continue else Nop
+
+moveTo : Input Command
+moveTo = input Nop

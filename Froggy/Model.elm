@@ -25,11 +25,14 @@ levelCompleted game = (game.leaves |> length) == 1
 
 stuck : Game -> Bool
 stuck game =
-  let canJumpThere leaf = (game.frog |> angleTo leaf) |> isJust
+  let canJumpThere leaf = game.frog `canJumpTo` leaf
   in not (game.leaves |> any canJumpThere)
 
-angleTo : Leaf -> Frog -> Maybe Float
-angleTo leaf frog =
+canJumpTo : Frog -> Leaf -> Bool
+canJumpTo frog leaf = (frog `angleTo` leaf) |> isJust
+
+angleTo : Frog -> Leaf -> Maybe Float
+angleTo frog leaf =
   let frogX = frog.leaf.position.x
       frogY = frog.leaf.position.y
       leafX = leaf.position.x
