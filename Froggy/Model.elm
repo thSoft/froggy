@@ -1,6 +1,7 @@
 module Froggy.Model where
 
 import Maybe (..)
+import Froggy.Util (..)
 import Froggy.Grid as Grid
 import Froggy.Levels (..)
 
@@ -24,12 +25,10 @@ levelCompleted : Game -> Bool
 levelCompleted game = (game.leaves |> length) == 1
 
 stuck : Game -> Bool
-stuck game =
-  let canJumpThere leaf = game.frog `canJumpTo` leaf
-  in not (game.leaves |> any canJumpThere)
+stuck game = not (game.leaves |> any (reachableBy game.frog))
 
-canJumpTo : Frog -> Leaf -> Bool
-canJumpTo frog leaf = (frog `angleTo` leaf) |> isJust
+reachableBy : Frog -> Leaf -> Bool
+reachableBy frog leaf = (frog `angleTo` leaf) |> isJust
 
 angleTo : Frog -> Leaf -> Maybe Float
 angleTo frog leaf =
@@ -38,13 +37,13 @@ angleTo frog leaf =
       leafX = leaf.position.x
       leafY = leaf.position.y
   in if | (frogX == leafX) && (frogY > leafY) && (frogY `near` leafY) -> Just 0
-        | (frogY == leafY) && (frogX < leafX) && (frogX `near` leafX) -> Just -90
+        | (frogY == leafY) && (frogX < leafX) && (frogX `near` leafX) -> Just 270
         | (frogX == leafX) && (frogY < leafY) && (frogY `near` leafY) -> Just 180
         | (frogY == leafY) && (frogX > leafX) && (frogX `near` leafX) -> Just 90
         | otherwise -> Nothing
 
 near : Int -> Int -> Bool
-near a b = abs(a - b) <= maxDistance
+near a b = (distance a b) <= maxDistance
 
 maxDistance = 2
 
