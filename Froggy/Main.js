@@ -10386,15 +10386,15 @@ Elm.Froggy.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $String = Elm.String.make(_elm),
    $Text = Elm.Text.make(_elm);
-   var continueKey = "Enter or tap";
-   var instructionsMessage = _L.append("Welcome to Froggy!\n\nYour goal is to traverse all leaves.\n\nArrow key: jump to an adjacent leaf\nShift + arrow key: leap over an adjacent leaf\n\nPress ",
-   _L.append(continueKey,
+   var continueInstruction = "Press Enter or tap";
+   var instructionsMessage = _L.append("Welcome to Froggy!\n\nYour goal is to traverse all leaves.\n\nArrow key: jump to an adjacent leaf\nShift + arrow key: leap over an adjacent leaf\n\n",
+   _L.append(continueInstruction,
    " to start the game!"));
-   var stuckMessage = _L.append("Uh oh, you seem to be stuck!\nPress ",
-   _L.append(continueKey,
+   var stuckMessage = _L.append("Uh oh, you seem to be stuck!\n",
+   _L.append(continueInstruction,
    " to restart this level!"));
-   var levelCompletedMessage = _L.append("Level completed!\nPress ",
-   _L.append(continueKey,
+   var levelCompletedMessage = _L.append("Level completed!\n",
+   _L.append(continueInstruction,
    " to continue to the next level!"));
    var gameCompletedMessage = "Congratulations!\nYou have completed the game!";
    var gameText = F2(function (height,
@@ -10624,7 +10624,7 @@ Elm.Froggy.View.make = function (_elm) {
                              ,levelCompletedMessage: levelCompletedMessage
                              ,stuckMessage: stuckMessage
                              ,instructionsMessage: instructionsMessage
-                             ,continueKey: continueKey};
+                             ,continueInstruction: continueInstruction};
    return _elm.Froggy.View.values;
 };Elm.Froggy = Elm.Froggy || {};
 Elm.Froggy.Update = Elm.Froggy.Update || {};
@@ -10812,7 +10812,19 @@ Elm.Froggy.Commands.make = function (_elm) {
    $Graphics$Input = Elm.Graphics.Input.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $Mouse = Elm.Mouse.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $Touch = Elm.Touch.make(_elm);
+   var realTaps = function () {
+      var isReal = function (_v0) {
+         return function () {
+            return !_U.eq(_v0.x,
+            0) && !_U.eq(_v0.y,0);
+         }();
+      };
+      return A2($Signal.lift,
+      isReal,
+      $Touch.taps);
+   }();
    var Continue = {ctor: "Continue"};
    var MoveTo = function (a) {
       return {ctor: "MoveTo"
@@ -10837,6 +10849,9 @@ Elm.Froggy.Commands.make = function (_elm) {
    };
    var moveTo = $Graphics$Input.input(Nop);
    var commands = function () {
+      var continueWithTouchscreen = A2($Signal.lift,
+      makeContinue,
+      realTaps);
       var continueWithMouse = A2($Signal.lift,
       makeContinue,
       $Mouse.isDown);
@@ -10850,6 +10865,7 @@ Elm.Froggy.Commands.make = function (_elm) {
       return $Signal.merges(_L.fromArray([moveBy
                                          ,continueWithKeyboard
                                          ,continueWithMouse
+                                         ,continueWithTouchscreen
                                          ,moveTo.signal]));
    }();
    _elm.Froggy.Commands.values = {_op: _op
@@ -10860,6 +10876,7 @@ Elm.Froggy.Commands.make = function (_elm) {
                                  ,commands: commands
                                  ,makeMoveBy: makeMoveBy
                                  ,makeContinue: makeContinue
+                                 ,realTaps: realTaps
                                  ,moveTo: moveTo};
    return _elm.Froggy.Commands.values;
 };Elm.Froggy = Elm.Froggy || {};
