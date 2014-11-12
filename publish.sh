@@ -8,11 +8,9 @@ if [ -n "$(git status --porcelain)" ]; then
   echo "Working directory must be clean!"
   exit 1
 fi
-git stash
 git checkout gh-pages
 cp -r build/* .
 git add -A
 git commit -am "publish"
 git push origin gh-pages
 git checkout master
-git stash pop
