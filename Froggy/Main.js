@@ -10386,7 +10386,7 @@ Elm.Froggy.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $String = Elm.String.make(_elm),
    $Text = Elm.Text.make(_elm);
-   var continueKey = "Enter";
+   var continueKey = "Enter or tap";
    var instructionsMessage = _L.append("Welcome to Froggy!\n\nYour goal is to traverse all leaves.\n\nArrow key: jump to an adjacent leaf\nShift + arrow key: leap over an adjacent leaf\n\nPress ",
    _L.append(continueKey,
    " to start the game!"));
@@ -10811,6 +10811,7 @@ Elm.Froggy.Commands.make = function (_elm) {
    $Froggy$Model = Elm.Froggy.Model.make(_elm),
    $Graphics$Input = Elm.Graphics.Input.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
+   $Mouse = Elm.Mouse.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var Continue = {ctor: "Continue"};
    var MoveTo = function (a) {
@@ -10836,7 +10837,10 @@ Elm.Froggy.Commands.make = function (_elm) {
    };
    var moveTo = $Graphics$Input.input(Nop);
    var commands = function () {
-      var $continue = A2($Signal.lift,
+      var continueWithMouse = A2($Signal.lift,
+      makeContinue,
+      $Mouse.isDown);
+      var continueWithKeyboard = A2($Signal.lift,
       makeContinue,
       $Keyboard.enter);
       var moveBy = A3($Signal.lift2,
@@ -10844,7 +10848,8 @@ Elm.Froggy.Commands.make = function (_elm) {
       $Keyboard.shift,
       $Keyboard.arrows);
       return $Signal.merges(_L.fromArray([moveBy
-                                         ,$continue
+                                         ,continueWithKeyboard
+                                         ,continueWithMouse
                                          ,moveTo.signal]));
    }();
    _elm.Froggy.Commands.values = {_op: _op
