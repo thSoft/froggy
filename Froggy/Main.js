@@ -10301,11 +10301,9 @@ Elm.Froggy.Main.make = function (_elm) {
    _A = _N.Array.make(_elm),
    _E = _N.Error.make(_elm),
    $moduleName = "Froggy.Main",
-   $Basics = Elm.Basics.make(_elm),
    $Froggy$Commands = Elm.Froggy.Commands.make(_elm),
    $Froggy$Model = Elm.Froggy.Model.make(_elm),
    $Froggy$Update = Elm.Froggy.Update.make(_elm),
-   $Froggy$Util = Elm.Froggy.Util.make(_elm),
    $Froggy$View = Elm.Froggy.View.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Native$Json = Elm.Native.Json.make(_elm),
@@ -10330,7 +10328,7 @@ Elm.Froggy.Main.make = function (_elm) {
                                                                                                                                                             ,levelNumber: typeof v.levelNumber === "number" ? v.levelNumber : _E.raise("invalid input, expecting JSNumber but got " + v.levelNumber)
                                                                                                                                                             ,instructions: typeof v.instructions === "boolean" ? v.instructions : _E.raise("invalid input, expecting JSBoolean but got " + v.instructions)} : _E.raise("invalid input, expecting JSObject [\"frog\",\"leaves\",\"levelNumber\",\"instructions\"] but got " + v));
    });
-   var initialGame = $Froggy$Util.getOrElse($Froggy$Update.newGame)(load);
+   var initialGame = $Froggy$Update.loadLevel(21);
    var game = A3($Signal.foldp,
    $Froggy$Update.update,
    initialGame,
@@ -12364,7 +12362,7 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                                                       ,false
                                                                                       ,true
                                                                                       ,false
-                                                                                      ,false])
+                                                                                      ,true])
                                                                         ,_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -12402,7 +12400,7 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                                                       ,false
                                                                                       ,true
                                                                                       ,false
-                                                                                      ,false
+                                                                                      ,true
                                                                                       ,false
                                                                                       ,true])
                                                                         ,_L.fromArray([true
