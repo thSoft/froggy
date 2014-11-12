@@ -10812,19 +10812,7 @@ Elm.Froggy.Commands.make = function (_elm) {
    $Graphics$Input = Elm.Graphics.Input.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $Mouse = Elm.Mouse.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Touch = Elm.Touch.make(_elm);
-   var realTaps = function () {
-      var isReal = function (_v0) {
-         return function () {
-            return !_U.eq(_v0.x,
-            0) && !_U.eq(_v0.y,0);
-         }();
-      };
-      return A2($Signal.lift,
-      isReal,
-      $Touch.taps);
-   }();
+   $Signal = Elm.Signal.make(_elm);
    var Continue = {ctor: "Continue"};
    var MoveTo = function (a) {
       return {ctor: "MoveTo"
@@ -10849,9 +10837,6 @@ Elm.Froggy.Commands.make = function (_elm) {
    };
    var moveTo = $Graphics$Input.input(Nop);
    var commands = function () {
-      var continueWithTouchscreen = A2($Signal.lift,
-      makeContinue,
-      realTaps);
       var continueWithMouse = A2($Signal.lift,
       makeContinue,
       $Mouse.isDown);
@@ -10865,7 +10850,6 @@ Elm.Froggy.Commands.make = function (_elm) {
       return $Signal.merges(_L.fromArray([moveBy
                                          ,continueWithKeyboard
                                          ,continueWithMouse
-                                         ,continueWithTouchscreen
                                          ,moveTo.signal]));
    }();
    _elm.Froggy.Commands.values = {_op: _op
@@ -10876,7 +10860,6 @@ Elm.Froggy.Commands.make = function (_elm) {
                                  ,commands: commands
                                  ,makeMoveBy: makeMoveBy
                                  ,makeContinue: makeContinue
-                                 ,realTaps: realTaps
                                  ,moveTo: moveTo};
    return _elm.Froggy.Commands.values;
 };Elm.Froggy = Elm.Froggy || {};
