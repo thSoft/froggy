@@ -10358,6 +10358,275 @@ Elm.Froggy.Main.make = function (_elm) {
                              ,initialGame: initialGame};
    return _elm.Froggy.Main.values;
 };Elm.Froggy = Elm.Froggy || {};
+Elm.Froggy.View = Elm.Froggy.View || {};
+Elm.Froggy.View.make = function (_elm) {
+   "use strict";
+   _elm.Froggy = _elm.Froggy || {};
+   _elm.Froggy.View = _elm.Froggy.View || {};
+   if (_elm.Froggy.View.values)
+   return _elm.Froggy.View.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _A = _N.Array.make(_elm),
+   _E = _N.Error.make(_elm),
+   $moduleName = "Froggy.View",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Froggy$Commands = Elm.Froggy.Commands.make(_elm),
+   $Froggy$Grid = Elm.Froggy.Grid.make(_elm),
+   $Froggy$Levels = Elm.Froggy.Levels.make(_elm),
+   $Froggy$Model = Elm.Froggy.Model.make(_elm),
+   $Froggy$Util = Elm.Froggy.Util.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Text = Elm.Text.make(_elm);
+   var continueKey = "Enter";
+   var instructionsMessage = _L.append("Welcome to Froggy!\n\nYour goal is to traverse all leaves.\n\nArrow key: jump to an adjacent leaf\nShift + arrow key: leap over an adjacent leaf\n\nPress ",
+   _L.append(continueKey,
+   " to start the game!"));
+   var stuckMessage = _L.append("Uh oh, you seem to be stuck!\nPress ",
+   _L.append(continueKey,
+   " to restart this level!"));
+   var levelCompletedMessage = _L.append("Level completed!\nPress ",
+   _L.append(continueKey,
+   " to continue to the next level!"));
+   var gameCompletedMessage = "Congratulations!\nYou have completed the game!";
+   var gameText = F2(function (height,
+   string) {
+      return $Text.centered($Text.style({_: {}
+                                        ,bold: true
+                                        ,color: $Color.red
+                                        ,height: $Maybe.Just(height)
+                                        ,italic: false
+                                        ,line: $Maybe.Nothing
+                                        ,typeface: _L.fromArray(["Comic Sans MS"])})($Text.toText(string)));
+   });
+   var viewMessage = F2(function (viewSize,
+   game) {
+      return function () {
+         var lastLevel = _U.eq(game.levelNumber,
+         $Froggy$Levels.numberOfLevels - 1);
+         var completedMessage = lastLevel ? gameCompletedMessage : levelCompletedMessage;
+         var textSize = $Basics.toFloat(viewSize) / 40;
+         var backgroundSize = $Basics.round($Basics.toFloat(viewSize) / 1.7);
+         var background = A3($Graphics$Element.image,
+         backgroundSize,
+         backgroundSize,
+         "http://www.i2clipart.com/cliparts/9/2/6/b/clipart-bubble-256x256-926b.png");
+         return $Froggy$Model.levelCompleted(game) ? _L.fromArray([background
+                                                                  ,A2(gameText,
+                                                                  textSize,
+                                                                  completedMessage)]) : $Froggy$Model.stuck(game) ? _L.fromArray([background
+                                                                                                                                 ,A2(gameText,
+                                                                                                                                 textSize,
+                                                                                                                                 stuckMessage)]) : game.instructions ? _L.fromArray([background
+                                                                                                                                                                                    ,A2(gameText,
+                                                                                                                                                                                    textSize,
+                                                                                                                                                                                    instructionsMessage)]) : _L.fromArray([]);
+      }();
+   });
+   var mapSize = 8;
+   var toWorld = F2(function (tileSize,
+   position) {
+      return function () {
+         var transform = function (coordinate) {
+            return ($Basics.toFloat(coordinate) - mapSize / 2 + 0.5) * tileSize;
+         };
+         return {ctor: "_Tuple2"
+                ,_0: transform(position.x)
+                ,_1: 0 - transform(position.y)};
+      }();
+   });
+   var makeForm = F3(function (position,
+   tileSize,
+   element) {
+      return function () {
+         var worldPosition = toWorld(tileSize)(position);
+         return $Graphics$Collage.move(worldPosition)($Graphics$Collage.toForm(element));
+      }();
+   });
+   var customSprite = F4(function (transform,
+   position,
+   tileSize,
+   url) {
+      return function () {
+         var element = A3($Graphics$Element.image,
+         $Basics.round(tileSize),
+         $Basics.round(tileSize),
+         url);
+         return A2(makeForm,
+         position,
+         tileSize)(transform(element));
+      }();
+   });
+   var sprite = customSprite($Basics.identity);
+   var viewFrog = F2(function (tileSize,
+   frog) {
+      return $Graphics$Collage.rotate($Basics.degrees(frog.angle))(A3(sprite,
+      frog.leaf.position,
+      tileSize,
+      "https://az31353.vo.msecnd.net/pub/enuofhjd"));
+   });
+   var viewLeaf = F2(function (tileSize,
+   leaf) {
+      return A3(sprite,
+      leaf.position,
+      tileSize,
+      "https://az31353.vo.msecnd.net/pub/ebfvplpg");
+   });
+   var viewTargets = F3(function (frog,
+   tileSize,
+   leaves) {
+      return function () {
+         var angle = function (target) {
+            return function () {
+               var _v0 = A2($Froggy$Model.angleTo,
+               frog,
+               target);
+               switch (_v0.ctor)
+               {case "Just": return _v0._0;
+                  case "Nothing": return 0;}
+               _E.Case($moduleName,
+               "between lines 60 and 63");
+            }();
+         };
+         var distanceOf = function (target) {
+            return A2($Froggy$Util.distance,
+            target.position.x,
+            frog.leaf.position.x) + A2($Froggy$Util.distance,
+            target.position.y,
+            frog.leaf.position.y);
+         };
+         var filename = function (target) {
+            return _L.append("arrows/",
+            _L.append($String.show(distanceOf(target)),
+            _L.append("/",
+            _L.append($String.show(angle(target)),
+            ".png"))));
+         };
+         var toClickable = function (target) {
+            return A2($Graphics$Input.clickable,
+            $Froggy$Commands.moveTo.handle,
+            $Froggy$Commands.MoveTo(target));
+         };
+         var viewTarget = function (target) {
+            return A4(customSprite,
+            toClickable(target),
+            target.position,
+            tileSize,
+            filename(target));
+         };
+         var targets = $List.filter($Froggy$Model.reachableBy(frog))(leaves);
+         return $List.map(viewTarget)(targets);
+      }();
+   });
+   var textSprite = F3(function (position,
+   tileSize,
+   string) {
+      return function () {
+         var textSize = tileSize / 6;
+         return A2(makeForm,
+         position,
+         tileSize)(A2(gameText,
+         textSize,
+         string));
+      }();
+   });
+   var viewLevel = F2(function (tileSize,
+   game) {
+      return function () {
+         var levelPosition = function (_) {
+            return _.levelPosition;
+         }($Froggy$Levels.getLevel(game.levelNumber));
+         var background = A3(sprite,
+         levelPosition,
+         tileSize,
+         "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-th.png");
+         var levelNumber = $Graphics$Collage.rotate($Basics.degrees(-1))(A3(textSprite,
+         levelPosition,
+         tileSize,
+         _L.append("Level ",
+         _L.append($String.show(game.levelNumber),
+         " \n "))));
+         return _L.fromArray([background
+                             ,levelNumber]);
+      }();
+   });
+   var viewForeground = F2(function (viewSize,
+   game) {
+      return function () {
+         var tileSize = $Basics.toFloat(viewSize) / mapSize;
+         var frog = viewFrog(tileSize)(game.frog);
+         var leaves = $List.map(viewLeaf(tileSize))(game.leaves);
+         var targets = A2(viewTargets,
+         game.frog,
+         tileSize)(game.leaves);
+         var level = viewLevel(tileSize)(game);
+         return A2($Graphics$Collage.collage,
+         viewSize,
+         viewSize)(_L.append(leaves,
+         _L.append(targets,
+         _L.append(_L.fromArray([frog]),
+         level))));
+      }();
+   });
+   var view = F2(function (_v2,
+   game) {
+      return function () {
+         switch (_v2.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var viewSize = A2($Basics.min,
+                 _v2._0,
+                 _v2._1);
+                 var foreground = A3($Graphics$Element.container,
+                 _v2._0,
+                 _v2._1,
+                 $Graphics$Element.middle)(viewForeground(viewSize)(game));
+                 var message = $List.map(A3($Graphics$Element.container,
+                 _v2._0,
+                 _v2._1,
+                 $Graphics$Element.middle))(viewMessage(viewSize)(game));
+                 var background = A3($Graphics$Element.fittedImage,
+                 _v2._0,
+                 _v2._1,
+                 "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg");
+                 return $Graphics$Element.layers(_L.append(_L.fromArray([background
+                                                                        ,foreground]),
+                 message));
+              }();}
+         _E.Case($moduleName,
+         "between lines 13 and 17");
+      }();
+   });
+   _elm.Froggy.View.values = {_op: _op
+                             ,view: view
+                             ,viewForeground: viewForeground
+                             ,mapSize: mapSize
+                             ,viewFrog: viewFrog
+                             ,sprite: sprite
+                             ,customSprite: customSprite
+                             ,makeForm: makeForm
+                             ,toWorld: toWorld
+                             ,viewLeaf: viewLeaf
+                             ,viewTargets: viewTargets
+                             ,viewLevel: viewLevel
+                             ,textSprite: textSprite
+                             ,gameText: gameText
+                             ,viewMessage: viewMessage
+                             ,gameCompletedMessage: gameCompletedMessage
+                             ,levelCompletedMessage: levelCompletedMessage
+                             ,stuckMessage: stuckMessage
+                             ,instructionsMessage: instructionsMessage
+                             ,continueKey: continueKey};
+   return _elm.Froggy.View.values;
+};Elm.Froggy = Elm.Froggy || {};
 Elm.Froggy.Update = Elm.Froggy.Update || {};
 Elm.Froggy.Update.make = function (_elm) {
    "use strict";
@@ -10408,7 +10677,9 @@ Elm.Froggy.Update.make = function (_elm) {
    var moveTo = F2(function (leaf,
    game) {
       return $Froggy$Model.playing(game) ? function () {
-         var maybeDirection = $Froggy$Model.angleTo(leaf)(game.frog);
+         var maybeDirection = A2($Froggy$Model.angleTo,
+         game.frog,
+         leaf);
          return function () {
             switch (maybeDirection.ctor)
             {case "Just":
@@ -10538,6 +10809,7 @@ Elm.Froggy.Commands.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Froggy$Grid = Elm.Froggy.Grid.make(_elm),
    $Froggy$Model = Elm.Froggy.Model.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var Continue = {ctor: "Continue"};
@@ -10562,6 +10834,7 @@ Elm.Froggy.Commands.make = function (_elm) {
    var makeContinue = function (pressed) {
       return pressed ? Continue : Nop;
    };
+   var moveTo = $Graphics$Input.input(Nop);
    var commands = function () {
       var $continue = A2($Signal.lift,
       makeContinue,
@@ -10571,7 +10844,8 @@ Elm.Froggy.Commands.make = function (_elm) {
       $Keyboard.shift,
       $Keyboard.arrows);
       return $Signal.merges(_L.fromArray([moveBy
-                                         ,$continue]));
+                                         ,$continue
+                                         ,moveTo.signal]));
    }();
    _elm.Froggy.Commands.values = {_op: _op
                                  ,Nop: Nop
@@ -10580,220 +10854,9 @@ Elm.Froggy.Commands.make = function (_elm) {
                                  ,Continue: Continue
                                  ,commands: commands
                                  ,makeMoveBy: makeMoveBy
-                                 ,makeContinue: makeContinue};
+                                 ,makeContinue: makeContinue
+                                 ,moveTo: moveTo};
    return _elm.Froggy.Commands.values;
-};Elm.Froggy = Elm.Froggy || {};
-Elm.Froggy.View = Elm.Froggy.View || {};
-Elm.Froggy.View.make = function (_elm) {
-   "use strict";
-   _elm.Froggy = _elm.Froggy || {};
-   _elm.Froggy.View = _elm.Froggy.View || {};
-   if (_elm.Froggy.View.values)
-   return _elm.Froggy.View.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   _A = _N.Array.make(_elm),
-   _E = _N.Error.make(_elm),
-   $moduleName = "Froggy.View",
-   $Basics = Elm.Basics.make(_elm),
-   $Color = Elm.Color.make(_elm),
-   $Froggy$Grid = Elm.Froggy.Grid.make(_elm),
-   $Froggy$Levels = Elm.Froggy.Levels.make(_elm),
-   $Froggy$Model = Elm.Froggy.Model.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Text = Elm.Text.make(_elm);
-   var continueKey = "Enter";
-   var instructionsMessage = _L.append("Welcome to Froggy!\n\nYour goal is to traverse all leaves.\n\nArrow key: jump to an adjacent leaf\nShift + arrow key: leap over an adjacent leaf\n\nPress ",
-   _L.append(continueKey,
-   " to start the game!"));
-   var stuckMessage = _L.append("Uh oh, you seem to be stuck!\nPress ",
-   _L.append(continueKey,
-   " to restart this level!"));
-   var levelCompletedMessage = _L.append("Level completed!\nPress ",
-   _L.append(continueKey,
-   " to continue to the next level!"));
-   var gameCompletedMessage = "Congratulations!\nYou have completed the game!";
-   var gameText = F2(function (height,
-   string) {
-      return $Text.centered($Text.style({_: {}
-                                        ,bold: true
-                                        ,color: $Color.red
-                                        ,height: $Maybe.Just(height)
-                                        ,italic: false
-                                        ,line: $Maybe.Nothing
-                                        ,typeface: _L.fromArray(["Comic Sans MS"])})($Text.toText(string)));
-   });
-   var viewMessage = F2(function (viewSize,
-   game) {
-      return function () {
-         var lastLevel = _U.eq(game.levelNumber,
-         $Froggy$Levels.numberOfLevels - 1);
-         var completedMessage = lastLevel ? gameCompletedMessage : levelCompletedMessage;
-         var textSize = $Basics.toFloat(viewSize) / 40;
-         var backgroundSize = $Basics.round($Basics.toFloat(viewSize) / 1.7);
-         var background = A3($Graphics$Element.image,
-         backgroundSize,
-         backgroundSize,
-         "http://www.i2clipart.com/cliparts/9/2/6/b/clipart-bubble-256x256-926b.png");
-         return $Froggy$Model.levelCompleted(game) ? _L.fromArray([background
-                                                                  ,A2(gameText,
-                                                                  textSize,
-                                                                  completedMessage)]) : $Froggy$Model.stuck(game) ? _L.fromArray([background
-                                                                                                                                 ,A2(gameText,
-                                                                                                                                 textSize,
-                                                                                                                                 stuckMessage)]) : game.instructions ? _L.fromArray([background
-                                                                                                                                                                                    ,A2(gameText,
-                                                                                                                                                                                    textSize,
-                                                                                                                                                                                    instructionsMessage)]) : _L.fromArray([]);
-      }();
-   });
-   var mapSize = 8;
-   var toWorld = F2(function (tileSize,
-   position) {
-      return function () {
-         var transform = function (coordinate) {
-            return ($Basics.toFloat(coordinate) - mapSize / 2 + 0.5) * tileSize;
-         };
-         return {ctor: "_Tuple2"
-                ,_0: transform(position.x)
-                ,_1: 0 - transform(position.y)};
-      }();
-   });
-   var makeForm = F3(function (position,
-   tileSize,
-   element) {
-      return function () {
-         var worldPosition = toWorld(tileSize)(position);
-         return $Graphics$Collage.move(worldPosition)($Graphics$Collage.toForm(element));
-      }();
-   });
-   var sprite = F3(function (position,
-   tileSize,
-   url) {
-      return function () {
-         var element = A3($Graphics$Element.image,
-         $Basics.floor(tileSize),
-         $Basics.floor(tileSize),
-         url);
-         return A2(makeForm,
-         position,
-         tileSize)(element);
-      }();
-   });
-   var viewFrog = F2(function (tileSize,
-   frog) {
-      return $Graphics$Collage.rotate($Basics.degrees(frog.angle))(A3(sprite,
-      frog.leaf.position,
-      tileSize,
-      "https://az31353.vo.msecnd.net/pub/enuofhjd"));
-   });
-   var viewLeaf = F2(function (tileSize,
-   leaf) {
-      return A3(sprite,
-      leaf.position,
-      tileSize,
-      "https://az31353.vo.msecnd.net/pub/ebfvplpg");
-   });
-   var textSprite = F3(function (position,
-   tileSize,
-   string) {
-      return function () {
-         var textSize = tileSize / 6;
-         return A2(makeForm,
-         position,
-         tileSize)(A2(gameText,
-         textSize,
-         string));
-      }();
-   });
-   var viewLevel = F2(function (tileSize,
-   game) {
-      return function () {
-         var levelPosition = function (_) {
-            return _.levelPosition;
-         }($Froggy$Levels.getLevel(game.levelNumber));
-         var background = A3(sprite,
-         levelPosition,
-         tileSize,
-         "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-th.png");
-         var levelNumber = $Graphics$Collage.rotate($Basics.degrees(-1))(A3(textSprite,
-         levelPosition,
-         tileSize,
-         _L.append("Level ",
-         _L.append($String.show(game.levelNumber),
-         " \n "))));
-         return _L.fromArray([background
-                             ,levelNumber]);
-      }();
-   });
-   var viewForeground = F2(function (viewSize,
-   game) {
-      return function () {
-         var tileSize = $Basics.toFloat(viewSize) / mapSize;
-         var frog = viewFrog(tileSize)(game.frog);
-         var leaves = $List.map(viewLeaf(tileSize))(game.leaves);
-         var level = viewLevel(tileSize)(game);
-         return A2($Graphics$Collage.collage,
-         viewSize,
-         viewSize)(_L.append(leaves,
-         _L.append(_L.fromArray([frog]),
-         level)));
-      }();
-   });
-   var view = F2(function (_v0,
-   game) {
-      return function () {
-         switch (_v0.ctor)
-         {case "_Tuple2":
-            return function () {
-                 var viewSize = A2($Basics.min,
-                 _v0._0,
-                 _v0._1);
-                 var foreground = A3($Graphics$Element.container,
-                 _v0._0,
-                 _v0._1,
-                 $Graphics$Element.middle)(viewForeground(viewSize)(game));
-                 var message = $List.map(A3($Graphics$Element.container,
-                 _v0._0,
-                 _v0._1,
-                 $Graphics$Element.middle))(viewMessage(viewSize)(game));
-                 var background = A3($Graphics$Element.fittedImage,
-                 _v0._0,
-                 _v0._1,
-                 "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg");
-                 return $Graphics$Element.layers(_L.append(_L.fromArray([background
-                                                                        ,foreground]),
-                 message));
-              }();}
-         _E.Case($moduleName,
-         "between lines 10 and 14");
-      }();
-   });
-   _elm.Froggy.View.values = {_op: _op
-                             ,view: view
-                             ,viewForeground: viewForeground
-                             ,mapSize: mapSize
-                             ,viewFrog: viewFrog
-                             ,sprite: sprite
-                             ,makeForm: makeForm
-                             ,toWorld: toWorld
-                             ,viewLeaf: viewLeaf
-                             ,viewLevel: viewLevel
-                             ,textSprite: textSprite
-                             ,gameText: gameText
-                             ,viewMessage: viewMessage
-                             ,gameCompletedMessage: gameCompletedMessage
-                             ,levelCompletedMessage: levelCompletedMessage
-                             ,stuckMessage: stuckMessage
-                             ,instructionsMessage: instructionsMessage
-                             ,continueKey: continueKey};
-   return _elm.Froggy.View.values;
 };Elm.Froggy = Elm.Froggy || {};
 Elm.Froggy.Model = Elm.Froggy.Model || {};
 Elm.Froggy.Model.make = function (_elm) {
@@ -10811,6 +10874,7 @@ Elm.Froggy.Model.make = function (_elm) {
    $moduleName = "Froggy.Model",
    $Basics = Elm.Basics.make(_elm),
    $Froggy$Grid = Elm.Froggy.Grid.make(_elm),
+   $Froggy$Util = Elm.Froggy.Util.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm);
    var playing = function (game) {
@@ -10818,11 +10882,13 @@ Elm.Froggy.Model.make = function (_elm) {
    };
    var maxDistance = 2;
    var near = F2(function (a,b) {
-      return _U.cmp($Basics.abs(a - b),
+      return _U.cmp(A2($Froggy$Util.distance,
+      a,
+      b),
       maxDistance) < 1;
    });
-   var angleTo = F2(function (leaf,
-   frog) {
+   var angleTo = F2(function (frog,
+   leaf) {
       return function () {
          var leafY = leaf.position.y;
          var leafX = leaf.position.x;
@@ -10836,7 +10902,7 @@ Elm.Froggy.Model.make = function (_elm) {
          leafY) && (_U.cmp(frogX,
          leafX) < 0 && A2(near,
          frogX,
-         leafX)) ? $Maybe.Just(-90) : _U.eq(frogX,
+         leafX)) ? $Maybe.Just(270) : _U.eq(frogX,
          leafX) && (_U.cmp(frogY,
          leafY) < 0 && A2(near,
          frogY,
@@ -10847,13 +10913,14 @@ Elm.Froggy.Model.make = function (_elm) {
          leafX)) ? $Maybe.Just(90) : $Maybe.Nothing;
       }();
    });
+   var reachableBy = F2(function (frog,
+   leaf) {
+      return $Maybe.isJust(A2(angleTo,
+      frog,
+      leaf));
+   });
    var stuck = function (game) {
-      return function () {
-         var canJumpThere = function (leaf) {
-            return $Maybe.isJust(angleTo(leaf)(game.frog));
-         };
-         return $Basics.not($List.any(canJumpThere)(game.leaves));
-      }();
+      return $Basics.not($List.any(reachableBy(game.frog))(game.leaves));
    };
    var levelCompleted = function (game) {
       return _U.eq($List.length(game.leaves),
@@ -10883,6 +10950,7 @@ Elm.Froggy.Model.make = function (_elm) {
                               ,Leaf: Leaf
                               ,levelCompleted: levelCompleted
                               ,stuck: stuck
+                              ,reachableBy: reachableBy
                               ,angleTo: angleTo
                               ,near: near
                               ,maxDistance: maxDistance
@@ -13047,6 +13115,10 @@ Elm.Froggy.Util.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm);
+   var distance = F2(function (a,
+   b) {
+      return $Basics.abs(a - b);
+   });
    var getOrElse = F2(function (defaultValue,
    maybeValue) {
       return A2($Maybe.maybe,
@@ -13061,6 +13133,7 @@ Elm.Froggy.Util.make = function (_elm) {
    });
    _elm.Froggy.Util.values = {_op: _op
                              ,remove: remove
-                             ,getOrElse: getOrElse};
+                             ,getOrElse: getOrElse
+                             ,distance: distance};
    return _elm.Froggy.Util.values;
 };
