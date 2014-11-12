@@ -116,4 +116,4 @@ Shift + arrow key: leap over an adjacent leaf
 
 Press """ ++ continueKey ++ """ to start the game!"""
 
-continueKey = "Enter"
+continueKey = "Enter or tap"

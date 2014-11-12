@@ -1,6 +1,7 @@
 module Froggy.Commands where
 
 import Keyboard
+import Mouse
 import Graphics.Input (..)
 import Froggy.Grid as Grid
 import Froggy.Model (..)
@@ -14,8 +15,9 @@ data Command =
 commands : Signal Command
 commands =
   let moveBy = lift2 makeMoveBy Keyboard.shift Keyboard.arrows
-      continue = lift makeContinue Keyboard.enter
-  in merges [moveBy, continue, moveTo.signal]
+      continueWithKeyboard = lift makeContinue Keyboard.enter
+      continueWithMouse = lift makeContinue Mouse.isDown
+  in merges [moveBy, continueWithKeyboard, continueWithMouse, moveTo.signal]
 
 makeMoveBy : Bool -> Grid.Position -> Command
 makeMoveBy shift arrows =
