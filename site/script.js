@@ -1,7 +1,9 @@
+var fontName = "Bubblegum Sans";
+
 function loadFonts() {
   WebFont.load({
     google: {
-      families: ["Bubblegum Sans"]
+      families: [fontName]
     }
   });
 }
@@ -41,7 +43,10 @@ function initializeElm() {
 
   var storedState = localStorage.getItem(storageKey);
   var startingState = storedState ? JSON.parse(storedState) : null;
-  var component = Elm.fullscreen(module, { load: startingState });
+  var component = Elm.fullscreen(module, {
+    load: startingState,
+    fontName: fontName
+  });
   component.ports.save.subscribe(function(state) {
     localStorage.setItem(storageKey, JSON.stringify(state));
   });
