@@ -56,11 +56,8 @@ viewTargets frog tileSize leaves =
   let targets = leaves |> filter (reachableBy frog)
       toClickable target = clickable moveTo.handle (MoveTo target)
       distanceOf target = (distance target.position.x frog.leaf.position.x) + (distance target.position.y frog.leaf.position.y)
-      angle target =
-        case frog `angleTo` target of
-          Just angle -> angle
-          Nothing -> 0
-      filename target = "arrows/" ++ (distanceOf target |> show) ++ "/" ++ (angle target |> show) ++ ".png"
+      angleOf target = frog `angleTo` target |> getOrElse 0
+      filename target = "arrows/" ++ (distanceOf target |> show) ++ "/" ++ (angleOf target |> show) ++ ".png"
       viewTarget target = customSprite (toClickable target) target.position tileSize (filename target)
   in targets |> map viewTarget
 
