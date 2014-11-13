@@ -94,6 +94,9 @@ nextLevel game = loadLevel (game.levelNumber + 1)
 restartLevel : Game -> Game
 restartLevel game = loadLevel game.levelNumber
 
+initialGame : Maybe Game -> Game
+initialGame loadedGame = loadedGame |> getOrElse newGame
+
 newGame : Game
 newGame =
   let level0 = loadLevel 0

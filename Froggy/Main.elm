@@ -10,14 +10,11 @@ import Froggy.View (..)
 main = lift2 (view fontName) Window.dimensions game
 
 game : Signal Game
-game = foldp update initialGame commands
+game = foldp update (initialGame loadedGame) commands
 
-initialGame : Game
-initialGame = load |> getOrElse newGame
+port loadedGame : Maybe Game
 
-port load : Maybe Game
-
-port save : Signal Game
-port save = game
+port savedGame : Signal Game
+port savedGame = game
 
 port fontName : String

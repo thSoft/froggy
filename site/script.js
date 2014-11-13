@@ -41,13 +41,13 @@ function initializeElm() {
   var module = Elm.Froggy.Main;
   var storageKey = 'froggy';
 
-  var storedState = localStorage.getItem(storageKey);
-  var startingState = storedState ? JSON.parse(storedState) : null;
+  var loadedJson = localStorage.getItem(storageKey);
+  var loadedState = loadedJson ? JSON.parse(loadedJson) : null;
   var component = Elm.fullscreen(module, {
-    load: startingState,
+    loadedGame: loadedState,
     fontName: fontName
   });
-  component.ports.save.subscribe(function(state) {
+  component.ports.savedGame.subscribe(function(state) {
     localStorage.setItem(storageKey, JSON.stringify(state));
   });
 }
