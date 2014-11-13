@@ -10405,7 +10405,8 @@ Elm.Froggy.View.make = function (_elm) {
                                         ,height: $Maybe.Just(height)
                                         ,italic: false
                                         ,line: $Maybe.Nothing
-                                        ,typeface: _L.fromArray(["Comic Sans MS"])})($Text.toText(string)));
+                                        ,typeface: _L.fromArray(["Bubblegum Sans"
+                                                                ,"cursive"])})($Text.toText(string)));
    });
    var viewMessage = F2(function (viewSize,
    game) {
