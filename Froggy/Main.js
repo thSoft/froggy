@@ -10548,7 +10548,7 @@ Elm.Froggy.View.make = function (_elm) {
          var background = A3(sprite,
          levelPosition,
          tileSize,
-         "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-th.png");
+         "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-md.png");
          var levelNumber = $Graphics$Collage.rotate($Basics.degrees(-1))(A3(textSprite,
          levelPosition,
          tileSize,
