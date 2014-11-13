@@ -78,7 +78,7 @@ textSprite position tileSize string =
 
 gameText : Float -> String -> Element
 gameText height string = toText string |> Text.style {
-    typeface = ["Comic Sans MS"],
+    typeface = ["Bubblegum Sans", "cursive"],
     height = Just height,
     color = red,
     bold = True,

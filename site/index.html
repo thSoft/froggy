@@ -4,8 +4,16 @@
 <meta charset="UTF-8">
 <title>Froggy</title>
 <script type="text/javascript" src="Froggy/Main.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js"></script>
 </head>
 <body>
+<script type="text/javascript">
+  WebFont.load({
+    google: {
+      families: ["Bubblegum Sans"]
+    }
+  });
+</script>
 <script type="text/javascript">
 var module = Elm.Froggy.Main;
 var storageKey = 'froggy';
@@ -21,8 +29,8 @@ component.ports.save.subscribe(function(state) {
 function touchHandler(event) {
   var touches = event.changedTouches;
   var first = touches[0];
-  var type = "";
-  switch(event.type) {
+  var type;
+  switch (event.type) {
     case "touchstart":
       type = "mousedown";
       break;
@@ -35,7 +43,6 @@ function touchHandler(event) {
     default:
       return;
   }
-
   var simulatedEvent = document.createEvent("MouseEvent");
   simulatedEvent.initMouseEvent(type, true, true, window, 1, first.screenX, first.screenY, first.clientX, first.clientY, false, false, false, false, 0, null);
   first.target.dispatchEvent(simulatedEvent);
