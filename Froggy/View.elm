@@ -67,7 +67,7 @@ viewTargets frog tileSize leaves =
 viewLevel : Float -> Game -> [Form]
 viewLevel tileSize game =
   let levelPosition = (getLevel game.levelNumber) |> .levelPosition
-      background = sprite levelPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-th.png"
+      background = sprite levelPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-md.png"
       levelNumber = textSprite levelPosition tileSize ("Level " ++ show game.levelNumber ++ " \n ") |> rotate (-1 |> degrees)
   in [background, levelNumber]
 
