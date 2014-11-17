@@ -110,7 +110,7 @@ viewMessage : String -> Int -> Game -> [Element]
 viewMessage fontName viewSize game =
   let backgroundSize = ((viewSize |> toFloat) / 1.7) |> round
       background = image backgroundSize backgroundSize "http://www.i2clipart.com/cliparts/9/2/6/b/clipart-bubble-256x256-926b.png"
-      textSize = (viewSize |> toFloat) / 40
+      textSize = (viewSize |> toFloat) / 42
       lastLevel = game.scene.levelNumber == numberOfLevels - 1
       completedMessage = if lastLevel then gameCompletedMessage else levelCompletedMessage
   in if | game |> levelCompleted -> [background, gameText fontName textSize completedMessage]
