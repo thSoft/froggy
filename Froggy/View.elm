@@ -87,7 +87,7 @@ viewLevel fontName tileSize game =
   let levelPosition = (getLevel game.levelNumber) |> .levelPosition
       worldPosition = levelPosition |> toWorld tileSize
       background = sprite worldPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-md.png"
-      levelNumber = textSprite fontName levelPosition tileSize ("Level " ++ show game.levelNumber ++ " \n ") |> rotate (-1 |> degrees)
+      levelNumber = textSprite fontName levelPosition tileSize ("Level\n" ++ show game.levelNumber ++ "/" ++ show numberOfLevels ++ "\n\n") |> rotate (-1 |> degrees)
   in [background, levelNumber]
 
 textSprite : String -> Grid.Position -> Float -> String -> Form
