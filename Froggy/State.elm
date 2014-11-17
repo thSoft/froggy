@@ -9,7 +9,7 @@ import Froggy.Model (..)
 import Froggy.Commands (..)
 
 game : Maybe Game -> Signal Game
-game loadedGame = foldp update (initialGame loadedGame) commandsWithTime
+game loadedGame = foldp update (initialGame loadedGame) commands
 
 update : (Time, Command) -> Game -> Game
 update (time, command) game =

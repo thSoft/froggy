@@ -12,14 +12,11 @@ data Command =
   MoveTo Leaf |
   Continue
 
-commandsWithTime : Signal (Time, Command)
-commandsWithTime = commands |> timestamp
-
-commands : Signal Command
+commands : Signal (Time, Command)
 commands =
   let moveBy = lift2 makeMoveBy Keyboard.shift Keyboard.arrows
       continue = lift makeContinue (merge Keyboard.enter Mouse.isDown)
-  in merges [moveBy, moveTo.signal, continue]
+  in merges [moveBy, moveTo.signal, continue] |> timestamp
 
 makeMoveBy : Bool -> Grid.Position -> Command
 makeMoveBy shift arrows =
