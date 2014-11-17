@@ -2,11 +2,9 @@ module Froggy.Commands where
 
 import Keyboard
 import Mouse
-import Time (..)
 import Graphics.Input (..)
 import Froggy.Grid as Grid
 import Froggy.Model (..)
-import Froggy.TransitionUtil (..)
 
 data Command =
   Nop |

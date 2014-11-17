@@ -1,8 +1,6 @@
 module Froggy.State where
 
 import Array
-import Maybe
-import Time (..)
 import Froggy.Util (..)
 import Froggy.Grid as Grid
 import Froggy.Grid (..)

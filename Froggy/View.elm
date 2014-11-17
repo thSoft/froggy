@@ -1,7 +1,5 @@
 module Froggy.View where
 
-import Maybe
-import Time (..)
 import Text
 import Graphics.Input (..)
 import Easing (..)
@@ -10,7 +8,6 @@ import Froggy.Grid as Grid
 import Froggy.Levels (..)
 import Froggy.Model (..)
 import Froggy.Commands (..)
-import Froggy.TransitionUtil (..)
 
 view : String -> (Int, Int) -> Time -> Game -> Element
 view fontName (windowWidth, windowHeight) time game =
