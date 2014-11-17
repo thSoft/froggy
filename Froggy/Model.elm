@@ -7,10 +7,15 @@ import Froggy.Grid as Grid
 import Froggy.Levels (..)
 
 type Game = {
+  scene: Scene,
+  instructions: Bool,
+  lastSceneChange: TransitionInfo (Maybe Scene)
+}
+
+type Scene = {
   frog: Frog,
   leaves: [Leaf],
-  levelNumber: Int,
-  instructions: Bool
+  levelNumber: Int
 }
 
 type Frog = {
@@ -24,10 +29,10 @@ type Leaf = {
 }
 
 levelCompleted : Game -> Bool
-levelCompleted game = (game.leaves |> length) == 1
+levelCompleted game = (game.scene.leaves |> length) == 1
 
 stuck : Game -> Bool
-stuck game = not (game.leaves |> any (reachableBy game.frog))
+stuck game = not (game.scene.leaves |> any (reachableBy game.scene.frog))
 
 reachableBy : Frog -> Leaf -> Bool
 reachableBy frog leaf = (frog `angleTo` leaf) |> isJust

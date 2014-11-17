@@ -17,14 +17,14 @@ update (time, command) game =
     Nop -> game
     MoveBy positionDelta -> game |> moveBy positionDelta time
     MoveTo leaf -> game |> moveTo leaf time
-    Continue -> game |> continue
+    Continue -> game |> continue time
 
 moveBy : Grid.Position -> Time -> Game -> Game
 moveBy positionDelta time game =
   if (positionDelta.x == 0) && (positionDelta.y == 0) then game
   else
-    let leafPosition = game.frog.leaf.position `translate` positionDelta
-        maybeLeaf = game.leaves |> findLeaf leafPosition
+    let leafPosition = game.scene.frog.leaf.position `translate` positionDelta
+        maybeLeaf = game.scene.leaves |> findLeaf leafPosition
     in case maybeLeaf of
       Nothing -> game
       Just leaf -> game |> moveTo leaf time
@@ -37,39 +37,48 @@ findLeaf position leaves =
 moveTo : Leaf -> Time -> Game -> Game
 moveTo leaf time game =
   if playing game then
-    let maybeDirection = game.frog `angleTo` leaf
+    let maybeDirection = game.scene.frog `angleTo` leaf
+        scene = game.scene
     in case maybeDirection of
       Nothing -> game
       Just angle ->
         { game |
-          frog <- {
-            leaf = leaf,
-            angle = angle,
-            lastMove = Just {
-              oldValue = game.frog.leaf,
-              startTime = time
-            }
-          },
-          leaves <- remove game.leaves game.frog.leaf
+          scene <- { scene |
+            frog <- {
+              leaf = leaf,
+              angle = angle,
+              lastMove = Just {
+                oldValue = game.scene.frog.leaf,
+                startTime = time
+              }
+            },
+            leaves <- remove game.scene.leaves game.scene.frog.leaf
+          }
         }
   else game
 
-loadLevel : Int -> Game
-loadLevel levelNumber =
+loadLevel : Time -> Int -> Game
+loadLevel time levelNumber =
   let actualLevelNumber = if (levelNumber >= numberOfLevels) || (levelNumber < 0) then 0 else levelNumber
       level = getLevel actualLevelNumber
       leaves = loadLeafMatrix level.leafMatrix
       maybeLeaf = leaves |> findLeaf level.frogPosition
       leaf = maybeLeaf |> getOrElse (leaves |> head)
   in {
-    frog = {
-      leaf = leaf,
-      angle = 0,
-      lastMove = Nothing
+    scene = {
+      frog = {
+        leaf = leaf,
+        angle = 0,
+        lastMove = Nothing
+      },
+      leaves = leaves,
+      levelNumber = actualLevelNumber
     },
-    levelNumber = actualLevelNumber,
-    leaves = leaves,
-    instructions = False
+    instructions = False,
+    lastSceneChange = {
+      oldValue = Nothing,
+      startTime = time
+    }
   }
 
 loadLeafMatrix : LeafMatrix -> [Leaf]
@@ -88,29 +97,23 @@ loadLeafRow y row =
       removeValue leaf = { leaf - value }
   in row |> indexedMap make |> filter isThere |> map removeValue
 
-continue : Game -> Game
-continue game =
-  if | game |> levelCompleted -> game |> nextLevel
-     | game |> stuck -> game |> restartLevel
+continue : Time -> Game -> Game
+continue time game =
+  if | game |> levelCompleted -> game |> nextLevel time
+     | game |> stuck -> game |> restartLevel time
      | game.instructions -> { game | instructions <- False }
      | otherwise -> game
 
-nextLevel : Game -> Game
-nextLevel game = loadLevel (game.levelNumber + 1)
+nextLevel : Time -> Game -> Game
+nextLevel time game = loadLevel time (game.scene.levelNumber + 1)
 
-restartLevel : Game -> Game
-restartLevel game = loadLevel game.levelNumber
+restartLevel : Time -> Game -> Game
+restartLevel time game = loadLevel time game.scene.levelNumber
 
 initialGame : Maybe Game -> Game
-initialGame loadedGame = loadedGame |> getOrElse newGame
+initialGame loadedGame = loadedGame |> getOrElse (newGame 0)
 
-newGame : Game
-newGame =
-  let level0 = loadLevel 0
+newGame : Time -> Game
+newGame time =
+  let level0 = loadLevel time 0
   in { level0 | instructions <- True }
-
-removeTransition : Game -> Game
-removeTransition game =
-  let oldFrog = game.frog
-      newFrog = { oldFrog | lastMove <- Nothing }
-  in { game | frog <- newFrog }

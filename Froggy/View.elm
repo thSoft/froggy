@@ -13,17 +13,17 @@ view : String -> (Int, Int) -> Time -> Game -> Element
 view fontName (windowWidth, windowHeight) time game =
   let background = fittedImage windowWidth windowHeight "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg"
       viewSize = min windowWidth windowHeight
-      foreground = game |> viewForeground fontName viewSize time |> container windowWidth windowHeight middle
+      scene = game |> viewScene fontName viewSize time |> container windowWidth windowHeight middle
       message = game |> viewMessage fontName viewSize |> map (container windowWidth windowHeight middle)
-  in layers ([background, foreground] ++ message)
+  in layers ([background, scene] ++ message)
 
-viewForeground : String -> Int -> Time -> Game -> Element
-viewForeground fontName viewSize time game = 
+viewScene : String -> Int -> Time -> Game -> Element
+viewScene fontName viewSize time game = 
   let tileSize = (viewSize |> toFloat) / mapSize
-      frog = game.frog |> viewFrog tileSize time
-      leaves = game.leaves |> map (viewLeaf tileSize)
-      targets = game.leaves |> viewTargets game.frog tileSize
-      level = game |> viewLevel fontName tileSize
+      frog = game.scene.frog |> viewFrog tileSize time
+      leaves = game.scene.leaves |> map (viewLeaf tileSize)
+      targets = game.scene.leaves |> viewTargets game.scene.frog tileSize
+      level = game |> viewLevelNumber fontName tileSize
   in (leaves ++ targets ++ frog ++ level) |> collage viewSize viewSize
 
 mapSize = 8
@@ -48,7 +48,7 @@ viewFrog tileSize time frog =
   in lastLeaf ++ [frogSprite]
 
 movingFromDuration : Time
-movingFromDuration = (250 * millisecond)
+movingFromDuration = 250 * millisecond
 
 sprite : (Float, Float) -> Float -> String -> Form
 sprite = customSprite identity
@@ -82,12 +82,12 @@ viewTargets frog tileSize leaves =
       viewTarget target = customSprite (toClickable target) (worldPosition target) tileSize (filename target)
   in targets |> map viewTarget
 
-viewLevel : String -> Float -> Game -> [Form]
-viewLevel fontName tileSize game =
-  let levelPosition = (getLevel game.levelNumber) |> .levelPosition
+viewLevelNumber : String -> Float -> Game -> [Form]
+viewLevelNumber fontName tileSize game =
+  let levelPosition = (getLevel game.scene.levelNumber) |> .levelPosition
       worldPosition = levelPosition |> toWorld tileSize
       background = sprite worldPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-md.png"
-      levelNumber = textSprite fontName levelPosition tileSize ("Level\n" ++ show game.levelNumber ++ "/" ++ show numberOfLevels ++ "\n\n") |> rotate (-1 |> degrees)
+      levelNumber = textSprite fontName levelPosition tileSize ("Level\n" ++ show game.scene.levelNumber ++ "/" ++ show numberOfLevels ++ "\n\n") |> rotate (-1 |> degrees)
   in [background, levelNumber]
 
 textSprite : String -> Grid.Position -> Float -> String -> Form
@@ -111,7 +111,7 @@ viewMessage fontName viewSize game =
   let backgroundSize = ((viewSize |> toFloat) / 1.7) |> round
       background = image backgroundSize backgroundSize "http://www.i2clipart.com/cliparts/9/2/6/b/clipart-bubble-256x256-926b.png"
       textSize = (viewSize |> toFloat) / 40
-      lastLevel = game.levelNumber == numberOfLevels - 1
+      lastLevel = game.scene.levelNumber == numberOfLevels - 1
       completedMessage = if lastLevel then gameCompletedMessage else levelCompletedMessage
   in if | game |> levelCompleted -> [background, gameText fontName textSize completedMessage]
         | game |> stuck -> [background, gameText fontName textSize stuckMessage]
