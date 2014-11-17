@@ -1,4 +1,4 @@
-var fontName = "Bubblegum Sans";
+var fontName = "Indie Flower";
 
 function loadFonts() {
   WebFont.load({
@@ -43,10 +43,19 @@ function initializeElm() {
 
   var loadedJson = localStorage.getItem(storageKey);
   var loadedState = loadedJson ? JSON.parse(loadedJson) : null;
-  var component = Elm.fullscreen(module, {
-    loadedGame: loadedState,
-    fontName: fontName
-  });
+  var component;
+  try {
+    component = Elm.fullscreen(module, {
+      loadedGame: loadedState,
+      fontName: fontName
+    });
+  } catch (e) {
+    console.log("Error while initializing component. This might mean that the game state can't be loaded because the internal model changed. Trying to restart the game." + e);
+    component = Elm.fullscreen(module, {
+      loadedGame: null,
+      fontName: fontName
+    });
+  }
   component.ports.savedGame.subscribe(function(state) {
     localStorage.setItem(storageKey, JSON.stringify(state));
   });
