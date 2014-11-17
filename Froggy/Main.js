@@ -10301,26 +10301,34 @@ Elm.Froggy.Main.make = function (_elm) {
    _A = _N.Array.make(_elm),
    _E = _N.Error.make(_elm),
    $moduleName = "Froggy.Main",
-   $Basics = Elm.Basics.make(_elm),
-   $Froggy$Commands = Elm.Froggy.Commands.make(_elm),
    $Froggy$Model = Elm.Froggy.Model.make(_elm),
-   $Froggy$Update = Elm.Froggy.Update.make(_elm),
-   $Froggy$Util = Elm.Froggy.Util.make(_elm),
+   $Froggy$State = Elm.Froggy.State.make(_elm),
+   $Froggy$TransitionUtil = Elm.Froggy.TransitionUtil.make(_elm),
    $Froggy$View = Elm.Froggy.View.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Native$Json = Elm.Native.Json.make(_elm),
    $Native$Ports = Elm.Native.Ports.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Window = Elm.Window.make(_elm);
-   var load = $Native$Ports.portIn("load",
+   var fontName = $Native$Ports.portIn("fontName",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _E.raise("invalid input, expecting JSString but got " + v);
+   });
+   var loadedGame = $Native$Ports.portIn("loadedGame",
    function (v) {
       return v === null ? $Maybe.Nothing : $Maybe.Just(typeof v === "object" && "frog" in v && "leaves" in v && "levelNumber" in v && "instructions" in v ? {_: {}
-                                                                                                                                                            ,frog: typeof v.frog === "object" && "leaf" in v.frog && "angle" in v.frog ? {_: {}
-                                                                                                                                                                                                                                         ,leaf: typeof v.frog.leaf === "object" && "position" in v.frog.leaf ? {_: {}
-                                                                                                                                                                                                                                                                                                               ,position: typeof v.frog.leaf.position === "object" && "x" in v.frog.leaf.position && "y" in v.frog.leaf.position ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                   ,x: typeof v.frog.leaf.position.x === "number" ? v.frog.leaf.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.frog.leaf.position.x)
-                                                                                                                                                                                                                                                                                                                                                                                                                                   ,y: typeof v.frog.leaf.position.y === "number" ? v.frog.leaf.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.frog.leaf.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.frog.leaf.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.frog.leaf)
-                                                                                                                                                                                                                                         ,angle: typeof v.frog.angle === "number" ? v.frog.angle : _E.raise("invalid input, expecting JSNumber but got " + v.frog.angle)} : _E.raise("invalid input, expecting JSObject [\"leaf\",\"angle\"] but got " + v.frog)
+                                                                                                                                                            ,frog: typeof v.frog === "object" && "leaf" in v.frog && "angle" in v.frog && "lastMove" in v.frog ? {_: {}
+                                                                                                                                                                                                                                                                 ,leaf: typeof v.frog.leaf === "object" && "position" in v.frog.leaf ? {_: {}
+                                                                                                                                                                                                                                                                                                                                       ,position: typeof v.frog.leaf.position === "object" && "x" in v.frog.leaf.position && "y" in v.frog.leaf.position ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,x: typeof v.frog.leaf.position.x === "number" ? v.frog.leaf.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.frog.leaf.position.x)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,y: typeof v.frog.leaf.position.y === "number" ? v.frog.leaf.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.frog.leaf.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.frog.leaf.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.frog.leaf)
+                                                                                                                                                                                                                                                                 ,angle: typeof v.frog.angle === "number" ? v.frog.angle : _E.raise("invalid input, expecting JSNumber but got " + v.frog.angle)
+                                                                                                                                                                                                                                                                 ,lastMove: v.frog.lastMove === null ? $Maybe.Nothing : $Maybe.Just(typeof v.frog.lastMove === "object" && "oldValue" in v.frog.lastMove && "startTime" in v.frog.lastMove ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                             ,oldValue: typeof v.frog.lastMove.oldValue === "object" && "position" in v.frog.lastMove.oldValue ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,position: typeof v.frog.lastMove.oldValue.position === "object" && "x" in v.frog.lastMove.oldValue.position && "y" in v.frog.lastMove.oldValue.position ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,x: typeof v.frog.lastMove.oldValue.position.x === "number" ? v.frog.lastMove.oldValue.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.frog.lastMove.oldValue.position.x)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,y: typeof v.frog.lastMove.oldValue.position.y === "number" ? v.frog.lastMove.oldValue.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.frog.lastMove.oldValue.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.frog.lastMove.oldValue.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.frog.lastMove.oldValue)
+                                                                                                                                                                                                                                                                                                                                                                                                                                             ,startTime: typeof v.frog.lastMove.startTime === "number" ? v.frog.lastMove.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.frog.lastMove.startTime)} : _E.raise("invalid input, expecting JSObject [\"oldValue\",\"startTime\"] but got " + v.frog.lastMove))} : _E.raise("invalid input, expecting JSObject [\"leaf\",\"angle\",\"lastMove\"] but got " + v.frog)
                                                                                                                                                             ,leaves: _U.isJSArray(v.leaves) ? _L.fromArray(v.leaves.map(function (v) {
                                                                                                                                                                return typeof v === "object" && "position" in v ? {_: {}
                                                                                                                                                                                                                  ,position: typeof v.position === "object" && "x" in v.position && "y" in v.position ? {_: {}
@@ -10330,16 +10338,15 @@ Elm.Froggy.Main.make = function (_elm) {
                                                                                                                                                             ,levelNumber: typeof v.levelNumber === "number" ? v.levelNumber : _E.raise("invalid input, expecting JSNumber but got " + v.levelNumber)
                                                                                                                                                             ,instructions: typeof v.instructions === "boolean" ? v.instructions : _E.raise("invalid input, expecting JSBoolean but got " + v.instructions)} : _E.raise("invalid input, expecting JSObject [\"frog\",\"leaves\",\"levelNumber\",\"instructions\"] but got " + v));
    });
-   var initialGame = $Froggy$Util.getOrElse($Froggy$Update.newGame)(load);
-   var game = A3($Signal.foldp,
-   $Froggy$Update.update,
-   initialGame,
-   $Froggy$Commands.commands);
-   var save = $Native$Ports.portOut("save",
+   var mainState = $Froggy$State.game(loadedGame);
+   var savedGame = $Native$Ports.portOut("savedGame",
    $Native$Ports.outgoingSignal(function (v) {
       return {frog: {leaf: {position: {x: v.frog.leaf.position.x
                                       ,y: v.frog.leaf.position.y}}
-                    ,angle: v.frog.angle}
+                    ,angle: v.frog.angle
+                    ,lastMove: v.frog.lastMove.ctor === "Nothing" ? null : {oldValue: {position: {x: v.frog.lastMove._0.oldValue.position.x
+                                                                                                 ,y: v.frog.lastMove._0.oldValue.position.y}}
+                                                                           ,startTime: v.frog.lastMove._0.startTime}}
              ,leaves: _L.toArray(v.leaves).map(function (v) {
                 return {position: {x: v.position.x
                                   ,y: v.position.y}};
@@ -10347,15 +10354,15 @@ Elm.Froggy.Main.make = function (_elm) {
              ,levelNumber: v.levelNumber
              ,instructions: v.instructions};
    }),
-   game);
-   var main = A3($Signal.lift2,
-   $Froggy$View.view,
+   mainState);
+   var main = A4($Signal.lift3,
+   $Froggy$View.view(fontName),
    $Window.dimensions,
-   game);
+   $Froggy$TransitionUtil.time,
+   mainState);
    _elm.Froggy.Main.values = {_op: _op
                              ,main: main
-                             ,game: game
-                             ,initialGame: initialGame};
+                             ,mainState: mainState};
    return _elm.Froggy.Main.values;
 };Elm.Froggy = Elm.Froggy || {};
 Elm.Froggy.View = Elm.Froggy.View || {};
@@ -10374,6 +10381,7 @@ Elm.Froggy.View.make = function (_elm) {
    $moduleName = "Froggy.View",
    $Basics = Elm.Basics.make(_elm),
    $Color = Elm.Color.make(_elm),
+   $Easing = Elm.Easing.make(_elm),
    $Froggy$Commands = Elm.Froggy.Commands.make(_elm),
    $Froggy$Grid = Elm.Froggy.Grid.make(_elm),
    $Froggy$Levels = Elm.Froggy.Levels.make(_elm),
@@ -10385,7 +10393,8 @@ Elm.Froggy.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $String = Elm.String.make(_elm),
-   $Text = Elm.Text.make(_elm);
+   $Text = Elm.Text.make(_elm),
+   $Time = Elm.Time.make(_elm);
    var continueInstruction = "Press Enter or tap";
    var instructionsMessage = _L.append("Welcome to Froggy!\n\nYour goal is to traverse all leaves.\n\nArrow key: jump to an adjacent leaf\nShift + arrow key: leap over an adjacent leaf\n\n",
    _L.append(continueInstruction,
@@ -10397,7 +10406,8 @@ Elm.Froggy.View.make = function (_elm) {
    _L.append(continueInstruction,
    " to continue to the next level!"));
    var gameCompletedMessage = "Congratulations!\nYou have completed the game!";
-   var gameText = F2(function (height,
+   var gameText = F3(function (fontName,
+   height,
    string) {
       return $Text.centered($Text.style({_: {}
                                         ,bold: true
@@ -10405,10 +10415,10 @@ Elm.Froggy.View.make = function (_elm) {
                                         ,height: $Maybe.Just(height)
                                         ,italic: false
                                         ,line: $Maybe.Nothing
-                                        ,typeface: _L.fromArray(["Bubblegum Sans"
-                                                                ,"cursive"])})($Text.toText(string)));
+                                        ,typeface: _L.fromArray([fontName])})($Text.toText(string)));
    });
-   var viewMessage = F2(function (viewSize,
+   var viewMessage = F3(function (fontName,
+   viewSize,
    game) {
       return function () {
          var lastLevel = _U.eq(game.levelNumber,
@@ -10421,17 +10431,38 @@ Elm.Froggy.View.make = function (_elm) {
          backgroundSize,
          "http://www.i2clipart.com/cliparts/9/2/6/b/clipart-bubble-256x256-926b.png");
          return $Froggy$Model.levelCompleted(game) ? _L.fromArray([background
-                                                                  ,A2(gameText,
+                                                                  ,A3(gameText,
+                                                                  fontName,
                                                                   textSize,
                                                                   completedMessage)]) : $Froggy$Model.stuck(game) ? _L.fromArray([background
-                                                                                                                                 ,A2(gameText,
+                                                                                                                                 ,A3(gameText,
+                                                                                                                                 fontName,
                                                                                                                                  textSize,
                                                                                                                                  stuckMessage)]) : game.instructions ? _L.fromArray([background
-                                                                                                                                                                                    ,A2(gameText,
+                                                                                                                                                                                    ,A3(gameText,
+                                                                                                                                                                                    fontName,
                                                                                                                                                                                     textSize,
                                                                                                                                                                                     instructionsMessage)]) : _L.fromArray([]);
       }();
    });
+   var makeForm = F2(function (worldPosition,
+   element) {
+      return $Graphics$Collage.move(worldPosition)($Graphics$Collage.toForm(element));
+   });
+   var customSprite = F4(function (transform,
+   worldPosition,
+   tileSize,
+   url) {
+      return function () {
+         var element = A3($Graphics$Element.image,
+         $Basics.round(tileSize),
+         $Basics.round(tileSize),
+         url);
+         return makeForm(worldPosition)(transform(element));
+      }();
+   });
+   var sprite = customSprite($Basics.identity);
+   var movingFromDuration = 250 * $Time.millisecond;
    var mapSize = 8;
    var toWorld = F2(function (tileSize,
    position) {
@@ -10444,58 +10475,95 @@ Elm.Froggy.View.make = function (_elm) {
                 ,_1: 0 - transform(position.y)};
       }();
    });
-   var makeForm = F3(function (position,
-   tileSize,
-   element) {
-      return function () {
-         var worldPosition = toWorld(tileSize)(position);
-         return $Graphics$Collage.move(worldPosition)($Graphics$Collage.toForm(element));
-      }();
-   });
-   var customSprite = F4(function (transform,
-   position,
-   tileSize,
-   url) {
-      return function () {
-         var element = A3($Graphics$Element.image,
-         $Basics.round(tileSize),
-         $Basics.round(tileSize),
-         url);
-         return A2(makeForm,
-         position,
-         tileSize)(transform(element));
-      }();
-   });
-   var sprite = customSprite($Basics.identity);
-   var viewFrog = F2(function (tileSize,
-   frog) {
-      return $Graphics$Collage.rotate($Basics.degrees(frog.angle))(A3(sprite,
-      frog.leaf.position,
-      tileSize,
-      "https://az31353.vo.msecnd.net/pub/enuofhjd"));
-   });
    var viewLeaf = F2(function (tileSize,
    leaf) {
-      return A3(sprite,
-      leaf.position,
-      tileSize,
-      "https://az31353.vo.msecnd.net/pub/ebfvplpg");
+      return function () {
+         var worldPosition = toWorld(tileSize)(leaf.position);
+         return A3(sprite,
+         worldPosition,
+         tileSize,
+         "https://az31353.vo.msecnd.net/pub/ebfvplpg");
+      }();
+   });
+   var viewFrog = F3(function (tileSize,
+   time,
+   frog) {
+      return function () {
+         var size = function () {
+            var _v0 = frog.lastMove;
+            switch (_v0.ctor)
+            {case "Just":
+               return A6($Easing.ease,
+                 $Easing.retour($Easing.easeInQuad),
+                 $Easing.$float,
+                 1,
+                 1.2,
+                 movingFromDuration,
+                 time - _v0._0.startTime);
+               case "Nothing": return 1;}
+            _E.Case($moduleName,
+            "between lines 47 and 50");
+         }();
+         var lastLeaf = function () {
+            var _v2 = frog.lastMove;
+            switch (_v2.ctor)
+            {case "Just":
+               return function () {
+                    var alphaValue = A6($Easing.ease,
+                    $Easing.easeInCubic,
+                    $Easing.$float,
+                    1,
+                    0,
+                    movingFromDuration,
+                    time - _v2._0.startTime);
+                    return _L.fromArray([$Graphics$Collage.alpha(alphaValue)(A2(viewLeaf,
+                    tileSize,
+                    _v2._0.oldValue))]);
+                 }();
+               case "Nothing":
+               return _L.fromArray([]);}
+            _E.Case($moduleName,
+            "between lines 42 and 47");
+         }();
+         var newWorldPosition = toWorld(tileSize)(frog.leaf.position);
+         var worldPosition = function () {
+            var _v4 = frog.lastMove;
+            switch (_v4.ctor)
+            {case "Just":
+               return function () {
+                    var oldWorldPosition = toWorld(tileSize)(_v4._0.oldValue.position);
+                    return A6($Easing.ease,
+                    $Easing.easeInOutQuint,
+                    $Easing.pair($Easing.$float),
+                    oldWorldPosition,
+                    newWorldPosition,
+                    movingFromDuration,
+                    time - _v4._0.startTime);
+                 }();
+               case "Nothing":
+               return newWorldPosition;}
+            _E.Case($moduleName,
+            "between lines 37 and 42");
+         }();
+         var frogSprite = $Graphics$Collage.scale(size)($Graphics$Collage.rotate($Basics.degrees(frog.angle))(A3(sprite,
+         worldPosition,
+         tileSize,
+         "https://az31353.vo.msecnd.net/pub/enuofhjd")));
+         return _L.append(lastLeaf,
+         _L.fromArray([frogSprite]));
+      }();
    });
    var viewTargets = F3(function (frog,
    tileSize,
    leaves) {
       return function () {
-         var angle = function (target) {
-            return function () {
-               var _v0 = A2($Froggy$Model.angleTo,
-               frog,
-               target);
-               switch (_v0.ctor)
-               {case "Just": return _v0._0;
-                  case "Nothing": return 0;}
-               _E.Case($moduleName,
-               "between lines 60 and 63");
-            }();
+         var worldPosition = function (target) {
+            return toWorld(tileSize)(target.position);
+         };
+         var angleOf = function (target) {
+            return $Froggy$Util.getOrElse(0)(A2($Froggy$Model.angleTo,
+            frog,
+            target));
          };
          var distanceOf = function (target) {
             return A2($Froggy$Util.distance,
@@ -10508,7 +10576,7 @@ Elm.Froggy.View.make = function (_elm) {
             return _L.append("arrows/",
             _L.append($String.show(distanceOf(target)),
             _L.append("/",
-            _L.append($String.show(angle(target)),
+            _L.append($String.show(angleOf(target)),
             ".png"))));
          };
          var toClickable = function (target) {
@@ -10519,7 +10587,7 @@ Elm.Froggy.View.make = function (_elm) {
          var viewTarget = function (target) {
             return A4(customSprite,
             toClickable(target),
-            target.position,
+            worldPosition(target),
             tileSize,
             filename(target));
          };
@@ -10527,29 +10595,33 @@ Elm.Froggy.View.make = function (_elm) {
          return $List.map(viewTarget)(targets);
       }();
    });
-   var textSprite = F3(function (position,
+   var textSprite = F4(function (fontName,
+   position,
    tileSize,
    string) {
       return function () {
+         var worldPosition = toWorld(tileSize)(position);
          var textSize = tileSize / 6;
-         return A2(makeForm,
-         position,
-         tileSize)(A2(gameText,
+         return makeForm(worldPosition)(A3(gameText,
+         fontName,
          textSize,
          string));
       }();
    });
-   var viewLevel = F2(function (tileSize,
+   var viewLevel = F3(function (fontName,
+   tileSize,
    game) {
       return function () {
          var levelPosition = function (_) {
             return _.levelPosition;
          }($Froggy$Levels.getLevel(game.levelNumber));
+         var worldPosition = toWorld(tileSize)(levelPosition);
          var background = A3(sprite,
-         levelPosition,
+         worldPosition,
          tileSize,
          "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-md.png");
-         var levelNumber = $Graphics$Collage.rotate($Basics.degrees(-1))(A3(textSprite,
+         var levelNumber = $Graphics$Collage.rotate($Basics.degrees(-1))(A4(textSprite,
+         fontName,
          levelPosition,
          tileSize,
          _L.append("Level ",
@@ -10559,51 +10631,63 @@ Elm.Froggy.View.make = function (_elm) {
                              ,levelNumber]);
       }();
    });
-   var viewForeground = F2(function (viewSize,
+   var viewForeground = F4(function (fontName,
+   viewSize,
+   time,
    game) {
       return function () {
          var tileSize = $Basics.toFloat(viewSize) / mapSize;
-         var frog = viewFrog(tileSize)(game.frog);
+         var frog = A2(viewFrog,
+         tileSize,
+         time)(game.frog);
          var leaves = $List.map(viewLeaf(tileSize))(game.leaves);
          var targets = A2(viewTargets,
          game.frog,
          tileSize)(game.leaves);
-         var level = viewLevel(tileSize)(game);
+         var level = A2(viewLevel,
+         fontName,
+         tileSize)(game);
          return A2($Graphics$Collage.collage,
          viewSize,
          viewSize)(_L.append(leaves,
          _L.append(targets,
-         _L.append(_L.fromArray([frog]),
-         level))));
+         _L.append(frog,level))));
       }();
    });
-   var view = F2(function (_v2,
+   var view = F4(function (fontName,
+   _v6,
+   time,
    game) {
       return function () {
-         switch (_v2.ctor)
+         switch (_v6.ctor)
          {case "_Tuple2":
             return function () {
                  var viewSize = A2($Basics.min,
-                 _v2._0,
-                 _v2._1);
+                 _v6._0,
+                 _v6._1);
                  var foreground = A3($Graphics$Element.container,
-                 _v2._0,
-                 _v2._1,
-                 $Graphics$Element.middle)(viewForeground(viewSize)(game));
+                 _v6._0,
+                 _v6._1,
+                 $Graphics$Element.middle)(A3(viewForeground,
+                 fontName,
+                 viewSize,
+                 time)(game));
                  var message = $List.map(A3($Graphics$Element.container,
-                 _v2._0,
-                 _v2._1,
-                 $Graphics$Element.middle))(viewMessage(viewSize)(game));
+                 _v6._0,
+                 _v6._1,
+                 $Graphics$Element.middle))(A2(viewMessage,
+                 fontName,
+                 viewSize)(game));
                  var background = A3($Graphics$Element.fittedImage,
-                 _v2._0,
-                 _v2._1,
+                 _v6._0,
+                 _v6._1,
                  "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg");
                  return $Graphics$Element.layers(_L.append(_L.fromArray([background
                                                                         ,foreground]),
                  message));
               }();}
          _E.Case($moduleName,
-         "between lines 13 and 17");
+         "between lines 17 and 21");
       }();
    });
    _elm.Froggy.View.values = {_op: _op
@@ -10611,6 +10695,7 @@ Elm.Froggy.View.make = function (_elm) {
                              ,viewForeground: viewForeground
                              ,mapSize: mapSize
                              ,viewFrog: viewFrog
+                             ,movingFromDuration: movingFromDuration
                              ,sprite: sprite
                              ,customSprite: customSprite
                              ,makeForm: makeForm
@@ -10627,21 +10712,337 @@ Elm.Froggy.View.make = function (_elm) {
                              ,instructionsMessage: instructionsMessage
                              ,continueInstruction: continueInstruction};
    return _elm.Froggy.View.values;
-};Elm.Froggy = Elm.Froggy || {};
-Elm.Froggy.Update = Elm.Froggy.Update || {};
-Elm.Froggy.Update.make = function (_elm) {
+};Elm.Easing = Elm.Easing || {};
+Elm.Easing.make = function (_elm) {
    "use strict";
-   _elm.Froggy = _elm.Froggy || {};
-   _elm.Froggy.Update = _elm.Froggy.Update || {};
-   if (_elm.Froggy.Update.values)
-   return _elm.Froggy.Update.values;
+   _elm.Easing = _elm.Easing || {};
+   if (_elm.Easing.values)
+   return _elm.Easing.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _A = _N.Array.make(_elm),
    _E = _N.Error.make(_elm),
-   $moduleName = "Froggy.Update",
+   $moduleName = "Easing",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var cycle = F3(function (animation,
+   d,
+   t) {
+      return A2(animation,
+      1,
+      t / d - $Basics.toFloat($Basics.floor(t / d)));
+   });
+   var flip = F2(function (easing,
+   time) {
+      return easing(1 - time);
+   });
+   var retour = F2(function (easing,
+   time) {
+      return _U.cmp(time,
+      0.5) < 0 ? easing(time * 2) : A2(flip,
+      easing,
+      (time - 0.5) * 2);
+   });
+   var invert = F2(function (easing,
+   time) {
+      return 1 - easing(1 - time);
+   });
+   var inOut = F3(function (e1,
+   e2,
+   time) {
+      return _U.cmp(time,
+      0.5) < 0 ? e1(time * 2) / 2 : 0.5 + e2((time - 0.5) * 2) / 2;
+   });
+   var easeInElastic = function (time) {
+      return function () {
+         var t$ = time - 1;
+         var p = 0.3;
+         var s = 7.5e-2;
+         return 0 - Math.pow(2,
+         10 * t$) * $Basics.sin((t$ - s) * (2 * $Basics.pi) / p);
+      }();
+   };
+   var easeOutElastic = invert(easeInElastic);
+   var easeInOutElastic = A2(inOut,
+   easeInElastic,
+   easeOutElastic);
+   var easeOutBounce = function (time) {
+      return function () {
+         var t4 = time - 2.65 / 2.75;
+         var t3 = time - 2.25 / 2.75;
+         var t2 = time - 1.5 / 2.75;
+         var a = 7.5625;
+         return _U.cmp(time,
+         1 / 2.75) < 0 ? a * time * time : _U.cmp(time,
+         2 / 2.75) < 0 ? a * t2 * t2 + 0.75 : _U.cmp(time,
+         2.5 / 2.75) < 0 ? a * t3 * t3 + 0.9375 : a * t4 * t4 + 0.984375;
+      }();
+   };
+   var easeInBounce = invert(easeOutBounce);
+   var easeInOutBounce = A2(inOut,
+   easeInBounce,
+   easeOutBounce);
+   var easeInBack = function (time) {
+      return time * time * (2.70158 * time - 1.70158);
+   };
+   var easeOutBack = invert(easeInBack);
+   var easeInOutBack = A2(inOut,
+   easeInBack,
+   easeOutBack);
+   var easeOutCirc = function (time) {
+      return $Basics.sqrt(1 - Math.pow(time - 1,
+      2));
+   };
+   var easeInCirc = invert(easeOutCirc);
+   var easeInOutCirc = A2(inOut,
+   easeInCirc,
+   easeOutCirc);
+   var easeInExpo = function (time) {
+      return Math.pow(2,
+      10 * (time - 1));
+   };
+   var easeOutExpo = invert(easeInExpo);
+   var easeInOutExpo = A2(inOut,
+   easeInExpo,
+   easeOutExpo);
+   var easeOutSine = function (time) {
+      return $Basics.sin(time * ($Basics.pi / 2));
+   };
+   var easeInSine = invert(easeOutSine);
+   var easeInOutSine = A2(inOut,
+   easeInSine,
+   easeOutSine);
+   var easeInQuint = function (time) {
+      return Math.pow(time,5);
+   };
+   var easeOutQuint = invert(easeInQuint);
+   var easeInOutQuint = A2(inOut,
+   easeInQuint,
+   easeOutQuint);
+   var easeInQuart = function (time) {
+      return Math.pow(time,4);
+   };
+   var easeOutQuart = invert(easeInQuart);
+   var easeInOutQuart = A2(inOut,
+   easeInQuart,
+   easeOutQuart);
+   var easeInCubic = function (time) {
+      return Math.pow(time,3);
+   };
+   var easeOutCubic = invert(easeInCubic);
+   var easeInOutCubic = A2(inOut,
+   easeInCubic,
+   easeOutCubic);
+   var easeInQuad = function (time) {
+      return Math.pow(time,2);
+   };
+   var easeOutQuad = invert(easeInQuad);
+   var easeInOutQuad = A2(inOut,
+   easeInQuad,
+   easeOutQuad);
+   var linear = $Basics.identity;
+   var pair = F4(function (interpolate,
+   _v0,
+   _v1,
+   v) {
+      return function () {
+         switch (_v1.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v0.ctor)
+                 {case "_Tuple2":
+                    return {ctor: "_Tuple2"
+                           ,_0: A3(interpolate,
+                           _v0._0,
+                           _v1._0,
+                           v)
+                           ,_1: A3(interpolate,
+                           _v0._1,
+                           _v1._1,
+                           v)};}
+                 _E.Case($moduleName,
+                 "on line 125, column 6 to 46");
+              }();}
+         _E.Case($moduleName,
+         "on line 125, column 6 to 46");
+      }();
+   });
+   var $float = F3(function (from,
+   to,
+   v) {
+      return from + (to - from) * v;
+   });
+   var point2d = F3(function (from,
+   to,
+   v) {
+      return {_: {}
+             ,x: A3($float,from.x,to.x,v)
+             ,y: A3($float,from.y,to.y,v)};
+   });
+   var point3d = F3(function (from,
+   to,
+   v) {
+      return {_: {}
+             ,x: A3($float,from.x,to.x,v)
+             ,y: A3($float,from.y,to.y,v)
+             ,z: A3($float,from.z,to.z,v)};
+   });
+   var color = F3(function (from,
+   to,
+   v) {
+      return function () {
+         var float$ = F3(function (from,
+         to,
+         v) {
+            return $Basics.round(A3($float,
+            $Basics.toFloat(from),
+            $Basics.toFloat(to),
+            v));
+         });
+         var $ = {ctor: "_Tuple2"
+                 ,_0: $Color.toRgb(from)
+                 ,_1: $Color.toRgb(to)},
+         rgb1 = $._0,
+         rgb2 = $._1;
+         var $ = {ctor: "_Tuple4"
+                 ,_0: rgb1.red
+                 ,_1: rgb1.green
+                 ,_2: rgb1.blue
+                 ,_3: rgb1.alpha},
+         r1 = $._0,
+         g1 = $._1,
+         b1 = $._2,
+         a1 = $._3;
+         var $ = {ctor: "_Tuple4"
+                 ,_0: rgb2.red
+                 ,_1: rgb2.green
+                 ,_2: rgb2.blue
+                 ,_3: rgb2.alpha},
+         r2 = $._0,
+         g2 = $._1,
+         b2 = $._2,
+         a2 = $._3;
+         return A4($Color.rgba,
+         A3(float$,r1,r2,v),
+         A3(float$,g1,g2,v),
+         A3(float$,b1,b2,v),
+         A3($float,a1,a2,v));
+      }();
+   });
+   var bezier = F5(function (x1,
+   y1,
+   x2,
+   y2,
+   time) {
+      return function () {
+         var casteljau = function (ps) {
+            return function () {
+               switch (ps.ctor)
+               {case "::": switch (ps._0.ctor)
+                    {case "_Tuple2":
+                       switch (ps._1.ctor)
+                         {case "[]": return ps._0._1;}
+                         break;}
+                    break;}
+               return casteljau(A3($List.zipWith,
+               F2(function (x,y) {
+                  return A4(pair,
+                  $float,
+                  x,
+                  y,
+                  time);
+               }),
+               ps,
+               $List.tail(ps)));
+            }();
+         };
+         return casteljau(_L.fromArray([{ctor: "_Tuple2"
+                                        ,_0: 0
+                                        ,_1: 0}
+                                       ,{ctor: "_Tuple2",_0: x1,_1: y1}
+                                       ,{ctor: "_Tuple2",_0: x2,_1: y2}
+                                       ,{ctor: "_Tuple2"
+                                        ,_0: 1
+                                        ,_1: 1}]));
+      }();
+   });
+   var ease = F6(function (easing,
+   interpolate,
+   from,
+   to,
+   duration,
+   time) {
+      return A3(interpolate,
+      from,
+      to,
+      easing(A2($Basics.min,
+      time / duration,
+      1)));
+   });
+   _elm.Easing.values = {_op: _op
+                        ,ease: ease
+                        ,$float: $float
+                        ,point2d: point2d
+                        ,point3d: point3d
+                        ,color: color
+                        ,pair: pair
+                        ,linear: linear
+                        ,bezier: bezier
+                        ,easeInQuad: easeInQuad
+                        ,easeOutQuad: easeOutQuad
+                        ,easeInOutQuad: easeInOutQuad
+                        ,easeInCubic: easeInCubic
+                        ,easeOutCubic: easeOutCubic
+                        ,easeInOutCubic: easeInOutCubic
+                        ,easeInQuart: easeInQuart
+                        ,easeOutQuart: easeOutQuart
+                        ,easeInOutQuart: easeInOutQuart
+                        ,easeInQuint: easeInQuint
+                        ,easeOutQuint: easeOutQuint
+                        ,easeInOutQuint: easeInOutQuint
+                        ,easeInSine: easeInSine
+                        ,easeOutSine: easeOutSine
+                        ,easeInOutSine: easeInOutSine
+                        ,easeInExpo: easeInExpo
+                        ,easeOutExpo: easeOutExpo
+                        ,easeInOutExpo: easeInOutExpo
+                        ,easeInCirc: easeInCirc
+                        ,easeOutCirc: easeOutCirc
+                        ,easeInOutCirc: easeInOutCirc
+                        ,easeInBack: easeInBack
+                        ,easeOutBack: easeOutBack
+                        ,easeInOutBack: easeInOutBack
+                        ,easeInBounce: easeInBounce
+                        ,easeOutBounce: easeOutBounce
+                        ,easeInOutBounce: easeInOutBounce
+                        ,easeInElastic: easeInElastic
+                        ,easeOutElastic: easeOutElastic
+                        ,easeInOutElastic: easeInOutElastic
+                        ,inOut: inOut
+                        ,invert: invert
+                        ,flip: flip
+                        ,retour: retour
+                        ,cycle: cycle};
+   return _elm.Easing.values;
+};Elm.Froggy = Elm.Froggy || {};
+Elm.Froggy.State = Elm.Froggy.State || {};
+Elm.Froggy.State.make = function (_elm) {
+   "use strict";
+   _elm.Froggy = _elm.Froggy || {};
+   _elm.Froggy.State = _elm.Froggy.State || {};
+   if (_elm.Froggy.State.values)
+   return _elm.Froggy.State.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _A = _N.Array.make(_elm),
+   _E = _N.Error.make(_elm),
+   $moduleName = "Froggy.State",
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Froggy$Commands = Elm.Froggy.Commands.make(_elm),
@@ -10650,7 +11051,20 @@ Elm.Froggy.Update.make = function (_elm) {
    $Froggy$Model = Elm.Froggy.Model.make(_elm),
    $Froggy$Util = Elm.Froggy.Util.make(_elm),
    $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm);
+   $Maybe = Elm.Maybe.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var removeTransition = function (game) {
+      return function () {
+         var oldFrog = game.frog;
+         var newFrog = _U.replace([["lastMove"
+                                   ,$Maybe.Nothing]],
+         oldFrog);
+         return _U.replace([["frog"
+                            ,newFrog]],
+         game);
+      }();
+   };
    var loadLeafRow = F2(function (y,
    row) {
       return function () {
@@ -10675,7 +11089,8 @@ Elm.Froggy.Update.make = function (_elm) {
    var loadLeafMatrix = function (leafMatrix) {
       return $List.concat($List.indexedMap(loadLeafRow)(leafMatrix));
    };
-   var moveTo = F2(function (leaf,
+   var moveTo = F3(function (leaf,
+   time,
    game) {
       return $Froggy$Model.playing(game) ? function () {
          var maybeDirection = A2($Froggy$Model.angleTo,
@@ -10687,6 +11102,9 @@ Elm.Froggy.Update.make = function (_elm) {
                return _U.replace([["frog"
                                   ,{_: {}
                                    ,angle: maybeDirection._0
+                                   ,lastMove: $Maybe.Just({_: {}
+                                                          ,oldValue: game.frog.leaf
+                                                          ,startTime: time})
                                    ,leaf: leaf}]
                                  ,["leaves"
                                   ,A2($Froggy$Util.remove,
@@ -10695,7 +11113,7 @@ Elm.Froggy.Update.make = function (_elm) {
                  game);
                case "Nothing": return game;}
             _E.Case($moduleName,
-            "between lines 39 and 49");
+            "between lines 43 and 57");
          }();
       }() : game;
    });
@@ -10722,6 +11140,7 @@ Elm.Froggy.Update.make = function (_elm) {
          return {_: {}
                 ,frog: {_: {}
                        ,angle: 0
+                       ,lastMove: $Maybe.Nothing
                        ,leaf: leaf}
                 ,instructions: false
                 ,leaves: leaves
@@ -10745,7 +11164,11 @@ Elm.Froggy.Update.make = function (_elm) {
                          ,true]],
       level0);
    }();
-   var moveBy = F2(function (positionDelta,
+   var initialGame = function (loadedGame) {
+      return $Froggy$Util.getOrElse(newGame)(loadedGame);
+   };
+   var moveBy = F3(function (positionDelta,
+   time,
    game) {
       return _U.eq(positionDelta.x,
       0) && _U.eq(positionDelta.y,
@@ -10756,42 +11179,60 @@ Elm.Froggy.Update.make = function (_elm) {
          var maybeLeaf = findLeaf(leafPosition)(game.leaves);
          return function () {
             switch (maybeLeaf.ctor)
-            {case "Just":
-               return moveTo(maybeLeaf._0)(game);
+            {case "Just": return A2(moveTo,
+                 maybeLeaf._0,
+                 time)(game);
                case "Nothing": return game;}
             _E.Case($moduleName,
-            "between lines 26 and 28");
+            "between lines 30 and 32");
          }();
       }();
    });
-   var update = F2(function (command,
+   var update = F2(function (_v6,
    game) {
       return function () {
-         switch (command.ctor)
-         {case "Continue":
-            return $continue(game);
-            case "MoveBy":
-            return moveBy(command._0)(game);
-            case "MoveTo":
-            return moveTo(command._0)(game);
-            case "Nop": return game;}
+         switch (_v6.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v6._1.ctor)
+                 {case "Continue":
+                    return $continue(game);
+                    case "MoveBy": return A2(moveBy,
+                      _v6._1._0,
+                      _v6._0)(game);
+                    case "MoveTo": return A2(moveTo,
+                      _v6._1._0,
+                      _v6._0)(game);
+                    case "Nop": return game;}
+                 _E.Case($moduleName,
+                 "between lines 18 and 22");
+              }();}
          _E.Case($moduleName,
-         "between lines 14 and 18");
+         "between lines 18 and 22");
       }();
    });
-   _elm.Froggy.Update.values = {_op: _op
-                               ,update: update
-                               ,moveBy: moveBy
-                               ,findLeaf: findLeaf
-                               ,moveTo: moveTo
-                               ,loadLevel: loadLevel
-                               ,loadLeafMatrix: loadLeafMatrix
-                               ,loadLeafRow: loadLeafRow
-                               ,$continue: $continue
-                               ,nextLevel: nextLevel
-                               ,restartLevel: restartLevel
-                               ,newGame: newGame};
-   return _elm.Froggy.Update.values;
+   var game = function (loadedGame) {
+      return A3($Signal.foldp,
+      update,
+      initialGame(loadedGame),
+      $Froggy$Commands.commandsWithTime);
+   };
+   _elm.Froggy.State.values = {_op: _op
+                              ,game: game
+                              ,update: update
+                              ,moveBy: moveBy
+                              ,findLeaf: findLeaf
+                              ,moveTo: moveTo
+                              ,loadLevel: loadLevel
+                              ,loadLeafMatrix: loadLeafMatrix
+                              ,loadLeafRow: loadLeafRow
+                              ,$continue: $continue
+                              ,nextLevel: nextLevel
+                              ,restartLevel: restartLevel
+                              ,initialGame: initialGame
+                              ,newGame: newGame
+                              ,removeTransition: removeTransition};
+   return _elm.Froggy.State.values;
 };Elm.Froggy = Elm.Froggy || {};
 Elm.Froggy.Commands = Elm.Froggy.Commands || {};
 Elm.Froggy.Commands.make = function (_elm) {
@@ -10813,7 +11254,8 @@ Elm.Froggy.Commands.make = function (_elm) {
    $Graphics$Input = Elm.Graphics.Input.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $Mouse = Elm.Mouse.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
    var Continue = {ctor: "Continue"};
    var MoveTo = function (a) {
       return {ctor: "MoveTo"
@@ -10838,26 +11280,26 @@ Elm.Froggy.Commands.make = function (_elm) {
    };
    var moveTo = $Graphics$Input.input(Nop);
    var commands = function () {
-      var continueWithMouse = A2($Signal.lift,
+      var $continue = A2($Signal.lift,
       makeContinue,
-      $Mouse.isDown);
-      var continueWithKeyboard = A2($Signal.lift,
-      makeContinue,
-      $Keyboard.enter);
+      A2($Signal.merge,
+      $Keyboard.enter,
+      $Mouse.isDown));
       var moveBy = A3($Signal.lift2,
       makeMoveBy,
       $Keyboard.shift,
       $Keyboard.arrows);
       return $Signal.merges(_L.fromArray([moveBy
-                                         ,continueWithKeyboard
-                                         ,continueWithMouse
-                                         ,moveTo.signal]));
+                                         ,moveTo.signal
+                                         ,$continue]));
    }();
+   var commandsWithTime = $Time.timestamp(commands);
    _elm.Froggy.Commands.values = {_op: _op
                                  ,Nop: Nop
                                  ,MoveBy: MoveBy
                                  ,MoveTo: MoveTo
                                  ,Continue: Continue
+                                 ,commandsWithTime: commandsWithTime
                                  ,commands: commands
                                  ,makeMoveBy: makeMoveBy
                                  ,makeContinue: makeContinue
@@ -10880,6 +11322,7 @@ Elm.Froggy.Model.make = function (_elm) {
    $moduleName = "Froggy.Model",
    $Basics = Elm.Basics.make(_elm),
    $Froggy$Grid = Elm.Froggy.Grid.make(_elm),
+   $Froggy$TransitionUtil = Elm.Froggy.TransitionUtil.make(_elm),
    $Froggy$Util = Elm.Froggy.Util.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm);
@@ -10935,9 +11378,10 @@ Elm.Froggy.Model.make = function (_elm) {
    var Leaf = function (a) {
       return {_: {},position: a};
    };
-   var Frog = F2(function (a,b) {
+   var Frog = F3(function (a,b,c) {
       return {_: {}
              ,angle: b
+             ,lastMove: c
              ,leaf: a};
    });
    var Game = F4(function (a,
@@ -13103,6 +13547,35 @@ Elm.Froggy.Grid.make = function (_elm) {
                              ,equals: equals
                              ,translate: translate};
    return _elm.Froggy.Grid.values;
+};Elm.Froggy = Elm.Froggy || {};
+Elm.Froggy.TransitionUtil = Elm.Froggy.TransitionUtil || {};
+Elm.Froggy.TransitionUtil.make = function (_elm) {
+   "use strict";
+   _elm.Froggy = _elm.Froggy || {};
+   _elm.Froggy.TransitionUtil = _elm.Froggy.TransitionUtil || {};
+   if (_elm.Froggy.TransitionUtil.values)
+   return _elm.Froggy.TransitionUtil.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _A = _N.Array.make(_elm),
+   _E = _N.Error.make(_elm),
+   $moduleName = "Froggy.TransitionUtil",
+   $Basics = Elm.Basics.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var time = $Signal.lift($Basics.fst)($Time.timestamp($Time.fps(30)));
+   var TransitionInfo = F2(function (a,
+   b) {
+      return {_: {}
+             ,oldValue: a
+             ,startTime: b};
+   });
+   _elm.Froggy.TransitionUtil.values = {_op: _op
+                                       ,TransitionInfo: TransitionInfo
+                                       ,time: time};
+   return _elm.Froggy.TransitionUtil.values;
 };Elm.Froggy = Elm.Froggy || {};
 Elm.Froggy.Util = Elm.Froggy.Util || {};
 Elm.Froggy.Util.make = function (_elm) {
