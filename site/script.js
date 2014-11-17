@@ -1,4 +1,4 @@
-var fontName = "Bubblegum Sans";
+var fontName = "Indie Flower";
 
 function loadFonts() {
   WebFont.load({
