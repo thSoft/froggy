@@ -1,0 +1,12 @@
+{
+    "version": "0.1",
+    "summary": "",
+    "description": "",
+    "license": "BSD3",
+    "exposed-modules": [],
+    "elm-version": "0.13",
+    "dependencies": {
+        "Dandandan/Easing": "0.8.1"
+    },
+    "repository": "https://github.com/thSoft/froggy.git"
+}

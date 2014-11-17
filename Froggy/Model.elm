@@ -2,6 +2,7 @@ module Froggy.Model where
 
 import Maybe (..)
 import Froggy.Util (..)
+import Froggy.TransitionUtil (..)
 import Froggy.Grid as Grid
 import Froggy.Levels (..)
 
@@ -14,7 +15,8 @@ type Game = {
 
 type Frog = {
   leaf: Leaf,
-  angle: Float
+  angle: Float,
+  lastMove: Maybe (TransitionInfo Leaf)
 }
 
 type Leaf = {

@@ -1,20 +1,18 @@
 module Froggy.Main where
 
 import Window
-import Froggy.Util (..)
 import Froggy.Model (..)
-import Froggy.Update (..)
-import Froggy.Commands (..)
+import Froggy.State (..)
 import Froggy.View (..)
+import Froggy.TransitionUtil (..)
 
-main = lift2 (view fontName) Window.dimensions game
+main = lift3 (view fontName) Window.dimensions time mainState
 
-game : Signal Game
-game = foldp update (initialGame loadedGame) commands
+mainState = game loadedGame
 
 port loadedGame : Maybe Game
 
 port savedGame : Signal Game
-port savedGame = game
+port savedGame = mainState
 
 port fontName : String

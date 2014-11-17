@@ -1,7 +1,8 @@
-module Froggy.Update where
+module Froggy.State where
 
 import Array
 import Maybe
+import Time (..)
 import Froggy.Util (..)
 import Froggy.Grid as Grid
 import Froggy.Grid (..)
@@ -9,31 +10,34 @@ import Froggy.Levels (..)
 import Froggy.Model (..)
 import Froggy.Commands (..)
 
-update : Command -> Game -> Game
-update command game =
+game : Maybe Game -> Signal Game
+game loadedGame = foldp update (initialGame loadedGame) commandsWithTime
+
+update : (Time, Command) -> Game -> Game
+update (time, command) game =
   case command of
     Nop -> game
-    MoveBy positionDelta -> game |> moveBy positionDelta
-    MoveTo leaf -> game |> moveTo leaf
+    MoveBy positionDelta -> game |> moveBy positionDelta time
+    MoveTo leaf -> game |> moveTo leaf time
     Continue -> game |> continue
 
-moveBy : Grid.Position -> Game -> Game
-moveBy positionDelta game =
+moveBy : Grid.Position -> Time -> Game -> Game
+moveBy positionDelta time game =
   if (positionDelta.x == 0) && (positionDelta.y == 0) then game
   else
     let leafPosition = game.frog.leaf.position `translate` positionDelta
         maybeLeaf = game.leaves |> findLeaf leafPosition
     in case maybeLeaf of
       Nothing -> game
-      Just leaf -> game |> moveTo leaf
+      Just leaf -> game |> moveTo leaf time
 
 findLeaf : Grid.Position -> [Leaf] -> Maybe Leaf
 findLeaf position leaves =
   let hasPosition leaf = leaf.position `equals` position
   in leaves |> filter hasPosition |> Array.fromList |> Array.get 0
 
-moveTo : Leaf -> Game -> Game
-moveTo leaf game =
+moveTo : Leaf -> Time -> Game -> Game
+moveTo leaf time game =
   if playing game then
     let maybeDirection = game.frog `angleTo` leaf
     in case maybeDirection of
@@ -42,7 +46,11 @@ moveTo leaf game =
         { game |
           frog <- {
             leaf = leaf,
-            angle = angle
+            angle = angle,
+            lastMove = Just {
+              oldValue = game.frog.leaf,
+              startTime = time
+            }
           },
           leaves <- remove game.leaves game.frog.leaf
         }
@@ -58,7 +66,8 @@ loadLevel levelNumber =
   in {
     frog = {
       leaf = leaf,
-      angle = 0
+      angle = 0,
+      lastMove = Nothing
     },
     levelNumber = actualLevelNumber,
     leaves = leaves,
@@ -101,3 +110,9 @@ newGame : Game
 newGame =
   let level0 = loadLevel 0
   in { level0 | instructions <- True }
+
+removeTransition : Game -> Game
+removeTransition game =
+  let oldFrog = game.frog
+      newFrog = { oldFrog | lastMove <- Nothing }
+  in { game | frog <- newFrog }

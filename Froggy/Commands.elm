@@ -2,9 +2,11 @@ module Froggy.Commands where
 
 import Keyboard
 import Mouse
+import Time (..)
 import Graphics.Input (..)
 import Froggy.Grid as Grid
 import Froggy.Model (..)
+import Froggy.TransitionUtil (..)
 
 data Command =
   Nop |
@@ -12,12 +14,14 @@ data Command =
   MoveTo Leaf |
   Continue
 
+commandsWithTime : Signal (Time, Command)
+commandsWithTime = commands |> timestamp
+
 commands : Signal Command
 commands =
   let moveBy = lift2 makeMoveBy Keyboard.shift Keyboard.arrows
-      continueWithKeyboard = lift makeContinue Keyboard.enter
-      continueWithMouse = lift makeContinue Mouse.isDown
-  in merges [moveBy, continueWithKeyboard, continueWithMouse, moveTo.signal]
+      continue = lift makeContinue (merge Keyboard.enter Mouse.isDown)
+  in merges [moveBy, moveTo.signal, continue]
 
 makeMoveBy : Bool -> Grid.Position -> Command
 makeMoveBy shift arrows =
