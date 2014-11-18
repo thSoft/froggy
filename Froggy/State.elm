@@ -37,16 +37,14 @@ findLeaf position leaves =
 moveTo : Leaf -> Time -> Game -> Game
 moveTo leaf time game =
   if playing game then
-    let maybeDirection = game.scene.frog `angleTo` leaf
+    let reachable = leaf |> reachableBy game.scene.frog
         scene = game.scene
-    in case maybeDirection of
-      Nothing -> game
-      Just angle ->
+    in
+      if reachable then
         { game |
           scene <- { scene |
             frog <- {
               leaf = leaf,
-              angle = angle,
               lastMove = Just {
                 oldValue = game.scene.frog.leaf,
                 startTime = time
@@ -55,6 +53,7 @@ moveTo leaf time game =
             leaves <- remove game.scene.leaves game.scene.frog.leaf
           }
         }
+      else game
   else game
 
 loadLevel : Time -> Int -> Game
@@ -68,7 +67,6 @@ loadLevel time levelNumber =
     scene = {
       frog = {
         leaf = leaf,
-        angle = 0,
         lastMove = Nothing
       },
       leaves = leaves,

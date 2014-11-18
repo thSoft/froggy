@@ -44,7 +44,7 @@ viewFrog tileSize time frog =
       size = case frog.lastMove of
         Nothing -> 1
         Just { startTime } -> ease (easeInQuad |> retour) float 1 1.2 movingFromDuration (time - startTime)
-      frogSprite = sprite worldPosition tileSize "https://az31353.vo.msecnd.net/pub/enuofhjd" |> rotate (frog.angle |> degrees) |> scale size
+      frogSprite = sprite worldPosition tileSize "https://az31353.vo.msecnd.net/pub/enuofhjd" |> rotate (angleOf frog |> degrees) |> scale size
   in lastLeaf ++ [frogSprite]
 
 movingFromDuration : Time
@@ -76,7 +76,7 @@ viewTargets frog tileSize leaves =
   let targets = leaves |> filter (reachableBy frog)
       toClickable target = clickable moveTo.handle (MoveTo target)
       distanceOf target = (distance target.position.x frog.leaf.position.x) + (distance target.position.y frog.leaf.position.y)
-      angleOf target = frog `angleTo` target |> getOrElse 0
+      angleOf target = frog.leaf `angleBetween` target |> getOrElse 0
       filename target = "arrows/" ++ (distanceOf target |> show) ++ "/" ++ (angleOf target |> show) ++ ".png"
       worldPosition target = target.position |> toWorld tileSize
       viewTarget target = customSprite (toClickable target) (worldPosition target) tileSize (filename target)

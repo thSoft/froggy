@@ -20,7 +20,6 @@ type Scene = {
 
 type Frog = {
   leaf: Leaf,
-  angle: Float,
   lastMove: Maybe (TransitionInfo Leaf)
 }
 
@@ -35,24 +34,30 @@ stuck : Game -> Bool
 stuck game = not (game.scene.leaves |> any (reachableBy game.scene.frog))
 
 reachableBy : Frog -> Leaf -> Bool
-reachableBy frog leaf = (frog `angleTo` leaf) |> isJust
+reachableBy frog leaf = (frog.leaf `angleBetween` leaf) |> isJust
 
-angleTo : Frog -> Leaf -> Maybe Float
-angleTo frog leaf =
-  let frogX = frog.leaf.position.x
-      frogY = frog.leaf.position.y
-      leafX = leaf.position.x
-      leafY = leaf.position.y
-  in if | (frogX == leafX) && (frogY > leafY) && (frogY `near` leafY) -> Just 0
-        | (frogY == leafY) && (frogX < leafX) && (frogX `near` leafX) -> Just 270
-        | (frogX == leafX) && (frogY < leafY) && (frogY `near` leafY) -> Just 180
-        | (frogY == leafY) && (frogX > leafX) && (frogX `near` leafX) -> Just 90
+angleBetween : Leaf -> Leaf -> Maybe Float
+angleBetween sourceLeaf targetLeaf =
+  let sourceX = sourceLeaf.position.x
+      sourceY = sourceLeaf.position.y
+      targetX = targetLeaf.position.x
+      targetY = targetLeaf.position.y
+  in if | (sourceX == targetX) && (sourceY > targetY) && (sourceY `near` targetY) -> Just 0
+        | (sourceY == targetY) && (sourceX < targetX) && (sourceX `near` targetX) -> Just 270
+        | (sourceX == targetX) && (sourceY < targetY) && (sourceY `near` targetY) -> Just 180
+        | (sourceY == targetY) && (sourceX > targetX) && (sourceX `near` targetX) -> Just 90
         | otherwise -> Nothing
 
 near : Int -> Int -> Bool
 near a b = (distance a b) <= maxDistance
 
 maxDistance = 2
+
+angleOf : Frog -> Float
+angleOf frog =
+  case frog.lastMove of
+    Just { oldValue } -> oldValue `angleBetween` frog.leaf |> getOrElse 0
+    Nothing -> 0
 
 playing : Game -> Bool
 playing game = not game.instructions
