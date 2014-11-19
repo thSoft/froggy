@@ -10658,7 +10658,7 @@ Elm.Froggy.View.make = function (_elm) {
          _L.append("Level\n",
          _L.append($String.show(game.scene.levelNumber),
          _L.append("/",
-         _L.append($String.show($Froggy$Levels.numberOfLevels),
+         _L.append($String.show($Froggy$Levels.numberOfLevels - 1),
          "\n\n"))))));
          return _L.fromArray([background
                              ,levelNumber]);
