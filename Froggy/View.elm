@@ -11,11 +11,10 @@ import Froggy.Commands (..)
 
 view : String -> (Int, Int) -> Time -> Game -> Element
 view fontName (windowWidth, windowHeight) time game =
-  let background = fittedImage windowWidth windowHeight "http://lh5.ggpht.com/-pc0Bk49G7Cs/T5RYCdQjj1I/AAAAAAAAAmQ/e494iWINcrI/s9000/Texture%252Bacqua%252Bpiscina%252Bwater%252Bpool%252Bsimo-3d.jpg"
-      viewSize = min windowWidth windowHeight
+  let viewSize = min windowWidth windowHeight
       scene = game |> viewScene fontName viewSize time |> container windowWidth windowHeight middle
       message = game |> viewMessage fontName viewSize |> map (container windowWidth windowHeight middle)
-  in layers ([background, scene] ++ message)
+  in layers ([scene] ++ message)
 
 viewScene : String -> Int -> Time -> Game -> Element
 viewScene fontName viewSize time game = 
