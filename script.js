@@ -1,4 +1,4 @@
-var fontName = "Indie Flower";
+var fontName = "Boogaloo";
 
 function loadFonts() {
   WebFont.load({
