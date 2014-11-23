@@ -4,12 +4,13 @@ import Array
 import Froggy.Util (..)
 import Froggy.Grid as Grid
 import Froggy.Grid (..)
+import Froggy.TransitionUtil (..)
 import Froggy.Levels (..)
 import Froggy.Model (..)
 import Froggy.Commands (..)
 
-game : Maybe Game -> Signal Game
-game loadedGame = foldp update (initialGame loadedGame) commands
+game : Signal (Maybe Game) -> Signal Game
+game loadedGame = foldp update initialGame (commands loadedGame)
 
 update : (Time, Command) -> Game -> Game
 update (time, command) game =
@@ -18,6 +19,7 @@ update (time, command) game =
     MoveBy positionDelta -> game |> moveBy positionDelta time
     MoveTo leaf -> game |> moveTo leaf time
     Continue -> game |> continue time
+    Start loadedGame -> game |> start loadedGame time
 
 moveBy : Grid.Position -> Time -> Game -> Game
 moveBy positionDelta time game =
@@ -73,7 +75,7 @@ loadLevel time levelNumber =
       levelNumber = actualLevelNumber
     },
     instructions = False,
-    lastSceneChange = {
+    lastSceneChange = Just {
       oldValue = Nothing,
       startTime = time
     }
@@ -108,10 +110,25 @@ nextLevel time game = loadLevel time (game.scene.levelNumber + 1)
 restartLevel : Time -> Game -> Game
 restartLevel time game = loadLevel time game.scene.levelNumber
 
-initialGame : Maybe Game -> Game
-initialGame loadedGame = loadedGame |> getOrElse (newGame 0)
+initialGame : Game
+initialGame = newGame 0 Nothing
 
-newGame : Time -> Game
-newGame time =
+newGame : Time -> Maybe (TransitionInfo (Maybe Scene)) -> Game
+newGame time lastSceneChange =
   let level0 = loadLevel time 0
-  in { level0 | instructions <- True }
+  in { level0 |
+    instructions <- True,
+    lastSceneChange <- lastSceneChange
+  }
+
+start : Maybe Game -> Time -> Game -> Game
+start loadedGame time game =
+  let lastSceneChange = Just {
+        oldValue = Nothing,
+        startTime = time
+      }
+  in case loadedGame of
+    Nothing -> newGame time lastSceneChange
+    Just startedGame -> { startedGame |
+      lastSceneChange <- lastSceneChange
+    }

@@ -9,7 +9,7 @@ import Froggy.Levels (..)
 type Game = {
   scene: Scene,
   instructions: Bool,
-  lastSceneChange: TransitionInfo (Maybe Scene)
+  lastSceneChange: Maybe (TransitionInfo (Maybe Scene))
 }
 
 type Scene = {

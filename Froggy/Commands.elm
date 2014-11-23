@@ -10,13 +10,15 @@ data Command =
   Nop |
   MoveBy Grid.Position |
   MoveTo Leaf |
-  Continue
+  Continue |
+  Start (Maybe Game)
 
-commands : Signal (Time, Command)
-commands =
+commands : Signal (Maybe Game) -> Signal (Time, Command)
+commands loadedGame =
   let moveBy = lift2 makeMoveBy Keyboard.shift Keyboard.arrows
       continue = lift makeContinue (merge Keyboard.enter Mouse.isDown)
-  in merges [moveBy, moveTo.signal, continue] |> timestamp
+      start = makeStart loadedGame
+  in merges [moveBy, moveTo.signal, continue, start] |> timestamp
 
 makeMoveBy : Bool -> Grid.Position -> Command
 makeMoveBy shift arrows =
@@ -26,8 +28,17 @@ makeMoveBy shift arrows =
     y = -arrows.y * multiplier
   }
 
+moveTo : Input Command
+moveTo = input Nop
+
 makeContinue : Bool -> Command
 makeContinue pressed = if pressed then Continue else Nop
 
-moveTo : Input Command
-moveTo = input Nop
+makeStart : Signal (Maybe Game) -> Signal Command
+makeStart loadedGame = foldp updateStart Nop loadedGame |> dropRepeats
+
+updateStart : Maybe Game -> Command -> Command
+updateStart loadedGame startGame =
+  case startGame of
+    Nop -> Start loadedGame
+    _ -> startGame

@@ -10,9 +10,10 @@
 </head>
 <body>
 <script type="text/javascript">
-loadFonts();
 translateTouchEventsToMouseEvents();
-initializeElm();
+var component = initializeElm();
+loadFonts();
+loadGame(component);
 </script>
 </body>
 </html>

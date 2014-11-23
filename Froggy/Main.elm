@@ -10,7 +10,7 @@ main = lift3 (view fontName) Window.dimensions time mainState
 
 mainState = game loadedGame
 
-port loadedGame : Maybe Game
+port loadedGame : Signal (Maybe Game)
 
 port savedGame : Signal Game
 port savedGame = mainState
