@@ -1,5 +1,6 @@
 module Froggy.View where
 
+import Maybe
 import Text
 import Graphics.Input (..)
 import Easing (..)
@@ -11,10 +12,14 @@ import Froggy.Commands (..)
 
 view : String -> (Int, Int) -> Time -> Game -> Element
 view fontName (windowWidth, windowHeight) time game =
-  let viewSize = min windowWidth windowHeight
-      scene = game |> viewScene fontName viewSize time |> container windowWidth windowHeight middle
-      message = game |> viewMessage fontName viewSize |> map (container windowWidth windowHeight middle)
-  in layers ([scene] ++ message)
+  if game.lastSceneChange |> Maybe.isJust then
+    let viewSize = min windowWidth windowHeight
+        scene = game |> viewScene fontName viewSize time |> container windowWidth windowHeight middle
+        message = game |> viewMessage fontName viewSize |> map (container windowWidth windowHeight middle)
+    in layers ([scene] ++ message)
+  else
+    let blackRectangle = rect (windowWidth |> toFloat) (windowHeight |> toFloat) |> filled black
+    in [blackRectangle] |> collage windowWidth windowHeight
 
 viewScene : String -> Int -> Time -> Game -> Element
 viewScene fontName viewSize time game = 
@@ -43,7 +48,7 @@ viewFrog tileSize time frog =
       size = case frog.lastMove of
         Nothing -> 1
         Just { startTime } -> ease (easeInQuad |> retour) float 1 1.2 movingFromDuration (time - startTime)
-      frogSprite = sprite worldPosition tileSize "https://az31353.vo.msecnd.net/pub/enuofhjd" |> rotate (angleOf frog |> degrees) |> scale size
+      frogSprite = sprite worldPosition tileSize (imagePath "frog.png") |> rotate (angleOf frog |> degrees) |> scale size
   in lastLeaf ++ [frogSprite]
 
 movingFromDuration : Time
@@ -68,7 +73,7 @@ toWorld tileSize position =
 viewLeaf : Float -> Leaf -> Form
 viewLeaf tileSize leaf =
   let worldPosition = leaf.position |> toWorld tileSize
-  in sprite worldPosition tileSize "https://az31353.vo.msecnd.net/pub/ebfvplpg"
+  in sprite worldPosition tileSize (imagePath "leaf.png")
 
 viewTargets : Frog -> Float -> [Leaf] -> [Form]
 viewTargets frog tileSize leaves =
@@ -76,7 +81,7 @@ viewTargets frog tileSize leaves =
       toClickable target = clickable moveTo.handle (MoveTo target)
       distanceOf target = (distance target.position.x frog.leaf.position.x) + (distance target.position.y frog.leaf.position.y)
       angleOf target = frog.leaf `angleBetween` target |> getOrElse 0
-      filename target = "arrows/" ++ (distanceOf target |> show) ++ "/" ++ (angleOf target |> show) ++ ".png"
+      filename target = "arrows/" ++ (distanceOf target |> show) ++ "/" ++ (angleOf target |> show) ++ ".png" |> imagePath
       worldPosition target = target.position |> toWorld tileSize
       viewTarget target = customSprite (toClickable target) (worldPosition target) tileSize (filename target)
   in targets |> map viewTarget
@@ -85,7 +90,7 @@ viewLevelNumber : String -> Float -> Game -> [Form]
 viewLevelNumber fontName tileSize game =
   let levelPosition = (getLevel game.scene.levelNumber) |> .levelPosition
       worldPosition = levelPosition |> toWorld tileSize
-      background = sprite worldPosition tileSize "http://www.clker.com/cliparts/m/F/i/G/X/L/blank-wood-sign-md.png"
+      background = sprite worldPosition tileSize (imagePath "level.png")
       levelNumber = textSprite fontName levelPosition tileSize ("Level\n" ++ show game.scene.levelNumber ++ "/" ++ show (numberOfLevels - 1) ++ "\n\n") |> rotate (-1 |> degrees)
   in [background, levelNumber]
 
@@ -108,7 +113,7 @@ gameText fontName height string = toText string |> Text.style {
 viewMessage : String -> Int -> Game -> [Element]
 viewMessage fontName viewSize game =
   let backgroundSize = ((viewSize |> toFloat) / 1.7) |> round
-      background = image backgroundSize backgroundSize "http://www.i2clipart.com/cliparts/9/2/6/b/clipart-bubble-256x256-926b.png"
+      background = image backgroundSize backgroundSize (imagePath "message.png")
       textSize = (viewSize |> toFloat) / 35
       lastLevel = game.scene.levelNumber == numberOfLevels - 1
       completedMessage = if lastLevel then gameCompletedMessage else levelCompletedMessage
@@ -136,3 +141,6 @@ Shift + arrow key: leap over an adjacent leaf
 """ ++ continueInstruction ++ """ to start the game!"""
 
 continueInstruction = "Press Enter or tap"
+
+imagePath : String -> String
+imagePath filename = "images/" ++ filename
