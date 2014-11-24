@@ -39,22 +39,21 @@ function translateTouchEventsToMouseEvents() {
 
 function initializeElm() {
   var module = Elm.Froggy.Main;
-  var storageKey = 'froggy';
-
-  var loadedJson = localStorage.getItem(storageKey);
-  var loadedState = loadedJson ? JSON.parse(loadedJson) : null;
-  var component;
-  try {
-    component = Elm.fullscreen(module, {
-      loadedGame: loadedState,
-      fontName: fontName
-    });
-  } catch (e) {
-    console.log("Error while initializing component. This might mean that the game state can't be loaded because the internal model changed. Trying to restart the game." + e);
-    component = Elm.fullscreen(module, {
+  return Elm.fullscreen(module, {
       loadedGame: null,
       fontName: fontName
     });
+}
+
+function loadGame(component) {
+  var storageKey = 'froggy';
+  var loadedJson = localStorage.getItem(storageKey);
+  var loadedState = loadedJson ? JSON.parse(loadedJson) : null;
+  try {
+    component.ports.loadedGame.send(loadedState);
+  } catch (e) {
+    console.log("The game state can't be loaded because the internal model changed. Trying to start a new game." + e);
+    component.ports.loadedGame.send(null);
   }
   component.ports.savedGame.subscribe(function(state) {
     localStorage.setItem(storageKey, JSON.stringify(state));
