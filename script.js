@@ -1,13 +1,3 @@
-var fontName = "Boogaloo";
-
-function loadFonts() {
-  WebFont.load({
-    google: {
-      families: [fontName]
-    }
-  });
-}
-
 function translateTouchEventsToMouseEvents() {
   function touchHandler(event) {
     var touches = event.changedTouches;
@@ -40,9 +30,33 @@ function translateTouchEventsToMouseEvents() {
 function initializeElm() {
   var module = Elm.Froggy.Main;
   return Elm.fullscreen(module, {
-      loadedGame: null,
-      fontName: fontName
-    });
+    loadedGame: null,
+    fontName: fontName
+  });
+}
+
+var fontName = "Boogaloo";
+
+function loadFonts() {
+  WebFont.load({
+    google: {
+      families: [fontName]
+    }
+  });
+}
+
+function loadImages(callback) {
+  var loadedImagesCount = 0;
+  images.forEach(function (imagePath) {
+    image = new Image();
+    image.src = imagePath;
+    image.onload = function() {
+      loadedImagesCount++;
+      if (loadedImagesCount >= images.length) {
+        callback();
+      }
+    }
+  });
 }
 
 function loadGame(component) {

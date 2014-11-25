@@ -10537,7 +10537,7 @@ Elm.Froggy.View.make = function (_elm) {
                  time - _v0._0.startTime);
                case "Nothing": return 1;}
             _E.Case($moduleName,
-            "between lines 48 and 51");
+            "between lines 49 and 52");
          }();
          var lastLeaf = function () {
             var _v2 = frog.lastMove;
@@ -10558,7 +10558,7 @@ Elm.Froggy.View.make = function (_elm) {
                case "Nothing":
                return _L.fromArray([]);}
             _E.Case($moduleName,
-            "between lines 43 and 48");
+            "between lines 44 and 49");
          }();
          var newWorldPosition = toWorld(tileSize)(frog.leaf.position);
          var worldPosition = function () {
@@ -10578,7 +10578,7 @@ Elm.Froggy.View.make = function (_elm) {
                case "Nothing":
                return newWorldPosition;}
             _E.Case($moduleName,
-            "between lines 38 and 43");
+            "between lines 39 and 44");
          }();
          var frogSprite = $Graphics$Collage.scale(size)($Graphics$Collage.rotate($Basics.degrees($Froggy$Model.angleOf(frog)))(A3(sprite,
          worldPosition,
@@ -10718,15 +10718,23 @@ Elm.Froggy.View.make = function (_elm) {
                  return $Graphics$Element.layers(_L.append(_L.fromArray([scene]),
                  message));
               }() : function () {
-                 var blackRectangle = $Graphics$Collage.filled($Color.black)(A2($Graphics$Collage.rect,
-                 $Basics.toFloat(_v6._0),
-                 $Basics.toFloat(_v6._1)));
-                 return A2($Graphics$Collage.collage,
+                 var loadingImage = A3($Graphics$Element.container,
                  _v6._0,
-                 _v6._1)(_L.fromArray([blackRectangle]));
+                 _v6._1,
+                 $Graphics$Element.middle)(A3($Graphics$Element.image,
+                 64,
+                 64,
+                 imagePath("loading.gif")));
+                 var blackRectangle = A2($Graphics$Collage.collage,
+                 _v6._0,
+                 _v6._1)(_L.fromArray([$Graphics$Collage.filled($Color.black)(A2($Graphics$Collage.rect,
+                 $Basics.toFloat(_v6._0),
+                 $Basics.toFloat(_v6._1)))]));
+                 return $Graphics$Element.layers(_L.fromArray([blackRectangle
+                                                              ,loadingImage]));
               }();}
          _E.Case($moduleName,
-         "between lines 15 and 22");
+         "between lines 15 and 23");
       }();
    });
    _elm.Froggy.View.values = {_op: _op
