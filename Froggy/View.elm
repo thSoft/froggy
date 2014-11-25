@@ -18,8 +18,9 @@ view fontName (windowWidth, windowHeight) time game =
         message = game |> viewMessage fontName viewSize |> map (container windowWidth windowHeight middle)
     in layers ([scene] ++ message)
   else
-    let blackRectangle = rect (windowWidth |> toFloat) (windowHeight |> toFloat) |> filled black
-    in [blackRectangle] |> collage windowWidth windowHeight
+    let blackRectangle = [rect (windowWidth |> toFloat) (windowHeight |> toFloat) |> filled black] |> collage windowWidth windowHeight
+        loadingImage = image 64 64 (imagePath "loading.gif") |> container windowWidth windowHeight middle
+     in layers [blackRectangle, loadingImage]
 
 viewScene : String -> Int -> Time -> Game -> Element
 viewScene fontName viewSize time game = 

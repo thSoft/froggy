@@ -1,19 +1,22 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Froggy</title>
-<script type="text/javascript" src="Froggy/Main.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js"></script>
-<script type="text/javascript" src="script.js"></script>
-<link rel="stylesheet" type="text/css" href="style.css"/>
-</head>
-<body>
-<script type="text/javascript">
-translateTouchEventsToMouseEvents();
-var component = initializeElm();
-loadFonts();
-loadGame(component);
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Froggy</title>
+    <script type="text/javascript" src="Froggy/Main.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js"></script>
+    <script type="text/javascript" src="images.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+  </head>
+  <body>
+    <script type="text/javascript">
+      translateTouchEventsToMouseEvents();
+      var component = initializeElm();
+      loadFonts();
+      loadImages(function () {
+        loadGame(component);
+      });
+    </script>
+  </body>
 </html>

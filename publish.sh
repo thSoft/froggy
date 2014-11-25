@@ -9,7 +9,7 @@ if [ -n "$(git status --porcelain)" ]; then
   exit 1
 fi
 git checkout gh-pages
-cp -r build/* .
+cp -R build/ .
 git add -A
 git commit -am "publish"
 git push origin gh-pages

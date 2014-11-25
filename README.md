@@ -2,4 +2,7 @@
 
 # Develop
 
-Elm version: 0.13
+Prerequisites:
+
+* node.js
+* Elm 0.13
