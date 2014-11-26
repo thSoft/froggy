@@ -15,7 +15,7 @@ if (status != '') {
 }
 var pagesBranch = 'gh-pages';
 exec('git checkout ' + pagesBranch);
-cp('-R', 'build/', '.');
+cp('-Rf', 'build/', '.');
 exec('git add -A');
 exec('git commit -am "publish"');
 exec('git push origin ' + pagesBranch);
