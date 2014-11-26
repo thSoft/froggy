@@ -19,6 +19,7 @@ update (time, command) game =
     MoveBy positionDelta -> game |> moveBy positionDelta time
     MoveTo leaf -> game |> moveTo leaf time
     Continue -> game |> continue time
+    RestartLevel -> game |> restartLevel time
     Start loadedGame -> game |> start loadedGame time
 
 moveBy : Grid.Position -> Time -> Game -> Game
