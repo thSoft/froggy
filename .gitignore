@@ -1,4 +1,4 @@
-build
-cache
-elm_dependencies
-node_modules
+build/cache
+build/elm_dependencies
+build/node_modules
+target
