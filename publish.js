@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 require('shelljs/global');
+var common = require('./common.js');
 
 var currentBranch = exec('git rev-parse --abbrev-ref HEAD', { silent:true }).output;
 var masterBranch = 'master';
@@ -15,7 +16,7 @@ if (status != '') {
 }
 var pagesBranch = 'gh-pages';
 exec('git checkout ' + pagesBranch);
-cp('-Rf', 'build/', '.');
+cp('-Rf', common.buildDirectory, '.');
 exec('git add -A');
 exec('git commit -am "publish"');
 exec('git push origin ' + pagesBranch);

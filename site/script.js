@@ -47,8 +47,8 @@ function loadFonts() {
 
 function loadImages(callback) {
   var loadedImagesCount = 0;
-  images.forEach(function (imagePath) {
-    image = new Image();
+  images.forEach(function(imagePath) {
+    var image = new Image();
     image.src = imagePath;
     image.onload = function() {
       loadedImagesCount++;
