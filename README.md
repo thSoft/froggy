@@ -1,8 +1,6 @@
 [Play it!](http://thsoft.github.io/froggy)
 
-# Develop
+For development, you need:
 
-Prerequisites:
-
-* node.js
-* Elm 0.13
+* [node.js](http://nodejs.org/download/)
+* [Elm 0.13](http://elm-lang.org/Install.elm)

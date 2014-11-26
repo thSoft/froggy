@@ -1,0 +1,8 @@
+{
+  "name": "Froggy",
+  "version": "0.1.0",
+  "devDependencies": {
+    "shelljs": "^0.3.0"
+  },
+  "repository": "https://github.com/thSoft/froggy.git"
+}
