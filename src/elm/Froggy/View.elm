@@ -113,7 +113,7 @@ gameText fontName height string = toText string |> Text.style {
 
 viewMessage : String -> Int -> Game -> [Element]
 viewMessage fontName viewSize game =
-  let backgroundSize = ((viewSize |> toFloat) / 1.5) |> round
+  let backgroundSize = ((viewSize |> toFloat) / 1.33) |> round
       background = image backgroundSize backgroundSize (imagePath "message.svg")
       textSize = (viewSize |> toFloat) / 35
       lastLevel = game.scene.levelNumber == numberOfLevels - 1
