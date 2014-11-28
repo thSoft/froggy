@@ -10460,11 +10460,11 @@ Elm.Froggy.View.make = function (_elm) {
          $Froggy$Levels.numberOfLevels - 1);
          var completedMessage = lastLevel ? gameCompletedMessage : levelCompletedMessage;
          var textSize = $Basics.toFloat(viewSize) / 35;
-         var backgroundSize = $Basics.round($Basics.toFloat(viewSize) / 1.7);
+         var backgroundSize = $Basics.round($Basics.toFloat(viewSize) / 1.5);
          var background = A3($Graphics$Element.image,
          backgroundSize,
          backgroundSize,
-         imagePath("message.png"));
+         imagePath("message.svg"));
          return $Froggy$Model.levelCompleted(game) ? _L.fromArray([background
                                                                   ,A3(gameText,
                                                                   fontName,
@@ -10612,7 +10612,7 @@ Elm.Froggy.View.make = function (_elm) {
             _L.append($String.show(distanceOf(target)),
             _L.append("/",
             _L.append($String.show(angleOf(target)),
-            ".png")))));
+            ".svg")))));
          };
          var toClickable = function (target) {
             return A2($Graphics$Input.clickable,
@@ -10636,7 +10636,7 @@ Elm.Froggy.View.make = function (_elm) {
    string) {
       return function () {
          var worldPosition = toWorld(tileSize)(position);
-         var textSize = tileSize / 5.6;
+         var textSize = tileSize / 5;
          return makeForm(worldPosition)(A3(gameText,
          fontName,
          textSize,
@@ -10662,8 +10662,7 @@ Elm.Froggy.View.make = function (_elm) {
          _L.append("Level\n",
          _L.append($String.show(game.scene.levelNumber),
          _L.append("/",
-         _L.append($String.show($Froggy$Levels.numberOfLevels - 1),
-         "\n\n"))))));
+         $String.show($Froggy$Levels.numberOfLevels - 1))))));
          return _L.fromArray([background
                              ,levelNumber]);
       }();
@@ -11234,7 +11233,7 @@ Elm.Froggy.State.make = function (_elm) {
                  time,
                  lastSceneChange);}
             _E.Case($moduleName,
-            "between lines 130 and 134");
+            "between lines 131 and 135");
          }();
       }();
    });
@@ -11255,7 +11254,7 @@ Elm.Froggy.State.make = function (_elm) {
                  time)(game);
                case "Nothing": return game;}
             _E.Case($moduleName,
-            "between lines 30 and 32");
+            "between lines 31 and 33");
          }();
       }();
    });
@@ -11275,14 +11274,16 @@ Elm.Froggy.State.make = function (_elm) {
                       _v6._1._0,
                       _v6._0)(game);
                     case "Nop": return game;
+                    case "RestartLevel":
+                    return restartLevel(_v6._0)(game);
                     case "Start": return A2(start,
                       _v6._1._0,
                       _v6._0)(game);}
                  _E.Case($moduleName,
-                 "between lines 17 and 22");
+                 "between lines 17 and 23");
               }();}
          _E.Case($moduleName,
-         "between lines 17 and 22");
+         "between lines 17 and 23");
       }();
    });
    var game = function (loadedGame) {
@@ -11343,6 +11344,7 @@ Elm.Froggy.Commands.make = function (_elm) {
          return startGame;
       }();
    });
+   var RestartLevel = {ctor: "RestartLevel"};
    var Continue = {ctor: "Continue"};
    var MoveTo = function (a) {
       return {ctor: "MoveTo"
@@ -11363,9 +11365,10 @@ Elm.Froggy.Commands.make = function (_elm) {
    });
    var Nop = {ctor: "Nop"};
    var moveTo = $Graphics$Input.input(Nop);
-   var makeContinue = function (pressed) {
-      return pressed ? Continue : Nop;
-   };
+   var makeCommand = F2(function (command,
+   pressed) {
+      return pressed ? command : Nop;
+   });
    var makeStart = function (loadedGame) {
       return $Signal.dropRepeats(A3($Signal.foldp,
       updateStart,
@@ -11375,8 +11378,11 @@ Elm.Froggy.Commands.make = function (_elm) {
    var commands = function (loadedGame) {
       return function () {
          var start = makeStart(loadedGame);
+         var restartLevel = A2($Signal.lift,
+         makeCommand(RestartLevel),
+         $Keyboard.isDown(27));
          var $continue = A2($Signal.lift,
-         makeContinue,
+         makeCommand(Continue),
          A2($Signal.merge,
          $Keyboard.enter,
          $Mouse.isDown));
@@ -11387,6 +11393,7 @@ Elm.Froggy.Commands.make = function (_elm) {
          return $Time.timestamp($Signal.merges(_L.fromArray([moveBy
                                                             ,moveTo.signal
                                                             ,$continue
+                                                            ,restartLevel
                                                             ,start])));
       }();
    };
@@ -11395,11 +11402,12 @@ Elm.Froggy.Commands.make = function (_elm) {
                                  ,MoveBy: MoveBy
                                  ,MoveTo: MoveTo
                                  ,Continue: Continue
+                                 ,RestartLevel: RestartLevel
                                  ,Start: Start
                                  ,commands: commands
                                  ,makeMoveBy: makeMoveBy
                                  ,moveTo: moveTo
-                                 ,makeContinue: makeContinue
+                                 ,makeCommand: makeCommand
                                  ,makeStart: makeStart
                                  ,updateStart: updateStart};
    return _elm.Froggy.Commands.values;
