@@ -82,7 +82,7 @@ viewTargets frog tileSize leaves =
       toClickable target = clickable moveTo.handle (MoveTo target)
       distanceOf target = (distance target.position.x frog.leaf.position.x) + (distance target.position.y frog.leaf.position.y)
       angleOf target = frog.leaf `angleBetween` target |> getOrElse 0
-      filename target = "arrows/" ++ (distanceOf target |> show) ++ "/" ++ (angleOf target |> show) ++ ".png" |> imagePath
+      filename target = "arrows/" ++ (distanceOf target |> show) ++ "/" ++ (angleOf target |> show) ++ ".svg" |> imagePath
       worldPosition target = target.position |> toWorld tileSize
       viewTarget target = customSprite (toClickable target) (worldPosition target) tileSize (filename target)
   in targets |> map viewTarget
