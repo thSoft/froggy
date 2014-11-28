@@ -92,12 +92,12 @@ viewLevelNumber fontName tileSize game =
   let levelPosition = (getLevel game.scene.levelNumber) |> .levelPosition
       worldPosition = levelPosition |> toWorld tileSize
       background = sprite worldPosition tileSize (imagePath "level.png")
-      levelNumber = textSprite fontName levelPosition tileSize ("Level\n" ++ show game.scene.levelNumber ++ "/" ++ show (numberOfLevels - 1) ++ "\n\n") |> rotate (-1 |> degrees)
+      levelNumber = textSprite fontName levelPosition tileSize ("Level\n" ++ show game.scene.levelNumber ++ "/" ++ show (numberOfLevels - 1)) |> rotate (-1 |> degrees)
   in [background, levelNumber]
 
 textSprite : String -> Grid.Position -> Float -> String -> Form
 textSprite fontName position tileSize string =
-  let textSize = tileSize / 5.6
+  let textSize = tileSize / 5
       worldPosition = position |> toWorld tileSize
   in gameText fontName textSize string |> makeForm worldPosition
 
@@ -113,8 +113,8 @@ gameText fontName height string = toText string |> Text.style {
 
 viewMessage : String -> Int -> Game -> [Element]
 viewMessage fontName viewSize game =
-  let backgroundSize = ((viewSize |> toFloat) / 1.7) |> round
-      background = image backgroundSize backgroundSize (imagePath "message.png")
+  let backgroundSize = ((viewSize |> toFloat) / 1.5) |> round
+      background = image backgroundSize backgroundSize (imagePath "message.svg")
       textSize = (viewSize |> toFloat) / 35
       lastLevel = game.scene.levelNumber == numberOfLevels - 1
       completedMessage = if lastLevel then gameCompletedMessage else levelCompletedMessage

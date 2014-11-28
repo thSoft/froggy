@@ -19,7 +19,7 @@ rm(cacheFiles);
 
 var imagePaths = ls('-R', directories.site).filter(function(filePath) {
   var extension = path.extname(filePath);
-  return extension == '.png' || extension == '.jpg';
+  return extension == '.svg' || extension == '.png' || extension == '.jpg';
 });
 var script = 'var images = ' + JSON.stringify(imagePaths) + ';';
 script.to(path.join(directories.target, 'images.js'));
