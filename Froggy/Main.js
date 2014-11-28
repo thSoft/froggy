@@ -10460,7 +10460,7 @@ Elm.Froggy.View.make = function (_elm) {
          $Froggy$Levels.numberOfLevels - 1);
          var completedMessage = lastLevel ? gameCompletedMessage : levelCompletedMessage;
          var textSize = $Basics.toFloat(viewSize) / 35;
-         var backgroundSize = $Basics.round($Basics.toFloat(viewSize) / 1.5);
+         var backgroundSize = $Basics.round($Basics.toFloat(viewSize) / 1.33);
          var background = A3($Graphics$Element.image,
          backgroundSize,
          backgroundSize,
