@@ -10,7 +10,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   sodipodi:docname="270.svg"
+   sodipodi:docname="180.svg"
    inkscape:version="0.47pre4 r22446"
    sodipodi:version="0.32"
    id="svg1878"
@@ -77,11 +77,11 @@
      id="defs3">
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 16.665892 : 1"
+       inkscape:vp_x="0 : 22.817926 : 1"
        inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="45.635853 : 16.665892 : 1"
-       inkscape:persp3d-origin="22.817926 : 11.110594 : 1"
-       id="perspective75" />
+       inkscape:vp_z="33.331783 : 22.817926 : 1"
+       inkscape:persp3d-origin="16.665892 : 15.211951 : 1"
+       id="perspective77" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient11462"
@@ -649,23 +649,43 @@
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient11462"
-       id="linearGradient2881"
+       id="linearGradient2882"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.80139,0,0,1.247832,-62.174185,46.97392)"
-       x1="358.60312"
-       y1="247.41286"
-       x2="341.68527"
-       y2="267.08432" />
+       gradientTransform="matrix(0,0.80139,-1.247832,0,0,0)"
+       x1="458.62335"
+       y1="-301.67392"
+       x2="477.9736"
+       y2="-280.46561" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient11462"
        id="linearGradient2884"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.80139,0,0,1.247832,-74.120278,46.97392)"
-       x1="358.60312"
-       y1="247.41286"
-       x2="341.68527"
-       y2="267.08432" />
+       gradientTransform="matrix(0,0.80139,-1.247832,0,0,0)"
+       x1="488.85745"
+       y1="-301.27124"
+       x2="507.57675"
+       y2="-281.40521" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient11462"
+       id="linearGradient2885"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,0.80139,-1.247832,0,-68.24861,-24.53058)"
+       x1="488.85745"
+       y1="-301.27124"
+       x2="507.57675"
+       y2="-281.40521" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient11462"
+       id="linearGradient2888"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,0.80139,-1.247832,0,-68.24861,-12.584475)"
+       x1="458.62335"
+       y1="-301.67392"
+       x2="477.9736"
+       y2="-280.46561" />
   </defs>
   <sodipodi:namedview
      inkscape:window-y="65"
@@ -674,8 +694,8 @@
      inkscape:window-width="836"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     inkscape:cy="188.36877"
-     inkscape:cx="-134.35461"
+     inkscape:cy="239.99998"
+     inkscape:cx="92.822694"
      inkscape:zoom="0.77472527"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -700,10 +720,10 @@
      inkscape:groupmode="layer"
      inkscape:label="Layer 1"
      id="layer1"
-     transform="translate(-174.48177,-336.75208)">
+     transform="translate(-262.8738,-342.90415)">
     <path
-       id="path9835"
-       d="m 200.61629,352.96119 -4.13134,4.13134 11.70036,11.70035 -11.58815,11.58815 4.16194,4.16194 15.71949,-15.71949 -15.8623,-15.86229 z"
-       style="color:#000000;fill:url(#linearGradient2884);fill-opacity:1;fill-rule:nonzero;stroke:#116b1c;stroke-width:1.75000167;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible" />
+       id="path9843"
+       d="m 310.66469,369.03867 -4.13134,-4.13134 -11.70035,11.70035 -11.58815,-11.58814 -4.16194,4.16194 15.71949,15.7195 15.86229,-15.86231 z"
+       style="color:#000000;fill:url(#linearGradient2885);fill-opacity:1;fill-rule:nonzero;stroke:#116b1c;stroke-width:1.75000167;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible" />
   </g>
 </svg>

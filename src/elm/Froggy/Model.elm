@@ -8,7 +8,7 @@ import Froggy.Levels (..)
 
 type Game = {
   scene: Scene,
-  instructions: Bool,
+  usingKeyboard: Bool,
   lastSceneChange: Maybe (TransitionInfo (Maybe Scene))
 }
 
@@ -36,16 +36,16 @@ stuck game = not (game.scene.leaves |> any (reachableBy game.scene.frog))
 reachableBy : Frog -> Leaf -> Bool
 reachableBy frog leaf = (frog.leaf `angleBetween` leaf) |> isJust
 
-angleBetween : Leaf -> Leaf -> Maybe Float
+angleBetween : Leaf -> Leaf -> Maybe Int
 angleBetween sourceLeaf targetLeaf =
   let sourceX = sourceLeaf.position.x
       sourceY = sourceLeaf.position.y
       targetX = targetLeaf.position.x
       targetY = targetLeaf.position.y
-  in if | (sourceX == targetX) && (sourceY > targetY) && (sourceY `near` targetY) -> Just 0
-        | (sourceY == targetY) && (sourceX < targetX) && (sourceX `near` targetX) -> Just 270
-        | (sourceX == targetX) && (sourceY < targetY) && (sourceY `near` targetY) -> Just 180
-        | (sourceY == targetY) && (sourceX > targetX) && (sourceX `near` targetX) -> Just 90
+  in if | (sourceX == targetX) && (sourceY > targetY) && (sourceY `near` targetY) -> Just 90
+        | (sourceY == targetY) && (sourceX < targetX) && (sourceX `near` targetX) -> Just 0
+        | (sourceX == targetX) && (sourceY < targetY) && (sourceY `near` targetY) -> Just 270
+        | (sourceY == targetY) && (sourceX > targetX) && (sourceX `near` targetX) -> Just 180
         | otherwise -> Nothing
 
 near : Int -> Int -> Bool
@@ -53,11 +53,8 @@ near a b = (distance a b) <= maxDistance
 
 maxDistance = 2
 
-angleOf : Frog -> Float
+angleOf : Frog -> Int
 angleOf frog =
   case frog.lastMove of
     Just { oldValue } -> oldValue `angleBetween` frog.leaf |> getOrElse 0
-    Nothing -> 0
-
-playing : Game -> Bool
-playing game = not game.instructions
+    Nothing -> 90

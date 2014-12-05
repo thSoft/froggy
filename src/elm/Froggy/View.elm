@@ -6,6 +6,7 @@ import Graphics.Input (..)
 import Easing (..)
 import Froggy.Util (..)
 import Froggy.Grid as Grid
+import Froggy.Grid (..)
 import Froggy.Levels (..)
 import Froggy.Model (..)
 import Froggy.Commands (..)
@@ -15,8 +16,7 @@ view fontName (windowWidth, windowHeight) time game =
   if game.lastSceneChange |> Maybe.isJust then
     let viewSize = min windowWidth windowHeight
         scene = game |> viewScene fontName viewSize time |> container windowWidth windowHeight middle
-        message = game |> viewMessage fontName viewSize |> map (container windowWidth windowHeight middle)
-    in layers ([scene] ++ message)
+    in layers [scene]
   else
     let blackRectangle = [rect (windowWidth |> toFloat) (windowHeight |> toFloat) |> filled black] |> collage windowWidth windowHeight
         loadingImage = image 64 64 (imagePath "loading.gif") |> container windowWidth windowHeight middle
@@ -29,7 +29,8 @@ viewScene fontName viewSize time game =
       leaves = game.scene.leaves |> map (viewLeaf tileSize)
       targets = game.scene.leaves |> viewTargets game.scene.frog tileSize
       level = game |> viewLevelNumber fontName tileSize
-  in (leaves ++ targets ++ frog ++ level) |> collage viewSize viewSize
+      message = game |> viewMessage fontName tileSize time
+  in (leaves ++ targets ++ frog ++ level ++ message) |> collage viewSize viewSize
 
 mapSize = 8
 
@@ -49,7 +50,7 @@ viewFrog tileSize time frog =
       size = case frog.lastMove of
         Nothing -> 1
         Just { startTime } -> ease (easeInQuad |> retour) float 1 1.2 movingFromDuration (time - startTime)
-      frogSprite = sprite worldPosition tileSize (imagePath "frog.png") |> rotate (angleOf frog |> degrees) |> scale size
+      frogSprite = sprite worldPosition tileSize (imagePath "frog.png") |> rotate (angleOf frog |> toFloat |> degrees) |> scale size
   in lastLeaf ++ [frogSprite]
 
 movingFromDuration : Time
@@ -111,37 +112,29 @@ gameText fontName height string = toText string |> Text.style {
     line = Nothing
   } |> centered
 
-viewMessage : String -> Int -> Game -> [Element]
-viewMessage fontName viewSize game =
-  let backgroundSize = ((viewSize |> toFloat) / 1.33) |> round
-      background = image backgroundSize backgroundSize (imagePath "message.svg")
-      textSize = (viewSize |> toFloat) / 35
-      lastLevel = game.scene.levelNumber == numberOfLevels - 1
-      completedMessage = if lastLevel then gameCompletedMessage else levelCompletedMessage
-  in if | game |> levelCompleted -> [background, gameText fontName textSize completedMessage]
-        | game |> stuck -> [background, gameText fontName textSize stuckMessage]
-        | game.instructions -> [background, gameText fontName textSize instructionsMessage]
-        | otherwise -> []
-
-gameCompletedMessage = """Congratulations!
-You have completed the game!"""
-
-levelCompletedMessage = """Level completed!
-""" ++ continueInstruction ++ """ to continue to the next level!"""
-
-stuckMessage = """Uh oh, you seem to be stuck!
-""" ++ continueInstruction ++ """ to restart this level!"""
-
-instructionsMessage = """Welcome to Froggy!
-
-Your goal is to traverse all leaves.
-
-Arrow key: jump to an adjacent leaf
-Shift + arrow key: leap over an adjacent leaf
-
-""" ++ continueInstruction ++ """ to start the game!"""
-
-continueInstruction = "Press Enter or tap"
+viewMessage : String -> Float -> Time -> Game -> [Form]
+viewMessage fontName tileSize time game =
+  let inverseAngle = ((angleOf game.scene.frog + 180) % 360) |> toFloat
+      deltaX = cos (inverseAngle |> degrees) |> round
+      deltaY = (-1 * sin (inverseAngle |> degrees)) |> round
+      position = game.scene.frog.leaf.position `translate` { x = deltaX, y = deltaY }
+      worldPosition = toWorld tileSize position
+      filename = "message/" ++ (inverseAngle |> show) ++ ".svg" |> imagePath
+      background = sprite worldPosition tileSize filename
+      iconSize = tileSize / 2.5
+      forms =
+        if | game |> levelCompleted ->
+             let lastLevel = game.scene.levelNumber == numberOfLevels - 1
+             in if lastLevel then
+               [background, sprite worldPosition iconSize (imagePath "completed.svg")]
+             else
+               [background, sprite worldPosition iconSize (imagePath "next.png")]
+           | game |> stuck -> [background, sprite worldPosition iconSize (imagePath "restart.png")]
+           | otherwise -> []
+      scaleFactor = case game.scene.frog.lastMove of
+        Just { startTime } -> ease easeInOutBack float 0 1 (movingFromDuration * 2) (time - startTime)
+        Nothing -> 1
+  in forms |> map (scale scaleFactor)
 
 imagePath : String -> String
 imagePath filename = "images/" ++ filename

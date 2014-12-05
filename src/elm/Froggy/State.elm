@@ -39,25 +39,23 @@ findLeaf position leaves =
 
 moveTo : Leaf -> Time -> Game -> Game
 moveTo leaf time game =
-  if playing game then
-    let reachable = leaf |> reachableBy game.scene.frog
-        scene = game.scene
-    in
-      if reachable then
-        { game |
-          scene <- { scene |
-            frog <- {
-              leaf = leaf,
-              lastMove = Just {
-                oldValue = game.scene.frog.leaf,
-                startTime = time
-              }
-            },
-            leaves <- remove game.scene.leaves game.scene.frog.leaf
-          }
+  let reachable = leaf |> reachableBy game.scene.frog
+      scene = game.scene
+  in
+    if reachable then
+      { game |
+        scene <- { scene |
+          frog <- {
+            leaf = leaf,
+            lastMove = Just {
+              oldValue = game.scene.frog.leaf,
+              startTime = time
+            }
+          },
+          leaves <- remove game.scene.leaves game.scene.frog.leaf
         }
-      else game
-  else game
+      }
+    else game
 
 loadLevel : Time -> Int -> Game
 loadLevel time levelNumber =
@@ -75,7 +73,7 @@ loadLevel time levelNumber =
       leaves = leaves,
       levelNumber = actualLevelNumber
     },
-    instructions = False,
+    usingKeyboard = False,
     lastSceneChange = Just {
       oldValue = Nothing,
       startTime = time
@@ -102,7 +100,6 @@ continue : Time -> Game -> Game
 continue time game =
   if | game |> levelCompleted -> game |> nextLevel time
      | game |> stuck -> game |> restartLevel time
-     | game.instructions -> { game | instructions <- False }
      | otherwise -> game
 
 nextLevel : Time -> Game -> Game
@@ -118,7 +115,6 @@ newGame : Time -> Maybe (TransitionInfo (Maybe Scene)) -> Game
 newGame time lastSceneChange =
   let level0 = loadLevel time 0
   in { level0 |
-    instructions <- True,
     lastSceneChange <- lastSceneChange
   }
 
