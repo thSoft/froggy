@@ -20,7 +20,7 @@ update (time, command) game =
     MoveTo leaf -> game |> moveTo leaf time
     Continue -> game |> continue time
     RestartLevel -> game |> restartLevel time
-    Start loadedGame -> game |> start loadedGame time
+    Start loadedGame -> start loadedGame time
 
 moveBy : Grid.Position -> Time -> Game -> Game
 moveBy positionDelta time game =
@@ -127,8 +127,8 @@ newGame time lastSceneChange =
     lastSceneChange <- lastSceneChange
   }
 
-start : Maybe Game -> Time -> Game -> Game
-start loadedGame time game =
+start : Maybe Game -> Time -> Game
+start loadedGame time =
   let lastSceneChange = Just {
         oldValue = Nothing,
         startTime = time
