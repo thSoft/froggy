@@ -2,9 +2,12 @@ module Froggy.View where
 
 import Maybe
 import Text
+import Graphics.Element as Element
 import Graphics.Input (..)
+import Easing
 import Easing (..)
 import Froggy.Util (..)
+import Froggy.TransitionUtil (..)
 import Froggy.Grid as Grid
 import Froggy.Grid (..)
 import Froggy.Levels (..)
@@ -13,23 +16,29 @@ import Froggy.Commands (..)
 
 view : String -> (Int, Int) -> Time -> Game -> Element
 view fontName (windowWidth, windowHeight) time game =
-  if game.lastSceneChange |> Maybe.isJust then
-    let viewSize = min windowWidth windowHeight
-        scene = game |> viewScene fontName viewSize time |> container windowWidth windowHeight middle
-    in layers [scene]
-  else
-    let blackRectangle = [rect (windowWidth |> toFloat) (windowHeight |> toFloat) |> filled black] |> collage windowWidth windowHeight
-        loadingImage = image 64 64 (imagePath "loading.gif") |> container windowWidth windowHeight middle
-     in layers [blackRectangle, loadingImage]
+  case game.lastSceneChange of
+    Just lastSceneChange ->
+      let viewSize = min windowWidth windowHeight
+          scene = game.scene |> viewScene fontName viewSize time lastSceneChange
+          cover = lastSceneChange |> viewCover (windowWidth, windowHeight) time
+      in [scene, cover] |> map (container windowWidth windowHeight middle) |> layers
+    Nothing ->
+      let blackRectangle = spacer windowWidth windowHeight |> Element.color black
+          loadingImage = image 64 64 (imagePath "loading.gif") |> container windowWidth windowHeight middle
+      in layers [blackRectangle, loadingImage]
 
-viewScene : String -> Int -> Time -> Game -> Element
-viewScene fontName viewSize time game = 
-  let tileSize = (viewSize |> toFloat) / mapSize
-      frog = game.scene.frog |> viewFrog tileSize time
-      leaves = game.scene.leaves |> map (viewLeaf tileSize)
-      targets = game.scene.leaves |> viewTargets game.scene.frog tileSize
-      level = game |> viewLevelNumber fontName tileSize
-      message = game |> viewMessage fontName tileSize time
+viewScene : String -> Int -> Time -> TransitionInfo (Maybe Scene) -> Scene -> Element
+viewScene fontName viewSize time lastSceneChange scene = 
+  let actualScene =
+        case lastSceneChange.oldValue of
+          Just oldScene -> if (time - lastSceneChange.startTime) < (sceneChangeDuration / 2) then oldScene else scene
+          Nothing -> scene
+      tileSize = (viewSize |> toFloat) / mapSize
+      frog = actualScene.frog |> viewFrog tileSize time
+      leaves = actualScene.leaves |> map (viewLeaf tileSize)
+      targets = actualScene.leaves |> viewTargets actualScene.frog tileSize
+      level = actualScene.levelNumber |> viewLevelNumber fontName tileSize
+      message = actualScene |> viewMessage fontName tileSize time
   in (leaves ++ targets ++ frog ++ level ++ message) |> collage viewSize viewSize
 
 mapSize = 8
@@ -88,13 +97,13 @@ viewTargets frog tileSize leaves =
       viewTarget target = customSprite (toClickable target) (worldPosition target) tileSize (filename target)
   in targets |> map viewTarget
 
-viewLevelNumber : String -> Float -> Game -> [Form]
-viewLevelNumber fontName tileSize game =
-  let levelPosition = (getLevel game.scene.levelNumber) |> .levelPosition
-      worldPosition = levelPosition |> toWorld tileSize
+viewLevelNumber : String -> Float -> Int -> [Form]
+viewLevelNumber fontName tileSize levelNumber =
+  let position = (getLevel levelNumber) |> .levelPosition
+      worldPosition = position |> toWorld tileSize
       background = sprite worldPosition tileSize (imagePath "level.png")
-      levelNumber = textSprite fontName levelPosition tileSize ("Level\n" ++ show game.scene.levelNumber ++ "/" ++ show (numberOfLevels - 1)) |> rotate (-1 |> degrees)
-  in [background, levelNumber]
+      indicator = textSprite fontName position tileSize ("Level\n" ++ show levelNumber ++ "/" ++ show (numberOfLevels - 1)) |> rotate (-1 |> degrees)
+  in [background, indicator]
 
 textSprite : String -> Grid.Position -> Float -> String -> Form
 textSprite fontName position tileSize string =
@@ -112,29 +121,38 @@ gameText fontName height string = toText string |> Text.style {
     line = Nothing
   } |> centered
 
-viewMessage : String -> Float -> Time -> Game -> [Form]
-viewMessage fontName tileSize time game =
-  let inverseAngle = ((angleOf game.scene.frog + 180) % 360) |> toFloat
+viewMessage : String -> Float -> Time -> Scene -> [Form]
+viewMessage fontName tileSize time scene =
+  let inverseAngle = ((angleOf scene.frog + 180) % 360) |> toFloat
       deltaX = cos (inverseAngle |> degrees) |> round
       deltaY = (-1 * sin (inverseAngle |> degrees)) |> round
-      position = game.scene.frog.leaf.position `translate` { x = deltaX, y = deltaY }
+      position = scene.frog.leaf.position `translate` { x = deltaX, y = deltaY }
       worldPosition = toWorld tileSize position
       filename = "message/" ++ (inverseAngle |> show) ++ ".svg" |> imagePath
       background = sprite worldPosition tileSize filename
       iconSize = tileSize / 2.5
       forms =
-        if | game |> levelCompleted ->
-             let lastLevel = game.scene.levelNumber == numberOfLevels - 1
+        if | scene |> levelCompleted ->
+             let lastLevel = scene.levelNumber == numberOfLevels - 1
              in if lastLevel then
                [background, sprite worldPosition iconSize (imagePath "completed.svg")]
              else
                [background, sprite worldPosition iconSize (imagePath "next.png")]
-           | game |> stuck -> [background, sprite worldPosition iconSize (imagePath "restart.png")]
+           | scene |> stuck -> [background, sprite worldPosition iconSize (imagePath "restart.png")]
            | otherwise -> []
-      scaleFactor = case game.scene.frog.lastMove of
+      scaleFactor = case scene.frog.lastMove of
         Just { startTime } -> ease easeInOutBack float 0 1 (movingFromDuration * 2) (time - startTime)
         Nothing -> 1
   in forms |> map (scale scaleFactor)
 
 imagePath : String -> String
 imagePath filename = "images/" ++ filename
+
+viewCover : (Int, Int) -> Time -> TransitionInfo (Maybe Scene) -> Element
+viewCover (windowWidth, windowHeight) time lastSceneChange =
+  let easingFunction = if lastSceneChange.oldValue |> Maybe.isJust then retour Easing.linear else Easing.flip Easing.linear
+      factor = ease easingFunction float 0 1 sceneChangeDuration (time - lastSceneChange.startTime)
+  in spacer windowWidth windowHeight |> Element.color black |> opacity factor
+
+sceneChangeDuration : Time
+sceneChangeDuration = 300 * millisecond

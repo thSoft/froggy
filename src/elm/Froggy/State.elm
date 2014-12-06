@@ -57,8 +57,8 @@ moveTo leaf time game =
       }
     else game
 
-loadLevel : Time -> Int -> Game
-loadLevel time levelNumber =
+loadLevel : Time -> Maybe Scene -> Int -> Game
+loadLevel time oldScene levelNumber =
   let actualLevelNumber = if (levelNumber >= numberOfLevels) || (levelNumber < 0) then 0 else levelNumber
       level = getLevel actualLevelNumber
       leaves = loadLeafMatrix level.leafMatrix
@@ -75,7 +75,7 @@ loadLevel time levelNumber =
     },
     usingKeyboard = False,
     lastSceneChange = Just {
-      oldValue = Nothing,
+      oldValue = oldScene,
       startTime = time
     }
   }
@@ -98,22 +98,31 @@ loadLeafRow y row =
 
 continue : Time -> Game -> Game
 continue time game =
-  if | game |> levelCompleted -> game |> nextLevel time
-     | game |> stuck -> game |> restartLevel time
+  if | game.scene |> levelCompleted -> game |> nextLevel time
+     | game.scene |> stuck -> game |> restartLevel time
      | otherwise -> game
 
 nextLevel : Time -> Game -> Game
-nextLevel time game = loadLevel time (game.scene.levelNumber + 1)
+nextLevel time game = loadLevel time (Just game.scene) (game.scene.levelNumber + 1)
 
 restartLevel : Time -> Game -> Game
-restartLevel time game = loadLevel time game.scene.levelNumber
+restartLevel time game = loadLevel time (Just game.scene) game.scene.levelNumber
+
+changeScene : Time -> Game -> Game -> Game
+changeScene time oldGame game = 
+  { game |
+    lastSceneChange <- Just {
+      oldValue = Just oldGame.scene,
+      startTime = time
+   } 
+  }
 
 initialGame : Game
 initialGame = newGame 0 Nothing
 
 newGame : Time -> Maybe (TransitionInfo (Maybe Scene)) -> Game
 newGame time lastSceneChange =
-  let level0 = loadLevel time 0
+  let level0 = loadLevel time Nothing 0
   in { level0 |
     lastSceneChange <- lastSceneChange
   }

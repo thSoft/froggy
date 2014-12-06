@@ -27,11 +27,11 @@ type Leaf = {
   position: Grid.Position
 }
 
-levelCompleted : Game -> Bool
-levelCompleted game = (game.scene.leaves |> length) == 1
+levelCompleted : Scene -> Bool
+levelCompleted scene = (scene.leaves |> length) == 1
 
-stuck : Game -> Bool
-stuck game = not (game.scene.leaves |> any (reachableBy game.scene.frog))
+stuck : Scene -> Bool
+stuck scene = not (scene.leaves |> any (reachableBy scene.frog))
 
 reachableBy : Frog -> Leaf -> Bool
 reachableBy frog leaf = (frog.leaf `angleBetween` leaf) |> isJust
