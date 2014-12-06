@@ -10316,48 +10316,48 @@ Elm.Froggy.Main.make = function (_elm) {
    });
    var loadedGame = $Native$Ports.portIn("loadedGame",
    $Native$Ports.incomingSignal(function (v) {
-      return v === null ? $Maybe.Nothing : $Maybe.Just(typeof v === "object" && "scene" in v && "instructions" in v && "lastSceneChange" in v ? {_: {}
-                                                                                                                                                ,scene: typeof v.scene === "object" && "frog" in v.scene && "leaves" in v.scene && "levelNumber" in v.scene ? {_: {}
-                                                                                                                                                                                                                                                              ,frog: typeof v.scene.frog === "object" && "leaf" in v.scene.frog && "lastMove" in v.scene.frog ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                ,leaf: typeof v.scene.frog.leaf === "object" && "position" in v.scene.frog.leaf ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,position: typeof v.scene.frog.leaf.position === "object" && "x" in v.scene.frog.leaf.position && "y" in v.scene.frog.leaf.position ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ,x: typeof v.scene.frog.leaf.position.x === "number" ? v.scene.frog.leaf.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.leaf.position.x)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ,y: typeof v.scene.frog.leaf.position.y === "number" ? v.scene.frog.leaf.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.leaf.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.scene.frog.leaf.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.scene.frog.leaf)
-                                                                                                                                                                                                                                                                                                                                                                ,lastMove: v.scene.frog.lastMove === null ? $Maybe.Nothing : $Maybe.Just(typeof v.scene.frog.lastMove === "object" && "oldValue" in v.scene.frog.lastMove && "startTime" in v.scene.frog.lastMove ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,oldValue: typeof v.scene.frog.lastMove.oldValue === "object" && "position" in v.scene.frog.lastMove.oldValue ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,position: typeof v.scene.frog.lastMove.oldValue.position === "object" && "x" in v.scene.frog.lastMove.oldValue.position && "y" in v.scene.frog.lastMove.oldValue.position ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,x: typeof v.scene.frog.lastMove.oldValue.position.x === "number" ? v.scene.frog.lastMove.oldValue.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.lastMove.oldValue.position.x)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,y: typeof v.scene.frog.lastMove.oldValue.position.y === "number" ? v.scene.frog.lastMove.oldValue.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.lastMove.oldValue.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.scene.frog.lastMove.oldValue.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.scene.frog.lastMove.oldValue)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,startTime: typeof v.scene.frog.lastMove.startTime === "number" ? v.scene.frog.lastMove.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.lastMove.startTime)} : _E.raise("invalid input, expecting JSObject [\"oldValue\",\"startTime\"] but got " + v.scene.frog.lastMove))} : _E.raise("invalid input, expecting JSObject [\"leaf\",\"lastMove\"] but got " + v.scene.frog)
-                                                                                                                                                                                                                                                              ,leaves: _U.isJSArray(v.scene.leaves) ? _L.fromArray(v.scene.leaves.map(function (v) {
-                                                                                                                                                                                                                                                                 return typeof v === "object" && "position" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                   ,position: typeof v.position === "object" && "x" in v.position && "y" in v.position ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                         ,x: typeof v.position.x === "number" ? v.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.position.x)
-                                                                                                                                                                                                                                                                                                                                                                                                         ,y: typeof v.position.y === "number" ? v.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v);
-                                                                                                                                                                                                                                                              })) : _E.raise("invalid input, expecting JSArray but got " + v.scene.leaves)
-                                                                                                                                                                                                                                                              ,levelNumber: typeof v.scene.levelNumber === "number" ? v.scene.levelNumber : _E.raise("invalid input, expecting JSNumber but got " + v.scene.levelNumber)} : _E.raise("invalid input, expecting JSObject [\"frog\",\"leaves\",\"levelNumber\"] but got " + v.scene)
-                                                                                                                                                ,instructions: typeof v.instructions === "boolean" ? v.instructions : _E.raise("invalid input, expecting JSBoolean but got " + v.instructions)
-                                                                                                                                                ,lastSceneChange: v.lastSceneChange === null ? $Maybe.Nothing : $Maybe.Just(typeof v.lastSceneChange === "object" && "oldValue" in v.lastSceneChange && "startTime" in v.lastSceneChange ? {_: {}
-                                                                                                                                                                                                                                                                                                                                           ,oldValue: v.lastSceneChange.oldValue === null ? $Maybe.Nothing : $Maybe.Just(typeof v.lastSceneChange.oldValue === "object" && "frog" in v.lastSceneChange.oldValue && "leaves" in v.lastSceneChange.oldValue && "levelNumber" in v.lastSceneChange.oldValue ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,frog: typeof v.lastSceneChange.oldValue.frog === "object" && "leaf" in v.lastSceneChange.oldValue.frog && "lastMove" in v.lastSceneChange.oldValue.frog ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,leaf: typeof v.lastSceneChange.oldValue.frog.leaf === "object" && "position" in v.lastSceneChange.oldValue.frog.leaf ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,position: typeof v.lastSceneChange.oldValue.frog.leaf.position === "object" && "x" in v.lastSceneChange.oldValue.frog.leaf.position && "y" in v.lastSceneChange.oldValue.frog.leaf.position ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,x: typeof v.lastSceneChange.oldValue.frog.leaf.position.x === "number" ? v.lastSceneChange.oldValue.frog.leaf.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.leaf.position.x)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,y: typeof v.lastSceneChange.oldValue.frog.leaf.position.y === "number" ? v.lastSceneChange.oldValue.frog.leaf.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.leaf.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.lastSceneChange.oldValue.frog.leaf.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.lastSceneChange.oldValue.frog.leaf)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,lastMove: v.lastSceneChange.oldValue.frog.lastMove === null ? $Maybe.Nothing : $Maybe.Just(typeof v.lastSceneChange.oldValue.frog.lastMove === "object" && "oldValue" in v.lastSceneChange.oldValue.frog.lastMove && "startTime" in v.lastSceneChange.oldValue.frog.lastMove ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,oldValue: typeof v.lastSceneChange.oldValue.frog.lastMove.oldValue === "object" && "position" in v.lastSceneChange.oldValue.frog.lastMove.oldValue ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,position: typeof v.lastSceneChange.oldValue.frog.lastMove.oldValue.position === "object" && "x" in v.lastSceneChange.oldValue.frog.lastMove.oldValue.position && "y" in v.lastSceneChange.oldValue.frog.lastMove.oldValue.position ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,x: typeof v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.x === "number" ? v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.x)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,y: typeof v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.y === "number" ? v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.lastSceneChange.oldValue.frog.lastMove.oldValue.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.lastSceneChange.oldValue.frog.lastMove.oldValue)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,startTime: typeof v.lastSceneChange.oldValue.frog.lastMove.startTime === "number" ? v.lastSceneChange.oldValue.frog.lastMove.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.lastMove.startTime)} : _E.raise("invalid input, expecting JSObject [\"oldValue\",\"startTime\"] but got " + v.lastSceneChange.oldValue.frog.lastMove))} : _E.raise("invalid input, expecting JSObject [\"leaf\",\"lastMove\"] but got " + v.lastSceneChange.oldValue.frog)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,leaves: _U.isJSArray(v.lastSceneChange.oldValue.leaves) ? _L.fromArray(v.lastSceneChange.oldValue.leaves.map(function (v) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              return typeof v === "object" && "position" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,position: typeof v.position === "object" && "x" in v.position && "y" in v.position ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,x: typeof v.position.x === "number" ? v.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.position.x)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,y: typeof v.position.y === "number" ? v.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           })) : _E.raise("invalid input, expecting JSArray but got " + v.lastSceneChange.oldValue.leaves)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,levelNumber: typeof v.lastSceneChange.oldValue.levelNumber === "number" ? v.lastSceneChange.oldValue.levelNumber : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.levelNumber)} : _E.raise("invalid input, expecting JSObject [\"frog\",\"leaves\",\"levelNumber\"] but got " + v.lastSceneChange.oldValue))
-                                                                                                                                                                                                                                                                                                                                           ,startTime: typeof v.lastSceneChange.startTime === "number" ? v.lastSceneChange.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.startTime)} : _E.raise("invalid input, expecting JSObject [\"oldValue\",\"startTime\"] but got " + v.lastSceneChange))} : _E.raise("invalid input, expecting JSObject [\"scene\",\"instructions\",\"lastSceneChange\"] but got " + v));
+      return v === null ? $Maybe.Nothing : $Maybe.Just(typeof v === "object" && "scene" in v && "usingKeyboard" in v && "lastSceneChange" in v ? {_: {}
+                                                                                                                                                 ,scene: typeof v.scene === "object" && "frog" in v.scene && "leaves" in v.scene && "levelNumber" in v.scene ? {_: {}
+                                                                                                                                                                                                                                                               ,frog: typeof v.scene.frog === "object" && "leaf" in v.scene.frog && "lastMove" in v.scene.frog ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                 ,leaf: typeof v.scene.frog.leaf === "object" && "position" in v.scene.frog.leaf ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,position: typeof v.scene.frog.leaf.position === "object" && "x" in v.scene.frog.leaf.position && "y" in v.scene.frog.leaf.position ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,x: typeof v.scene.frog.leaf.position.x === "number" ? v.scene.frog.leaf.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.leaf.position.x)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,y: typeof v.scene.frog.leaf.position.y === "number" ? v.scene.frog.leaf.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.leaf.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.scene.frog.leaf.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.scene.frog.leaf)
+                                                                                                                                                                                                                                                                                                                                                                 ,lastMove: v.scene.frog.lastMove === null ? $Maybe.Nothing : $Maybe.Just(typeof v.scene.frog.lastMove === "object" && "oldValue" in v.scene.frog.lastMove && "startTime" in v.scene.frog.lastMove ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,oldValue: typeof v.scene.frog.lastMove.oldValue === "object" && "position" in v.scene.frog.lastMove.oldValue ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,position: typeof v.scene.frog.lastMove.oldValue.position === "object" && "x" in v.scene.frog.lastMove.oldValue.position && "y" in v.scene.frog.lastMove.oldValue.position ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,x: typeof v.scene.frog.lastMove.oldValue.position.x === "number" ? v.scene.frog.lastMove.oldValue.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.lastMove.oldValue.position.x)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,y: typeof v.scene.frog.lastMove.oldValue.position.y === "number" ? v.scene.frog.lastMove.oldValue.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.lastMove.oldValue.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.scene.frog.lastMove.oldValue.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.scene.frog.lastMove.oldValue)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,startTime: typeof v.scene.frog.lastMove.startTime === "number" ? v.scene.frog.lastMove.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.scene.frog.lastMove.startTime)} : _E.raise("invalid input, expecting JSObject [\"oldValue\",\"startTime\"] but got " + v.scene.frog.lastMove))} : _E.raise("invalid input, expecting JSObject [\"leaf\",\"lastMove\"] but got " + v.scene.frog)
+                                                                                                                                                                                                                                                               ,leaves: _U.isJSArray(v.scene.leaves) ? _L.fromArray(v.scene.leaves.map(function (v) {
+                                                                                                                                                                                                                                                                  return typeof v === "object" && "position" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                    ,position: typeof v.position === "object" && "x" in v.position && "y" in v.position ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                          ,x: typeof v.position.x === "number" ? v.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.position.x)
+                                                                                                                                                                                                                                                                                                                                                                                                          ,y: typeof v.position.y === "number" ? v.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v);
+                                                                                                                                                                                                                                                               })) : _E.raise("invalid input, expecting JSArray but got " + v.scene.leaves)
+                                                                                                                                                                                                                                                               ,levelNumber: typeof v.scene.levelNumber === "number" ? v.scene.levelNumber : _E.raise("invalid input, expecting JSNumber but got " + v.scene.levelNumber)} : _E.raise("invalid input, expecting JSObject [\"frog\",\"leaves\",\"levelNumber\"] but got " + v.scene)
+                                                                                                                                                 ,usingKeyboard: typeof v.usingKeyboard === "boolean" ? v.usingKeyboard : _E.raise("invalid input, expecting JSBoolean but got " + v.usingKeyboard)
+                                                                                                                                                 ,lastSceneChange: v.lastSceneChange === null ? $Maybe.Nothing : $Maybe.Just(typeof v.lastSceneChange === "object" && "oldValue" in v.lastSceneChange && "startTime" in v.lastSceneChange ? {_: {}
+                                                                                                                                                                                                                                                                                                                                            ,oldValue: v.lastSceneChange.oldValue === null ? $Maybe.Nothing : $Maybe.Just(typeof v.lastSceneChange.oldValue === "object" && "frog" in v.lastSceneChange.oldValue && "leaves" in v.lastSceneChange.oldValue && "levelNumber" in v.lastSceneChange.oldValue ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,frog: typeof v.lastSceneChange.oldValue.frog === "object" && "leaf" in v.lastSceneChange.oldValue.frog && "lastMove" in v.lastSceneChange.oldValue.frog ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,leaf: typeof v.lastSceneChange.oldValue.frog.leaf === "object" && "position" in v.lastSceneChange.oldValue.frog.leaf ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,position: typeof v.lastSceneChange.oldValue.frog.leaf.position === "object" && "x" in v.lastSceneChange.oldValue.frog.leaf.position && "y" in v.lastSceneChange.oldValue.frog.leaf.position ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,x: typeof v.lastSceneChange.oldValue.frog.leaf.position.x === "number" ? v.lastSceneChange.oldValue.frog.leaf.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.leaf.position.x)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,y: typeof v.lastSceneChange.oldValue.frog.leaf.position.y === "number" ? v.lastSceneChange.oldValue.frog.leaf.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.leaf.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.lastSceneChange.oldValue.frog.leaf.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.lastSceneChange.oldValue.frog.leaf)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,lastMove: v.lastSceneChange.oldValue.frog.lastMove === null ? $Maybe.Nothing : $Maybe.Just(typeof v.lastSceneChange.oldValue.frog.lastMove === "object" && "oldValue" in v.lastSceneChange.oldValue.frog.lastMove && "startTime" in v.lastSceneChange.oldValue.frog.lastMove ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,oldValue: typeof v.lastSceneChange.oldValue.frog.lastMove.oldValue === "object" && "position" in v.lastSceneChange.oldValue.frog.lastMove.oldValue ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,position: typeof v.lastSceneChange.oldValue.frog.lastMove.oldValue.position === "object" && "x" in v.lastSceneChange.oldValue.frog.lastMove.oldValue.position && "y" in v.lastSceneChange.oldValue.frog.lastMove.oldValue.position ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,x: typeof v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.x === "number" ? v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.x)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,y: typeof v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.y === "number" ? v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.lastMove.oldValue.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.lastSceneChange.oldValue.frog.lastMove.oldValue.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v.lastSceneChange.oldValue.frog.lastMove.oldValue)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,startTime: typeof v.lastSceneChange.oldValue.frog.lastMove.startTime === "number" ? v.lastSceneChange.oldValue.frog.lastMove.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.frog.lastMove.startTime)} : _E.raise("invalid input, expecting JSObject [\"oldValue\",\"startTime\"] but got " + v.lastSceneChange.oldValue.frog.lastMove))} : _E.raise("invalid input, expecting JSObject [\"leaf\",\"lastMove\"] but got " + v.lastSceneChange.oldValue.frog)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,leaves: _U.isJSArray(v.lastSceneChange.oldValue.leaves) ? _L.fromArray(v.lastSceneChange.oldValue.leaves.map(function (v) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               return typeof v === "object" && "position" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,position: typeof v.position === "object" && "x" in v.position && "y" in v.position ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,x: typeof v.position.x === "number" ? v.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.position.x)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,y: typeof v.position.y === "number" ? v.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.position)} : _E.raise("invalid input, expecting JSObject [\"position\"] but got " + v);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            })) : _E.raise("invalid input, expecting JSArray but got " + v.lastSceneChange.oldValue.leaves)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,levelNumber: typeof v.lastSceneChange.oldValue.levelNumber === "number" ? v.lastSceneChange.oldValue.levelNumber : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.oldValue.levelNumber)} : _E.raise("invalid input, expecting JSObject [\"frog\",\"leaves\",\"levelNumber\"] but got " + v.lastSceneChange.oldValue))
+                                                                                                                                                                                                                                                                                                                                            ,startTime: typeof v.lastSceneChange.startTime === "number" ? v.lastSceneChange.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.lastSceneChange.startTime)} : _E.raise("invalid input, expecting JSObject [\"oldValue\",\"startTime\"] but got " + v.lastSceneChange))} : _E.raise("invalid input, expecting JSObject [\"scene\",\"usingKeyboard\",\"lastSceneChange\"] but got " + v));
    }));
    var mainState = $Froggy$State.game(loadedGame);
    var savedGame = $Native$Ports.portOut("savedGame",
@@ -10372,7 +10372,7 @@ Elm.Froggy.Main.make = function (_elm) {
                                           ,y: v.position.y}};
                      })
                      ,levelNumber: v.scene.levelNumber}
-             ,instructions: v.instructions
+             ,usingKeyboard: v.usingKeyboard
              ,lastSceneChange: v.lastSceneChange.ctor === "Nothing" ? null : {oldValue: v.lastSceneChange._0.oldValue.ctor === "Nothing" ? null : {frog: {leaf: {position: {x: v.lastSceneChange._0.oldValue._0.frog.leaf.position.x
                                                                                                                                                                            ,y: v.lastSceneChange._0.oldValue._0.frog.leaf.position.y}}
                                                                                                                                                          ,lastMove: v.lastSceneChange._0.oldValue._0.frog.lastMove.ctor === "Nothing" ? null : {oldValue: {position: {x: v.lastSceneChange._0.oldValue._0.frog.lastMove._0.oldValue.position.x
@@ -10417,6 +10417,7 @@ Elm.Froggy.View.make = function (_elm) {
    $Froggy$Grid = Elm.Froggy.Grid.make(_elm),
    $Froggy$Levels = Elm.Froggy.Levels.make(_elm),
    $Froggy$Model = Elm.Froggy.Model.make(_elm),
+   $Froggy$TransitionUtil = Elm.Froggy.TransitionUtil.make(_elm),
    $Froggy$Util = Elm.Froggy.Util.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
@@ -10426,21 +10427,34 @@ Elm.Froggy.View.make = function (_elm) {
    $String = Elm.String.make(_elm),
    $Text = Elm.Text.make(_elm),
    $Time = Elm.Time.make(_elm);
+   var sceneChangeDuration = 300 * $Time.millisecond;
+   var viewCover = F3(function (_v0,
+   time,
+   lastSceneChange) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var easingFunction = $Maybe.isJust(lastSceneChange.oldValue) ? $Easing.retour($Easing.linear) : $Easing.flip($Easing.linear);
+                 var factor = A6($Easing.ease,
+                 easingFunction,
+                 $Easing.$float,
+                 0,
+                 1,
+                 sceneChangeDuration,
+                 time - lastSceneChange.startTime);
+                 return $Graphics$Element.opacity(factor)($Graphics$Element.color($Color.black)(A2($Graphics$Element.spacer,
+                 _v0._0,
+                 _v0._1)));
+              }();}
+         _E.Case($moduleName,
+         "between lines 153 and 155");
+      }();
+   });
    var imagePath = function (filename) {
       return _L.append("images/",
       filename);
    };
-   var continueInstruction = "Press Enter or tap";
-   var instructionsMessage = _L.append("Welcome to Froggy!\n\nYour goal is to traverse all leaves.\n\nArrow key: jump to an adjacent leaf\nShift + arrow key: leap over an adjacent leaf\n\n",
-   _L.append(continueInstruction,
-   " to start the game!"));
-   var stuckMessage = _L.append("Uh oh, you seem to be stuck!\n",
-   _L.append(continueInstruction,
-   " to restart this level!"));
-   var levelCompletedMessage = _L.append("Level completed!\n",
-   _L.append(continueInstruction,
-   " to continue to the next level!"));
-   var gameCompletedMessage = "Congratulations!\nYou have completed the game!";
    var gameText = F3(function (fontName,
    height,
    string) {
@@ -10451,34 +10465,6 @@ Elm.Froggy.View.make = function (_elm) {
                                         ,italic: false
                                         ,line: $Maybe.Nothing
                                         ,typeface: _L.fromArray([fontName])})($Text.toText(string)));
-   });
-   var viewMessage = F3(function (fontName,
-   viewSize,
-   game) {
-      return function () {
-         var lastLevel = _U.eq(game.scene.levelNumber,
-         $Froggy$Levels.numberOfLevels - 1);
-         var completedMessage = lastLevel ? gameCompletedMessage : levelCompletedMessage;
-         var textSize = $Basics.toFloat(viewSize) / 35;
-         var backgroundSize = $Basics.round($Basics.toFloat(viewSize) / 1.33);
-         var background = A3($Graphics$Element.image,
-         backgroundSize,
-         backgroundSize,
-         imagePath("message.svg"));
-         return $Froggy$Model.levelCompleted(game) ? _L.fromArray([background
-                                                                  ,A3(gameText,
-                                                                  fontName,
-                                                                  textSize,
-                                                                  completedMessage)]) : $Froggy$Model.stuck(game) ? _L.fromArray([background
-                                                                                                                                 ,A3(gameText,
-                                                                                                                                 fontName,
-                                                                                                                                 textSize,
-                                                                                                                                 stuckMessage)]) : game.instructions ? _L.fromArray([background
-                                                                                                                                                                                    ,A3(gameText,
-                                                                                                                                                                                    fontName,
-                                                                                                                                                                                    textSize,
-                                                                                                                                                                                    instructionsMessage)]) : _L.fromArray([]);
-      }();
    });
    var makeForm = F2(function (worldPosition,
    element) {
@@ -10525,8 +10511,8 @@ Elm.Froggy.View.make = function (_elm) {
    frog) {
       return function () {
          var size = function () {
-            var _v0 = frog.lastMove;
-            switch (_v0.ctor)
+            var _v4 = frog.lastMove;
+            switch (_v4.ctor)
             {case "Just":
                return A6($Easing.ease,
                  $Easing.retour($Easing.easeInQuad),
@@ -10534,14 +10520,14 @@ Elm.Froggy.View.make = function (_elm) {
                  1,
                  1.2,
                  movingFromDuration,
-                 time - _v0._0.startTime);
+                 time - _v4._0.startTime);
                case "Nothing": return 1;}
             _E.Case($moduleName,
-            "between lines 49 and 52");
+            "between lines 59 and 62");
          }();
          var lastLeaf = function () {
-            var _v2 = frog.lastMove;
-            switch (_v2.ctor)
+            var _v6 = frog.lastMove;
+            switch (_v6.ctor)
             {case "Just":
                return function () {
                     var alphaValue = A6($Easing.ease,
@@ -10550,37 +10536,37 @@ Elm.Froggy.View.make = function (_elm) {
                     1,
                     0,
                     movingFromDuration,
-                    time - _v2._0.startTime);
+                    time - _v6._0.startTime);
                     return _L.fromArray([$Graphics$Collage.alpha(alphaValue)(A2(viewLeaf,
                     tileSize,
-                    _v2._0.oldValue))]);
+                    _v6._0.oldValue))]);
                  }();
                case "Nothing":
                return _L.fromArray([]);}
             _E.Case($moduleName,
-            "between lines 44 and 49");
+            "between lines 54 and 59");
          }();
          var newWorldPosition = toWorld(tileSize)(frog.leaf.position);
          var worldPosition = function () {
-            var _v4 = frog.lastMove;
-            switch (_v4.ctor)
+            var _v8 = frog.lastMove;
+            switch (_v8.ctor)
             {case "Just":
                return function () {
-                    var oldWorldPosition = toWorld(tileSize)(_v4._0.oldValue.position);
+                    var oldWorldPosition = toWorld(tileSize)(_v8._0.oldValue.position);
                     return A6($Easing.ease,
                     $Easing.easeInOutQuint,
                     $Easing.pair($Easing.$float),
                     oldWorldPosition,
                     newWorldPosition,
                     movingFromDuration,
-                    time - _v4._0.startTime);
+                    time - _v8._0.startTime);
                  }();
                case "Nothing":
                return newWorldPosition;}
             _E.Case($moduleName,
-            "between lines 39 and 44");
+            "between lines 49 and 54");
          }();
-         var frogSprite = $Graphics$Collage.scale(size)($Graphics$Collage.rotate($Basics.degrees($Froggy$Model.angleOf(frog)))(A3(sprite,
+         var frogSprite = $Graphics$Collage.scale(size)($Graphics$Collage.rotate($Basics.degrees($Basics.toFloat($Froggy$Model.angleOf(frog))))(A3(sprite,
          worldPosition,
          tileSize,
          imagePath("frog.png"))));
@@ -10645,95 +10631,177 @@ Elm.Froggy.View.make = function (_elm) {
    });
    var viewLevelNumber = F3(function (fontName,
    tileSize,
-   game) {
+   levelNumber) {
       return function () {
-         var levelPosition = function (_) {
+         var position = function (_) {
             return _.levelPosition;
-         }($Froggy$Levels.getLevel(game.scene.levelNumber));
-         var worldPosition = toWorld(tileSize)(levelPosition);
+         }($Froggy$Levels.getLevel(levelNumber));
+         var worldPosition = toWorld(tileSize)(position);
          var background = A3(sprite,
          worldPosition,
          tileSize,
          imagePath("level.png"));
-         var levelNumber = $Graphics$Collage.rotate($Basics.degrees(-1))(A4(textSprite,
+         var indicator = $Graphics$Collage.rotate($Basics.degrees(-1))(A4(textSprite,
          fontName,
-         levelPosition,
+         position,
          tileSize,
          _L.append("Level\n",
-         _L.append($String.show(game.scene.levelNumber),
+         _L.append($String.show(levelNumber),
          _L.append("/",
          $String.show($Froggy$Levels.numberOfLevels - 1))))));
          return _L.fromArray([background
-                             ,levelNumber]);
+                             ,indicator]);
       }();
    });
-   var viewScene = F4(function (fontName,
+   var viewMessage = F4(function (fontName,
+   tileSize,
+   time,
+   scene) {
+      return function () {
+         var scaleFactor = function () {
+            var _v10 = scene.frog.lastMove;
+            switch (_v10.ctor)
+            {case "Just":
+               return A6($Easing.ease,
+                 $Easing.easeInOutBack,
+                 $Easing.$float,
+                 0,
+                 1,
+                 movingFromDuration * 2,
+                 time - _v10._0.startTime);
+               case "Nothing": return 1;}
+            _E.Case($moduleName,
+            "between lines 143 and 146");
+         }();
+         var iconSize = tileSize / 2.5;
+         var inverseAngle = $Basics.toFloat(A2($Basics._op["%"],
+         $Froggy$Model.angleOf(scene.frog) + 180,
+         360));
+         var deltaX = $Basics.round($Basics.cos($Basics.degrees(inverseAngle)));
+         var deltaY = $Basics.round(-1 * $Basics.sin($Basics.degrees(inverseAngle)));
+         var position = A2($Froggy$Grid.translate,
+         scene.frog.leaf.position,
+         {_: {},x: deltaX,y: deltaY});
+         var worldPosition = A2(toWorld,
+         tileSize,
+         position);
+         var filename = imagePath(_L.append("message/",
+         _L.append($String.show(inverseAngle),
+         ".svg")));
+         var background = A3(sprite,
+         worldPosition,
+         tileSize,
+         filename);
+         var forms = $Froggy$Model.levelCompleted(scene) ? function () {
+            var lastLevel = _U.eq(scene.levelNumber,
+            $Froggy$Levels.numberOfLevels - 1);
+            return lastLevel ? _L.fromArray([background
+                                            ,A3(sprite,
+                                            worldPosition,
+                                            iconSize,
+                                            imagePath("completed.svg"))]) : _L.fromArray([background
+                                                                                         ,A3(sprite,
+                                                                                         worldPosition,
+                                                                                         iconSize,
+                                                                                         imagePath("next.png"))]);
+         }() : $Froggy$Model.stuck(scene) ? _L.fromArray([background
+                                                         ,A3(sprite,
+                                                         worldPosition,
+                                                         iconSize,
+                                                         imagePath("restart.png"))]) : _L.fromArray([]);
+         return $List.map($Graphics$Collage.scale(scaleFactor))(forms);
+      }();
+   });
+   var viewScene = F5(function (fontName,
    viewSize,
    time,
-   game) {
+   lastSceneChange,
+   scene) {
       return function () {
          var tileSize = $Basics.toFloat(viewSize) / mapSize;
+         var actualScene = function () {
+            var _v12 = lastSceneChange.oldValue;
+            switch (_v12.ctor)
+            {case "Just":
+               return _U.cmp(time - lastSceneChange.startTime,
+                 sceneChangeDuration / 2) < 0 ? _v12._0 : scene;
+               case "Nothing": return scene;}
+            _E.Case($moduleName,
+            "between lines 33 and 36");
+         }();
          var frog = A2(viewFrog,
          tileSize,
-         time)(game.scene.frog);
-         var leaves = $List.map(viewLeaf(tileSize))(game.scene.leaves);
+         time)(actualScene.frog);
+         var leaves = $List.map(viewLeaf(tileSize))(actualScene.leaves);
          var targets = A2(viewTargets,
-         game.scene.frog,
-         tileSize)(game.scene.leaves);
+         actualScene.frog,
+         tileSize)(actualScene.leaves);
          var level = A2(viewLevelNumber,
          fontName,
-         tileSize)(game);
+         tileSize)(actualScene.levelNumber);
+         var message = A3(viewMessage,
+         fontName,
+         tileSize,
+         time)(actualScene);
          return A2($Graphics$Collage.collage,
          viewSize,
          viewSize)(_L.append(leaves,
          _L.append(targets,
-         _L.append(frog,level))));
+         _L.append(frog,
+         _L.append(level,message)))));
       }();
    });
    var view = F4(function (fontName,
-   _v6,
+   _v14,
    time,
    game) {
       return function () {
-         switch (_v6.ctor)
+         switch (_v14.ctor)
          {case "_Tuple2":
-            return $Maybe.isJust(game.lastSceneChange) ? function () {
-                 var viewSize = A2($Basics.min,
-                 _v6._0,
-                 _v6._1);
-                 var scene = A3($Graphics$Element.container,
-                 _v6._0,
-                 _v6._1,
-                 $Graphics$Element.middle)(A3(viewScene,
-                 fontName,
-                 viewSize,
-                 time)(game));
-                 var message = $List.map(A3($Graphics$Element.container,
-                 _v6._0,
-                 _v6._1,
-                 $Graphics$Element.middle))(A2(viewMessage,
-                 fontName,
-                 viewSize)(game));
-                 return $Graphics$Element.layers(_L.append(_L.fromArray([scene]),
-                 message));
-              }() : function () {
-                 var loadingImage = A3($Graphics$Element.container,
-                 _v6._0,
-                 _v6._1,
-                 $Graphics$Element.middle)(A3($Graphics$Element.image,
-                 64,
-                 64,
-                 imagePath("loading.gif")));
-                 var blackRectangle = A2($Graphics$Collage.collage,
-                 _v6._0,
-                 _v6._1)(_L.fromArray([$Graphics$Collage.filled($Color.black)(A2($Graphics$Collage.rect,
-                 $Basics.toFloat(_v6._0),
-                 $Basics.toFloat(_v6._1)))]));
-                 return $Graphics$Element.layers(_L.fromArray([blackRectangle
-                                                              ,loadingImage]));
+            return function () {
+                 var _v18 = game.lastSceneChange;
+                 switch (_v18.ctor)
+                 {case "Just":
+                    return function () {
+                         var cover = A2(viewCover,
+                         {ctor: "_Tuple2"
+                         ,_0: _v14._0
+                         ,_1: _v14._1},
+                         time)(_v18._0);
+                         var viewSize = A2($Basics.min,
+                         _v14._0,
+                         _v14._1);
+                         var scene = A4(viewScene,
+                         fontName,
+                         viewSize,
+                         time,
+                         _v18._0)(game.scene);
+                         return $Graphics$Element.layers($List.map(A3($Graphics$Element.container,
+                         _v14._0,
+                         _v14._1,
+                         $Graphics$Element.middle))(_L.fromArray([scene
+                                                                 ,cover])));
+                      }();
+                    case "Nothing":
+                    return function () {
+                         var loadingImage = A3($Graphics$Element.container,
+                         _v14._0,
+                         _v14._1,
+                         $Graphics$Element.middle)(A3($Graphics$Element.image,
+                         64,
+                         64,
+                         imagePath("loading.gif")));
+                         var blackRectangle = $Graphics$Element.color($Color.black)(A2($Graphics$Element.spacer,
+                         _v14._0,
+                         _v14._1));
+                         return $Graphics$Element.layers(_L.fromArray([blackRectangle
+                                                                      ,loadingImage]));
+                      }();}
+                 _E.Case($moduleName,
+                 "between lines 19 and 28");
               }();}
          _E.Case($moduleName,
-         "between lines 15 and 23");
+         "between lines 19 and 28");
       }();
    });
    _elm.Froggy.View.values = {_op: _op
@@ -10752,12 +10820,9 @@ Elm.Froggy.View.make = function (_elm) {
                              ,textSprite: textSprite
                              ,gameText: gameText
                              ,viewMessage: viewMessage
-                             ,gameCompletedMessage: gameCompletedMessage
-                             ,levelCompletedMessage: levelCompletedMessage
-                             ,stuckMessage: stuckMessage
-                             ,instructionsMessage: instructionsMessage
-                             ,continueInstruction: continueInstruction
-                             ,imagePath: imagePath};
+                             ,imagePath: imagePath
+                             ,viewCover: viewCover
+                             ,sceneChangeDuration: sceneChangeDuration};
    return _elm.Froggy.View.values;
 };Elm.Easing = Elm.Easing || {};
 Elm.Easing.make = function (_elm) {
@@ -11102,6 +11167,15 @@ Elm.Froggy.State.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
+   var changeScene = F3(function (time,
+   oldGame,
+   game) {
+      return _U.replace([["lastSceneChange"
+                         ,$Maybe.Just({_: {}
+                                      ,oldValue: $Maybe.Just(oldGame.scene)
+                                      ,startTime: time})]],
+      game);
+   });
    var loadLeafRow = F2(function (y,
    row) {
       return function () {
@@ -11129,7 +11203,7 @@ Elm.Froggy.State.make = function (_elm) {
    var moveTo = F3(function (leaf,
    time,
    game) {
-      return $Froggy$Model.playing(game) ? function () {
+      return function () {
          var scene = game.scene;
          var reachable = $Froggy$Model.reachableBy(game.scene.frog)(leaf);
          return reachable ? _U.replace([["scene"
@@ -11145,7 +11219,7 @@ Elm.Froggy.State.make = function (_elm) {
                                                      game.scene.frog.leaf)]],
                                         scene)]],
          game) : game;
-      }() : game;
+      }();
    });
    var findLeaf = F2(function (position,
    leaves) {
@@ -11158,7 +11232,8 @@ Elm.Froggy.State.make = function (_elm) {
          return $Array.get(0)($Array.fromList($List.filter(hasPosition)(leaves)));
       }();
    });
-   var loadLevel = F2(function (time,
+   var loadLevel = F3(function (time,
+   oldScene,
    levelNumber) {
       return function () {
          var actualLevelNumber = _U.cmp(levelNumber,
@@ -11169,45 +11244,44 @@ Elm.Froggy.State.make = function (_elm) {
          var maybeLeaf = findLeaf(level.frogPosition)(leaves);
          var leaf = $Froggy$Util.getOrElse($List.head(leaves))(maybeLeaf);
          return {_: {}
-                ,instructions: false
                 ,lastSceneChange: $Maybe.Just({_: {}
-                                              ,oldValue: $Maybe.Nothing
+                                              ,oldValue: oldScene
                                               ,startTime: time})
                 ,scene: {_: {}
                         ,frog: {_: {}
                                ,lastMove: $Maybe.Nothing
                                ,leaf: leaf}
                         ,leaves: leaves
-                        ,levelNumber: actualLevelNumber}};
+                        ,levelNumber: actualLevelNumber}
+                ,usingKeyboard: false};
       }();
    });
    var nextLevel = F2(function (time,
    game) {
-      return A2(loadLevel,
+      return A3(loadLevel,
       time,
+      $Maybe.Just(game.scene),
       game.scene.levelNumber + 1);
    });
    var restartLevel = F2(function (time,
    game) {
-      return A2(loadLevel,
+      return A3(loadLevel,
       time,
+      $Maybe.Just(game.scene),
       game.scene.levelNumber);
    });
    var $continue = F2(function (time,
    game) {
-      return $Froggy$Model.levelCompleted(game) ? nextLevel(time)(game) : $Froggy$Model.stuck(game) ? restartLevel(time)(game) : game.instructions ? _U.replace([["instructions"
-                                                                                                                                                                 ,false]],
-      game) : game;
+      return $Froggy$Model.levelCompleted(game.scene) ? nextLevel(time)(game) : $Froggy$Model.stuck(game.scene) ? restartLevel(time)(game) : game;
    });
    var newGame = F2(function (time,
    lastSceneChange) {
       return function () {
-         var level0 = A2(loadLevel,
+         var level0 = A3(loadLevel,
          time,
+         $Maybe.Nothing,
          0);
-         return _U.replace([["instructions"
-                            ,true]
-                           ,["lastSceneChange"
+         return _U.replace([["lastSceneChange"
                             ,lastSceneChange]],
          level0);
       }();
@@ -11233,7 +11307,7 @@ Elm.Froggy.State.make = function (_elm) {
                  time,
                  lastSceneChange);}
             _E.Case($moduleName,
-            "between lines 131 and 135");
+            "between lines 136 and 140");
          }();
       }();
    });
@@ -11304,6 +11378,7 @@ Elm.Froggy.State.make = function (_elm) {
                               ,$continue: $continue
                               ,nextLevel: nextLevel
                               ,restartLevel: restartLevel
+                              ,changeScene: changeScene
                               ,initialGame: initialGame
                               ,newGame: newGame
                               ,start: start};
@@ -11432,9 +11507,6 @@ Elm.Froggy.Model.make = function (_elm) {
    $Froggy$Util = Elm.Froggy.Util.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm);
-   var playing = function (game) {
-      return $Basics.not(game.instructions);
-   };
    var maxDistance = 2;
    var near = F2(function (a,b) {
       return _U.cmp(A2($Froggy$Util.distance,
@@ -11453,19 +11525,19 @@ Elm.Froggy.Model.make = function (_elm) {
          targetX) && (_U.cmp(sourceY,
          targetY) > 0 && A2(near,
          sourceY,
-         targetY)) ? $Maybe.Just(0) : _U.eq(sourceY,
+         targetY)) ? $Maybe.Just(90) : _U.eq(sourceY,
          targetY) && (_U.cmp(sourceX,
          targetX) < 0 && A2(near,
          sourceX,
-         targetX)) ? $Maybe.Just(270) : _U.eq(sourceX,
+         targetX)) ? $Maybe.Just(0) : _U.eq(sourceX,
          targetX) && (_U.cmp(sourceY,
          targetY) < 0 && A2(near,
          sourceY,
-         targetY)) ? $Maybe.Just(180) : _U.eq(sourceY,
+         targetY)) ? $Maybe.Just(270) : _U.eq(sourceY,
          targetY) && (_U.cmp(sourceX,
          targetX) > 0 && A2(near,
          sourceX,
-         targetX)) ? $Maybe.Just(90) : $Maybe.Nothing;
+         targetX)) ? $Maybe.Just(180) : $Maybe.Nothing;
       }();
    });
    var angleOf = function (frog) {
@@ -11476,7 +11548,7 @@ Elm.Froggy.Model.make = function (_elm) {
             return $Froggy$Util.getOrElse(0)(A2(angleBetween,
               _v0._0.oldValue,
               frog.leaf));
-            case "Nothing": return 0;}
+            case "Nothing": return 90;}
          _E.Case($moduleName,
          "between lines 58 and 60");
       }();
@@ -11487,11 +11559,11 @@ Elm.Froggy.Model.make = function (_elm) {
       frog.leaf,
       leaf));
    });
-   var stuck = function (game) {
-      return $Basics.not($List.any(reachableBy(game.scene.frog))(game.scene.leaves));
+   var stuck = function (scene) {
+      return $Basics.not($List.any(reachableBy(scene.frog))(scene.leaves));
    };
-   var levelCompleted = function (game) {
-      return _U.eq($List.length(game.scene.leaves),
+   var levelCompleted = function (scene) {
+      return _U.eq($List.length(scene.leaves),
       1);
    };
    var Leaf = function (a) {
@@ -11512,9 +11584,9 @@ Elm.Froggy.Model.make = function (_elm) {
    });
    var Game = F3(function (a,b,c) {
       return {_: {}
-             ,instructions: b
              ,lastSceneChange: c
-             ,scene: a};
+             ,scene: a
+             ,usingKeyboard: b};
    });
    _elm.Froggy.Model.values = {_op: _op
                               ,Game: Game
@@ -11527,8 +11599,7 @@ Elm.Froggy.Model.make = function (_elm) {
                               ,angleBetween: angleBetween
                               ,near: near
                               ,maxDistance: maxDistance
-                              ,angleOf: angleOf
-                              ,playing: playing};
+                              ,angleOf: angleOf};
    return _elm.Froggy.Model.values;
 };Elm.Froggy = Elm.Froggy || {};
 Elm.Froggy.Levels = Elm.Froggy.Levels || {};
