@@ -108,15 +108,6 @@ nextLevel time game = loadLevel time (Just game.scene) (game.scene.levelNumber +
 restartLevel : Time -> Game -> Game
 restartLevel time game = loadLevel time (Just game.scene) game.scene.levelNumber
 
-changeScene : Time -> Game -> Game -> Game
-changeScene time oldGame game = 
-  { game |
-    lastSceneChange <- Just {
-      oldValue = Just oldGame.scene,
-      startTime = time
-   } 
-  }
-
 initialGame : Game
 initialGame = newGame 0 Nothing
 
