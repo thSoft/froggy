@@ -49,9 +49,14 @@ angleBetween sourceLeaf targetLeaf =
         | otherwise -> Nothing
 
 near : Int -> Int -> Bool
-near a b = (distance a b) <= maxDistance
+near a b = (distance a b) <= 2
 
-maxDistance = 2
+onlyDoubleJump : Scene -> Bool
+onlyDoubleJump scene =
+  let distanceX leaf = distance scene.frog.leaf.position.x leaf.position.x
+      distanceY leaf = distance scene.frog.leaf.position.y leaf.position.y
+      leafOnlyDoubleJump leaf = ((distanceX leaf) == 2) || ((distanceY leaf) == 2)
+  in scene.leaves |> filter (reachableBy scene.frog) |> all leafOnlyDoubleJump
 
 angleOf : Frog -> Int
 angleOf frog =

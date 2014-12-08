@@ -20,8 +20,9 @@ view fontName (windowWidth, windowHeight) time game =
     Just lastSceneChange ->
       let viewSize = min windowWidth windowHeight
           scene = game.scene |> viewScene fontName viewSize time lastSceneChange
+          keyboardHint = game |> viewKeyboardHint viewSize
           cover = lastSceneChange |> viewCover (windowWidth, windowHeight) time
-      in [scene, cover] |> map (container windowWidth windowHeight middle) |> layers
+      in [scene] ++ keyboardHint ++ [cover] |> map (container windowWidth windowHeight middle) |> layers
     Nothing ->
       let blackRectangle = spacer windowWidth windowHeight |> Element.color black
           loadingImage = image 64 64 (imagePath "loading.gif") |> container windowWidth windowHeight middle
@@ -29,10 +30,9 @@ view fontName (windowWidth, windowHeight) time game =
 
 viewScene : String -> Int -> Time -> TransitionInfo (Maybe Scene) -> Scene -> Element
 viewScene fontName viewSize time lastSceneChange scene = 
-  let actualScene =
-        case lastSceneChange.oldValue of
-          Just oldScene -> if (time - lastSceneChange.startTime) < (sceneChangeDuration / 2) then oldScene else scene
-          Nothing -> scene
+  let actualScene = case lastSceneChange.oldValue of
+        Just oldScene -> if (time - lastSceneChange.startTime) < (sceneChangeDuration / 2) then oldScene else scene
+        Nothing -> scene
       tileSize = (viewSize |> toFloat) / mapSize
       frog = actualScene.frog |> viewFrog tileSize time
       leaves = actualScene.leaves |> map (viewLeaf tileSize)
@@ -49,21 +49,21 @@ viewFrog tileSize time frog =
       worldPosition = case frog.lastMove of
         Just { oldValue, startTime } ->
           let oldWorldPosition = oldValue.position |> toWorld tileSize
-          in ease easeInOutQuint (pair float) oldWorldPosition newWorldPosition movingFromDuration (time - startTime)
+          in ease easeInOutQuint (pair float) oldWorldPosition newWorldPosition moveDuration (time - startTime)
         Nothing -> newWorldPosition
       lastLeaf = case frog.lastMove of
         Nothing -> []
         Just { oldValue, startTime } ->
-          let alphaValue = ease easeInCubic float 1 0 movingFromDuration (time - startTime)
+          let alphaValue = ease easeInCubic float 1 0 moveDuration (time - startTime)
           in [viewLeaf tileSize oldValue |> alpha alphaValue]
       size = case frog.lastMove of
         Nothing -> 1
-        Just { startTime } -> ease (easeInQuad |> retour) float 1 1.2 movingFromDuration (time - startTime)
+        Just { startTime } -> ease (easeInQuad |> retour) float 1 1.2 moveDuration (time - startTime)
       frogSprite = sprite worldPosition tileSize (imagePath "frog.png") |> rotate (angleOf frog |> toFloat |> degrees) |> scale size
   in lastLeaf ++ [frogSprite]
 
-movingFromDuration : Time
-movingFromDuration = 250 * millisecond
+moveDuration : Time
+moveDuration = 250 * millisecond
 
 sprite : (Float, Float) -> Float -> String -> Form
 sprite = customSprite identity
@@ -135,18 +135,26 @@ viewMessage fontName tileSize time scene =
         if | scene |> levelCompleted ->
              let lastLevel = scene.levelNumber == numberOfLevels - 1
              in if lastLevel then
-               [background, sprite worldPosition iconSize (imagePath "completed.svg")]
-             else
-               [background, sprite worldPosition iconSize (imagePath "next.png")]
+                  [background, sprite worldPosition iconSize (imagePath "completed.svg")]
+                else
+                  [background, sprite worldPosition iconSize (imagePath "next.png")]
            | scene |> stuck -> [background, sprite worldPosition iconSize (imagePath "restart.png")]
            | otherwise -> []
       scaleFactor = case scene.frog.lastMove of
-        Just { startTime } -> ease easeInOutBack float 0 1 (movingFromDuration * 2) (time - startTime)
+        Just { startTime } -> ease easeInOutBack float 0 1 (moveDuration * 2) (time - startTime)
         Nothing -> 1
   in forms |> map (scale scaleFactor)
 
 imagePath : String -> String
 imagePath filename = "images/" ++ filename
+
+viewKeyboardHint : Int -> Game -> [Element]
+viewKeyboardHint viewSize game =
+  let background = fittedImage (viewSize // 10) (viewSize // 16) (imagePath "key.svg") -- XXX hardcoded image ratio
+  in if | game.scene |> levelCompleted -> [background, plainText "Enter"]
+        | game.scene |> stuck -> [background, plainText "Esc"]
+        | (game.scene |> onlyDoubleJump) && game.usingKeyboard -> [background, plainText "Shift"]
+        | otherwise -> []
 
 viewCover : (Int, Int) -> Time -> TransitionInfo (Maybe Scene) -> Element
 viewCover (windowWidth, windowHeight) time lastSceneChange =
