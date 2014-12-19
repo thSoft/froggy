@@ -2,6 +2,10 @@
 
 [Have fun!](http://thsoft.github.io/froggy)
 
+## Design
+
+If you are a graphic designer and this game inspires you, I'd be very grateful if you created the graphics for it. Please [contact me](http://thsoft.hu/en/Contact)!
+
 ## Develop
 
 ### Install
