@@ -6,7 +6,8 @@ import Froggy.Grid as Grid
 type Level = {
   frogPosition: Grid.Position,
   leafMatrix: LeafMatrix,
-  levelPosition: Grid.Position
+  levelPosition: Grid.Position,
+  keyboardHintPosition: Grid.Position
 }
 
 type LeafMatrix = [[Bool]]
@@ -32,6 +33,10 @@ levels =
       levelPosition = {
         x = 6,
         y = 0
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     },
     -- 1
@@ -53,6 +58,10 @@ levels =
       levelPosition = {
         x = 5,
         y = 3
+      },
+      keyboardHintPosition = {
+        x = 7,
+        y = 7
       }
     }, 
     -- 2
@@ -72,6 +81,10 @@ levels =
         [False, False, False, False, False, False, False, False]
       ],
       levelPosition = {
+        x = 0,
+        y = 0
+      },
+      keyboardHintPosition = {
         x = 0,
         y = 0
       }
@@ -95,6 +108,10 @@ levels =
       levelPosition = {
         x = 0,
         y = 3
+      },
+      keyboardHintPosition = {
+        x = 7,
+        y = 7
       }
     }, 
     -- 4
@@ -115,6 +132,10 @@ levels =
       ],
       levelPosition = {
         x = 7,
+        y = 0
+      },
+      keyboardHintPosition = {
+        x = 0,
         y = 0
       }
     }, 
@@ -137,6 +158,10 @@ levels =
       levelPosition = {
         x = 0,
         y = 3
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 6
@@ -158,6 +183,10 @@ levels =
       levelPosition = {
         x = 7,
         y = 7
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 7
@@ -177,6 +206,10 @@ levels =
         [False, False, False, False, False, True , True , False]
       ],
       levelPosition = {
+        x = 0,
+        y = 0
+      },
+      keyboardHintPosition = {
         x = 0,
         y = 0
       }
@@ -200,6 +233,10 @@ levels =
       levelPosition = {
         x = 7,
         y = 0
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 9
@@ -221,6 +258,10 @@ levels =
       levelPosition = {
         x = 0,
         y = 1
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 10
@@ -242,6 +283,10 @@ levels =
       levelPosition = {
         x = 7,
         y = 7
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 11
@@ -261,6 +306,10 @@ levels =
         [False, False, True , False, True , False, False, False]
       ],
       levelPosition = {
+        x = 0,
+        y = 0
+      },
+      keyboardHintPosition = {
         x = 0,
         y = 0
       }
@@ -284,6 +333,10 @@ levels =
       levelPosition = {
         x = 0,
         y = 7
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 13
@@ -303,6 +356,10 @@ levels =
         [False, True , True , False, True , False, True , False]
       ],
       levelPosition = {
+        x = 0,
+        y = 0
+      },
+      keyboardHintPosition = {
         x = 0,
         y = 0
       }
@@ -326,6 +383,10 @@ levels =
       levelPosition = {
         x = 7,
         y = 7
+      },
+      keyboardHintPosition = {
+        x = 7,
+        y = 6
       }
     }, 
     -- 15
@@ -345,6 +406,10 @@ levels =
         [True , False, False, True , False, True , False, True ]
       ],
       levelPosition = {
+        x = 7,
+        y = 0
+      },
+      keyboardHintPosition = {
         x = 7,
         y = 0
       }
@@ -368,6 +433,10 @@ levels =
       levelPosition = {
         x = 4,
         y = 7
+      },
+      keyboardHintPosition = {
+        x = 7,
+        y = 7
       }
     }, 
     -- 17
@@ -389,6 +458,10 @@ levels =
       levelPosition = {
         x = 3,
         y = 4
+      },
+      keyboardHintPosition = {
+        x = 2,
+        y = 4
       }
     }, 
     -- 18
@@ -408,6 +481,10 @@ levels =
         [False, False, True , False, True , True , True , False]
       ],
       levelPosition = {
+        x = 0,
+        y = 0
+      },
+      keyboardHintPosition = {
         x = 0,
         y = 0
       }
@@ -431,6 +508,10 @@ levels =
       levelPosition = {
         x = 7,
         y = 4
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 20
@@ -450,6 +531,10 @@ levels =
         [True , True , True , False, True , False, False, False]
       ],
       levelPosition = {
+        x = 0,
+        y = 0
+      },
+      keyboardHintPosition = {
         x = 0,
         y = 0
       }
@@ -473,6 +558,10 @@ levels =
       levelPosition = {
         x = 0,
         y = 7
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 22
@@ -493,6 +582,10 @@ levels =
       ],
       levelPosition = {
         x = 7,
+        y = 7
+      },
+      keyboardHintPosition = {
+        x = 6,
         y = 7
       }
     }, 
@@ -515,6 +608,10 @@ levels =
       levelPosition = {
         x = 4,
         y = 0
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 24
@@ -536,6 +633,10 @@ levels =
       levelPosition = {
         x = 4,
         y = 4
+      },
+      keyboardHintPosition = {
+        x = 7,
+        y = 7
       }
     }, 
     -- 25
@@ -557,6 +658,10 @@ levels =
       levelPosition = {
         x = 0,
         y = 3
+      },
+      keyboardHintPosition = {
+        x = 7,
+        y = 0
       }
     }, 
     -- 26
@@ -576,6 +681,10 @@ levels =
         [False, True , True , True , True , False, False, False]
       ],
       levelPosition = {
+        x = 0,
+        y = 0
+      },
+      keyboardHintPosition = {
         x = 0,
         y = 0
       }
@@ -599,6 +708,10 @@ levels =
       levelPosition = {
         x = 6,
         y = 7
+      },
+      keyboardHintPosition = {
+        x = 7,
+        y = 7
       }
     }, 
     -- 28
@@ -620,6 +733,10 @@ levels =
       levelPosition = {
         x = 7,
         y = 7
+      },
+      keyboardHintPosition = {
+        x = 0,
+        y = 0
       }
     }, 
     -- 29
@@ -641,6 +758,10 @@ levels =
       levelPosition = {
         x = 0,
         y = 7
+      },
+      keyboardHintPosition = {
+        x = 7,
+        y = 0
       }
     }
   ]

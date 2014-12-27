@@ -20,9 +20,9 @@ view fontName (windowWidth, windowHeight) time game =
     Just lastSceneChange ->
       let viewSize = min windowWidth windowHeight
           scene = game.scene |> viewScene fontName viewSize time lastSceneChange
-          keyboardHint = game |> viewKeyboardHint viewSize
+          keyboardHint = game |> viewKeyboardHint fontName viewSize |> collage viewSize viewSize
           cover = lastSceneChange |> viewCover (windowWidth, windowHeight) time
-      in [scene] ++ keyboardHint ++ [cover] |> map (container windowWidth windowHeight middle) |> layers
+      in [scene, keyboardHint, cover] |> map (container windowWidth windowHeight middle) |> layers
     Nothing ->
       let blackRectangle = spacer windowWidth windowHeight |> Element.color black
           loadingImage = image 64 64 (imagePath "loading.gif") |> container windowWidth windowHeight middle
@@ -33,13 +33,16 @@ viewScene fontName viewSize time lastSceneChange scene =
   let actualScene = case lastSceneChange.oldValue of
         Just oldScene -> if (time - lastSceneChange.startTime) < (sceneChangeDuration / 2) then oldScene else scene
         Nothing -> scene
-      tileSize = (viewSize |> toFloat) / mapSize
+      tileSize = viewSize |> getTileSize
       frog = actualScene.frog |> viewFrog tileSize time
       leaves = actualScene.leaves |> map (viewLeaf tileSize)
       targets = actualScene.leaves |> viewTargets actualScene.frog tileSize
       level = actualScene.levelNumber |> viewLevelNumber fontName tileSize
       message = actualScene |> viewMessage fontName tileSize time
   in (leaves ++ targets ++ frog ++ level ++ message) |> collage viewSize viewSize
+
+getTileSize : Int -> Float
+getTileSize viewSize = (viewSize |> toFloat) / mapSize
 
 mapSize = 8
 
@@ -148,13 +151,19 @@ viewMessage fontName tileSize time scene =
 imagePath : String -> String
 imagePath filename = "images/" ++ filename
 
-viewKeyboardHint : Int -> Game -> [Element]
-viewKeyboardHint viewSize game =
-  let background = fittedImage (viewSize // 10) (viewSize // 16) (imagePath "key.svg") -- XXX hardcoded image ratio
-  in if | game.scene |> levelCompleted -> [background, plainText "Enter"]
-        | game.scene |> stuck -> [background, plainText "Esc"]
-        | (game.scene |> onlyDoubleJump) && game.usingKeyboard -> [background, plainText "Shift"]
-        | otherwise -> []
+viewKeyboardHint : String -> Int -> Game -> [Form]
+viewKeyboardHint fontName viewSize game =
+  if game.usingKeyboard then
+    let tileSize = viewSize |> getTileSize
+        gridPosition = game.scene.levelNumber |> getLevel |> .keyboardHintPosition
+        worldPosition = gridPosition |> toWorld tileSize
+        background = sprite worldPosition tileSize (imagePath "key.svg")
+        text string = string |> textSprite fontName gridPosition tileSize 
+    in if | (game.scene |> levelCompleted) && (game.scene.levelNumber == 0) -> [background, text "Enter"]
+          | (game.scene |> stuck) && not (game.scene |> levelCompleted) -> [background, text "Esc"]
+          | (game.scene |> onlyDoubleJump) && (game.scene.levelNumber == 0) -> [background, text "Shift"]
+          | otherwise -> []
+  else []
 
 viewCover : (Int, Int) -> Time -> TransitionInfo (Maybe Scene) -> Element
 viewCover (windowWidth, windowHeight) time lastSceneChange =
