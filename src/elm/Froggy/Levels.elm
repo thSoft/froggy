@@ -85,8 +85,8 @@ levels =
         y = 0
       },
       keyboardHintPosition = {
-        x = 0,
-        y = 0
+        x = 7,
+        y = 7
       }
     }, 
     -- 3
@@ -210,8 +210,8 @@ levels =
         y = 0
       },
       keyboardHintPosition = {
-        x = 0,
-        y = 0
+        x = 7,
+        y = 7
       }
     }, 
     -- 8
@@ -310,8 +310,8 @@ levels =
         y = 0
       },
       keyboardHintPosition = {
-        x = 0,
-        y = 0
+        x = 7,
+        y = 7
       }
     }, 
     -- 12
@@ -360,8 +360,8 @@ levels =
         y = 0
       },
       keyboardHintPosition = {
-        x = 0,
-        y = 0
+        x = 7,
+        y = 7
       }
     }, 
     -- 14
@@ -411,7 +411,7 @@ levels =
       },
       keyboardHintPosition = {
         x = 7,
-        y = 0
+        y = 1
       }
     }, 
     -- 16
@@ -485,8 +485,8 @@ levels =
         y = 0
       },
       keyboardHintPosition = {
-        x = 0,
-        y = 0
+        x = 7,
+        y = 7
       }
     }, 
     -- 19
@@ -535,8 +535,8 @@ levels =
         y = 0
       },
       keyboardHintPosition = {
-        x = 0,
-        y = 0
+        x = 7,
+        y = 7
       }
     }, 
     -- 21
@@ -685,8 +685,8 @@ levels =
         y = 0
       },
       keyboardHintPosition = {
-        x = 0,
-        y = 0
+        x = 7,
+        y = 7
       }
     }, 
     -- 27
