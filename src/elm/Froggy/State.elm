@@ -22,15 +22,20 @@ update (time, command) game =
     RestartLevel -> game |> restartLevel time
     Start loadedGame -> start loadedGame time
 
+useKeyboard : Bool -> Game -> Game
+useKeyboard keyboard game = { game | usingKeyboard <- keyboard }
+
 moveBy : Grid.Position -> Time -> Game -> Game
 moveBy positionDelta time game =
-  if (positionDelta.x == 0) && (positionDelta.y == 0) then game
-  else
-    let leafPosition = game.scene.frog.leaf.position `translate` positionDelta
-        maybeLeaf = game.scene.leaves |> findLeaf leafPosition
-    in case maybeLeaf of
-      Nothing -> game
-      Just leaf -> game |> moveTo leaf time
+  let newGame =
+    if (positionDelta.x == 0) && (positionDelta.y == 0) then game
+    else
+      let leafPosition = game.scene.frog.leaf.position `translate` positionDelta
+          maybeLeaf = game.scene.leaves |> findLeaf leafPosition
+      in case maybeLeaf of
+        Nothing -> game
+        Just leaf -> game |> moveTo leaf time
+  in newGame |> useKeyboard True
 
 findLeaf : Grid.Position -> [Leaf] -> Maybe Leaf
 findLeaf position leaves =
@@ -41,21 +46,22 @@ moveTo : Leaf -> Time -> Game -> Game
 moveTo leaf time game =
   let reachable = leaf |> reachableBy game.scene.frog
       scene = game.scene
-  in
-    if reachable then
-      { game |
-        scene <- { scene |
-          frog <- {
-            leaf = leaf,
-            lastMove = Just {
-              oldValue = game.scene.frog.leaf,
-              startTime = time
+      newGame =
+        if reachable then
+          { game |
+            scene <- { scene |
+              frog <- {
+                leaf = leaf,
+                lastMove = Just {
+                  oldValue = game.scene.frog.leaf,
+                  startTime = time
+                }
+              },
+              leaves <- remove game.scene.leaves game.scene.frog.leaf
             }
-          },
-          leaves <- remove game.scene.leaves game.scene.frog.leaf
-        }
-      }
-    else game
+          }
+        else game
+  in newGame |> useKeyboard False
 
 loadLevel : Time -> Maybe Scene -> Int -> Game
 loadLevel time oldScene levelNumber =
