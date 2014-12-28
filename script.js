@@ -66,7 +66,7 @@ function loadGame(component) {
   try {
     component.ports.loadedGame.send(loadedState);
   } catch (e) {
-    console.log("The game state can't be loaded because the internal model changed. Trying to start a new game." + e);
+    console.log("The game state can't be loaded because the internal model changed. Trying to start a new game. " + e);
     component.ports.loadedGame.send(null);
   }
   component.ports.savedGame.subscribe(function(state) {

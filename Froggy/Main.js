@@ -10448,7 +10448,7 @@ Elm.Froggy.View.make = function (_elm) {
                  _v0._1)));
               }();}
          _E.Case($moduleName,
-         "between lines 153 and 155");
+         "between lines 174 and 176");
       }();
    });
    var imagePath = function (filename) {
@@ -10483,7 +10483,7 @@ Elm.Froggy.View.make = function (_elm) {
       }();
    });
    var sprite = customSprite($Basics.identity);
-   var movingFromDuration = 250 * $Time.millisecond;
+   var moveDuration = 250 * $Time.millisecond;
    var mapSize = 8;
    var toWorld = F2(function (tileSize,
    position) {
@@ -10519,11 +10519,11 @@ Elm.Froggy.View.make = function (_elm) {
                  $Easing.$float,
                  1,
                  1.2,
-                 movingFromDuration,
+                 moveDuration,
                  time - _v4._0.startTime);
                case "Nothing": return 1;}
             _E.Case($moduleName,
-            "between lines 59 and 62");
+            "between lines 62 and 65");
          }();
          var lastLeaf = function () {
             var _v6 = frog.lastMove;
@@ -10535,7 +10535,7 @@ Elm.Froggy.View.make = function (_elm) {
                     $Easing.$float,
                     1,
                     0,
-                    movingFromDuration,
+                    moveDuration,
                     time - _v6._0.startTime);
                     return _L.fromArray([$Graphics$Collage.alpha(alphaValue)(A2(viewLeaf,
                     tileSize,
@@ -10544,7 +10544,7 @@ Elm.Froggy.View.make = function (_elm) {
                case "Nothing":
                return _L.fromArray([]);}
             _E.Case($moduleName,
-            "between lines 54 and 59");
+            "between lines 57 and 62");
          }();
          var newWorldPosition = toWorld(tileSize)(frog.leaf.position);
          var worldPosition = function () {
@@ -10558,13 +10558,13 @@ Elm.Froggy.View.make = function (_elm) {
                     $Easing.pair($Easing.$float),
                     oldWorldPosition,
                     newWorldPosition,
-                    movingFromDuration,
+                    moveDuration,
                     time - _v8._0.startTime);
                  }();
                case "Nothing":
                return newWorldPosition;}
             _E.Case($moduleName,
-            "between lines 49 and 54");
+            "between lines 52 and 57");
          }();
          var frogSprite = $Graphics$Collage.scale(size)($Graphics$Collage.rotate($Basics.degrees($Basics.toFloat($Froggy$Model.angleOf(frog))))(A3(sprite,
          worldPosition,
@@ -10667,11 +10667,11 @@ Elm.Froggy.View.make = function (_elm) {
                  $Easing.$float,
                  0,
                  1,
-                 movingFromDuration * 2,
+                 moveDuration * 2,
                  time - _v10._0.startTime);
                case "Nothing": return 1;}
             _E.Case($moduleName,
-            "between lines 143 and 146");
+            "between lines 146 and 149");
          }();
          var iconSize = tileSize / 2.5;
          var inverseAngle = $Basics.toFloat(A2($Basics._op["%"],
@@ -10712,19 +10712,66 @@ Elm.Froggy.View.make = function (_elm) {
          return $List.map($Graphics$Collage.scale(scaleFactor))(forms);
       }();
    });
+   var getTileSize = function (viewSize) {
+      return $Basics.toFloat(viewSize) / mapSize;
+   };
+   var viewKeyboardHint = F4(function (fontName,
+   viewSize,
+   time,
+   game) {
+      return game.usingKeyboard ? function () {
+         var scaleFactor = function () {
+            var _v12 = game.scene.frog.lastMove;
+            switch (_v12.ctor)
+            {case "Just":
+               return A6($Easing.ease,
+                 $Easing.easeInOutQuad,
+                 $Easing.$float,
+                 0,
+                 1,
+                 moveDuration,
+                 time - _v12._0.startTime);
+               case "Nothing": return 1;}
+            _E.Case($moduleName,
+            "between lines 166 and 169");
+         }();
+         var gridPosition = function (_) {
+            return _.keyboardHintPosition;
+         }($Froggy$Levels.getLevel(game.scene.levelNumber));
+         var tileSize = getTileSize(viewSize);
+         var worldPosition = toWorld(tileSize)(gridPosition);
+         var background = A3(sprite,
+         worldPosition,
+         tileSize,
+         imagePath("key.svg"));
+         var text = function (string) {
+            return A3(textSprite,
+            fontName,
+            gridPosition,
+            tileSize)(string);
+         };
+         var forms = $Froggy$Model.levelCompleted(game.scene) && _U.eq(game.scene.levelNumber,
+         0) ? _L.fromArray([background
+                           ,text("Enter")]) : $Froggy$Model.stuck(game.scene) && $Basics.not($Froggy$Model.levelCompleted(game.scene)) ? _L.fromArray([background
+                                                                                                                                                      ,text("Esc")]) : $Froggy$Model.onlyDoubleJump(game.scene) && _U.eq(game.scene.levelNumber,
+         0) ? _L.fromArray([background
+                           ,text("Shift")]) : _L.fromArray([]);
+         return $List.map($Graphics$Collage.scale(scaleFactor))(forms);
+      }() : _L.fromArray([]);
+   });
    var viewScene = F5(function (fontName,
    viewSize,
    time,
    lastSceneChange,
    scene) {
       return function () {
-         var tileSize = $Basics.toFloat(viewSize) / mapSize;
+         var tileSize = getTileSize(viewSize);
          var actualScene = function () {
-            var _v12 = lastSceneChange.oldValue;
-            switch (_v12.ctor)
+            var _v14 = lastSceneChange.oldValue;
+            switch (_v14.ctor)
             {case "Just":
                return _U.cmp(time - lastSceneChange.startTime,
-                 sceneChangeDuration / 2) < 0 ? _v12._0 : scene;
+                 sceneChangeDuration / 2) < 0 ? _v14._0 : scene;
                case "Nothing": return scene;}
             _E.Case($moduleName,
             "between lines 33 and 36");
@@ -10752,64 +10799,72 @@ Elm.Froggy.View.make = function (_elm) {
       }();
    });
    var view = F4(function (fontName,
-   _v14,
+   _v16,
    time,
    game) {
       return function () {
-         switch (_v14.ctor)
+         switch (_v16.ctor)
          {case "_Tuple2":
             return function () {
-                 var _v18 = game.lastSceneChange;
-                 switch (_v18.ctor)
+                 var _v20 = game.lastSceneChange;
+                 switch (_v20.ctor)
                  {case "Just":
                     return function () {
                          var cover = A2(viewCover,
                          {ctor: "_Tuple2"
-                         ,_0: _v14._0
-                         ,_1: _v14._1},
-                         time)(_v18._0);
+                         ,_0: _v16._0
+                         ,_1: _v16._1},
+                         time)(_v20._0);
                          var viewSize = A2($Basics.min,
-                         _v14._0,
-                         _v14._1);
+                         _v16._0,
+                         _v16._1);
                          var scene = A4(viewScene,
                          fontName,
                          viewSize,
                          time,
-                         _v18._0)(game.scene);
+                         _v20._0)(game.scene);
+                         var keyboardHint = A2($Graphics$Collage.collage,
+                         viewSize,
+                         viewSize)(A3(viewKeyboardHint,
+                         fontName,
+                         viewSize,
+                         time)(game));
                          return $Graphics$Element.layers($List.map(A3($Graphics$Element.container,
-                         _v14._0,
-                         _v14._1,
+                         _v16._0,
+                         _v16._1,
                          $Graphics$Element.middle))(_L.fromArray([scene
+                                                                 ,keyboardHint
                                                                  ,cover])));
                       }();
                     case "Nothing":
                     return function () {
                          var loadingImage = A3($Graphics$Element.container,
-                         _v14._0,
-                         _v14._1,
+                         _v16._0,
+                         _v16._1,
                          $Graphics$Element.middle)(A3($Graphics$Element.image,
                          64,
                          64,
                          imagePath("loading.gif")));
                          var blackRectangle = $Graphics$Element.color($Color.black)(A2($Graphics$Element.spacer,
-                         _v14._0,
-                         _v14._1));
+                         _v16._0,
+                         _v16._1));
                          return $Graphics$Element.layers(_L.fromArray([blackRectangle
                                                                       ,loadingImage]));
                       }();}
                  _E.Case($moduleName,
-                 "between lines 19 and 28");
+                 "between lines 19 and 29");
               }();}
          _E.Case($moduleName,
-         "between lines 19 and 28");
+         "between lines 19 and 29");
       }();
    });
    _elm.Froggy.View.values = {_op: _op
                              ,view: view
                              ,viewScene: viewScene
+                             ,getTileSize: getTileSize
                              ,mapSize: mapSize
                              ,viewFrog: viewFrog
-                             ,movingFromDuration: movingFromDuration
+                             ,moveDuration: moveDuration
                              ,sprite: sprite
                              ,customSprite: customSprite
                              ,makeForm: makeForm
@@ -10821,6 +10876,7 @@ Elm.Froggy.View.make = function (_elm) {
                              ,gameText: gameText
                              ,viewMessage: viewMessage
                              ,imagePath: imagePath
+                             ,viewKeyboardHint: viewKeyboardHint
                              ,viewCover: viewCover
                              ,sceneChangeDuration: sceneChangeDuration};
    return _elm.Froggy.View.values;
@@ -11167,15 +11223,6 @@ Elm.Froggy.State.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
-   var changeScene = F3(function (time,
-   oldGame,
-   game) {
-      return _U.replace([["lastSceneChange"
-                         ,$Maybe.Just({_: {}
-                                      ,oldValue: $Maybe.Just(oldGame.scene)
-                                      ,startTime: time})]],
-      game);
-   });
    var loadLeafRow = F2(function (y,
    row) {
       return function () {
@@ -11200,27 +11247,6 @@ Elm.Froggy.State.make = function (_elm) {
    var loadLeafMatrix = function (leafMatrix) {
       return $List.concat($List.indexedMap(loadLeafRow)(leafMatrix));
    };
-   var moveTo = F3(function (leaf,
-   time,
-   game) {
-      return function () {
-         var scene = game.scene;
-         var reachable = $Froggy$Model.reachableBy(game.scene.frog)(leaf);
-         return reachable ? _U.replace([["scene"
-                                        ,_U.replace([["frog"
-                                                     ,{_: {}
-                                                      ,lastMove: $Maybe.Just({_: {}
-                                                                             ,oldValue: game.scene.frog.leaf
-                                                                             ,startTime: time})
-                                                      ,leaf: leaf}]
-                                                    ,["leaves"
-                                                     ,A2($Froggy$Util.remove,
-                                                     game.scene.leaves,
-                                                     game.scene.frog.leaf)]],
-                                        scene)]],
-         game) : game;
-      }();
-   });
    var findLeaf = F2(function (position,
    leaves) {
       return function () {
@@ -11289,9 +11315,8 @@ Elm.Froggy.State.make = function (_elm) {
    var initialGame = A2(newGame,
    0,
    $Maybe.Nothing);
-   var start = F3(function (loadedGame,
-   time,
-   game) {
+   var start = F2(function (loadedGame,
+   time) {
       return function () {
          var lastSceneChange = $Maybe.Just({_: {}
                                            ,oldValue: $Maybe.Nothing
@@ -11307,29 +11332,60 @@ Elm.Froggy.State.make = function (_elm) {
                  time,
                  lastSceneChange);}
             _E.Case($moduleName,
-            "between lines 136 and 140");
+            "between lines 133 and 137");
          }();
+      }();
+   });
+   var useKeyboard = F2(function (keyboard,
+   game) {
+      return _U.replace([["usingKeyboard"
+                         ,keyboard]],
+      game);
+   });
+   var moveTo = F3(function (leaf,
+   time,
+   game) {
+      return function () {
+         var scene = game.scene;
+         var reachable = $Froggy$Model.reachableBy(game.scene.frog)(leaf);
+         var newGame = reachable ? _U.replace([["scene"
+                                               ,_U.replace([["frog"
+                                                            ,{_: {}
+                                                             ,lastMove: $Maybe.Just({_: {}
+                                                                                    ,oldValue: game.scene.frog.leaf
+                                                                                    ,startTime: time})
+                                                             ,leaf: leaf}]
+                                                           ,["leaves"
+                                                            ,A2($Froggy$Util.remove,
+                                                            game.scene.leaves,
+                                                            game.scene.frog.leaf)]],
+                                               scene)]],
+         game) : game;
+         return useKeyboard(false)(newGame);
       }();
    });
    var moveBy = F3(function (positionDelta,
    time,
    game) {
-      return _U.eq(positionDelta.x,
-      0) && _U.eq(positionDelta.y,
-      0) ? game : function () {
-         var leafPosition = A2($Froggy$Grid.translate,
-         game.scene.frog.leaf.position,
-         positionDelta);
-         var maybeLeaf = findLeaf(leafPosition)(game.scene.leaves);
-         return function () {
-            switch (maybeLeaf.ctor)
-            {case "Just": return A2(moveTo,
-                 maybeLeaf._0,
-                 time)(game);
-               case "Nothing": return game;}
-            _E.Case($moduleName,
-            "between lines 31 and 33");
+      return function () {
+         var newGame = _U.eq(positionDelta.x,
+         0) && _U.eq(positionDelta.y,
+         0) ? game : function () {
+            var leafPosition = A2($Froggy$Grid.translate,
+            game.scene.frog.leaf.position,
+            positionDelta);
+            var maybeLeaf = findLeaf(leafPosition)(game.scene.leaves);
+            return function () {
+               switch (maybeLeaf.ctor)
+               {case "Just": return A2(moveTo,
+                    maybeLeaf._0,
+                    time)(game);
+                  case "Nothing": return game;}
+               _E.Case($moduleName,
+               "between lines 35 and 38");
+            }();
          }();
+         return useKeyboard(true)(newGame);
       }();
    });
    var update = F2(function (_v6,
@@ -11352,7 +11408,7 @@ Elm.Froggy.State.make = function (_elm) {
                     return restartLevel(_v6._0)(game);
                     case "Start": return A2(start,
                       _v6._1._0,
-                      _v6._0)(game);}
+                      _v6._0);}
                  _E.Case($moduleName,
                  "between lines 17 and 23");
               }();}
@@ -11369,6 +11425,7 @@ Elm.Froggy.State.make = function (_elm) {
    _elm.Froggy.State.values = {_op: _op
                               ,game: game
                               ,update: update
+                              ,useKeyboard: useKeyboard
                               ,moveBy: moveBy
                               ,findLeaf: findLeaf
                               ,moveTo: moveTo
@@ -11378,7 +11435,6 @@ Elm.Froggy.State.make = function (_elm) {
                               ,$continue: $continue
                               ,nextLevel: nextLevel
                               ,restartLevel: restartLevel
-                              ,changeScene: changeScene
                               ,initialGame: initialGame
                               ,newGame: newGame
                               ,start: start};
@@ -11507,12 +11563,11 @@ Elm.Froggy.Model.make = function (_elm) {
    $Froggy$Util = Elm.Froggy.Util.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm);
-   var maxDistance = 2;
    var near = F2(function (a,b) {
       return _U.cmp(A2($Froggy$Util.distance,
       a,
       b),
-      maxDistance) < 1;
+      2) < 1;
    });
    var angleBetween = F2(function (sourceLeaf,
    targetLeaf) {
@@ -11550,7 +11605,7 @@ Elm.Froggy.Model.make = function (_elm) {
               frog.leaf));
             case "Nothing": return 90;}
          _E.Case($moduleName,
-         "between lines 58 and 60");
+         "between lines 63 and 65");
       }();
    };
    var reachableBy = F2(function (frog,
@@ -11559,6 +11614,25 @@ Elm.Froggy.Model.make = function (_elm) {
       frog.leaf,
       leaf));
    });
+   var onlyDoubleJump = function (scene) {
+      return function () {
+         var distanceY = function (leaf) {
+            return A2($Froggy$Util.distance,
+            scene.frog.leaf.position.y,
+            leaf.position.y);
+         };
+         var distanceX = function (leaf) {
+            return A2($Froggy$Util.distance,
+            scene.frog.leaf.position.x,
+            leaf.position.x);
+         };
+         var leafOnlyDoubleJump = function (leaf) {
+            return _U.eq(distanceX(leaf),
+            2) || _U.eq(distanceY(leaf),2);
+         };
+         return $List.all(leafOnlyDoubleJump)($List.filter(reachableBy(scene.frog))(scene.leaves));
+      }();
+   };
    var stuck = function (scene) {
       return $Basics.not($List.any(reachableBy(scene.frog))(scene.leaves));
    };
@@ -11598,7 +11672,7 @@ Elm.Froggy.Model.make = function (_elm) {
                               ,reachableBy: reachableBy
                               ,angleBetween: angleBetween
                               ,near: near
-                              ,maxDistance: maxDistance
+                              ,onlyDoubleJump: onlyDoubleJump
                               ,angleOf: angleOf};
    return _elm.Froggy.Model.values;
 };Elm.Froggy = Elm.Froggy || {};
@@ -11621,6 +11695,9 @@ Elm.Froggy.Levels.make = function (_elm) {
    $Froggy$Grid = Elm.Froggy.Grid.make(_elm);
    var levels = $Array.fromList(_L.fromArray([{_: {}
                                               ,frogPosition: {_: {},x: 6,y: 1}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -11690,6 +11767,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 5,y: 2}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,false
                                                                                       ,false
@@ -11759,6 +11839,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 3}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 5,y: 3}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -11828,6 +11911,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 0,y: 2}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,false
                                                                                       ,false
@@ -11897,6 +11983,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 3}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 4,y: 4}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,true
@@ -11966,6 +12055,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 5,y: 3}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -12035,6 +12127,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 3}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 1,y: 0}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,true
                                                                                       ,false
@@ -12104,6 +12199,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 7}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 3,y: 3}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -12173,6 +12271,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 6,y: 0}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -12242,6 +12343,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 6,y: 2}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,true
                                                                                       ,true
@@ -12311,6 +12415,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 1}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 6,y: 1}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -12380,6 +12487,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 7}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 5,y: 3}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -12449,6 +12559,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 6,y: 2}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,true
@@ -12518,6 +12631,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 7}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 6,y: 2}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -12587,6 +12703,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 1,y: 6}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 6}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,false
                                                                                       ,true
@@ -12656,6 +12775,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 7}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 4,y: 6}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 1}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,false
                                                                                       ,true
@@ -12725,6 +12847,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 4,y: 2}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,true
                                                                                       ,true
@@ -12794,6 +12919,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 7}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 4,y: 7}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 2
+                                                                     ,y: 4}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,true
                                                                                       ,true
@@ -12863,6 +12991,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 4}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 3,y: 5}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -12932,6 +13063,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 4,y: 4}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,true
@@ -13001,6 +13135,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 4}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 4,y: 3}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -13070,6 +13207,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 1,y: 6}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -13139,6 +13279,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 7}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 0,y: 7}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 6
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,true
                                                                                       ,true
@@ -13208,6 +13351,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 7}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 2,y: 6}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -13277,6 +13423,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 7,y: 0}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,true
                                                                                       ,true
@@ -13346,6 +13495,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 4}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 5,y: 3}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,false
                                                                                       ,true
@@ -13415,6 +13567,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 3}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 4,y: 7}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,false
                                                                                       ,false
@@ -13484,6 +13639,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 0}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 3,y: 5}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 7}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,false
                                                                                       ,true
@@ -13553,6 +13711,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 7}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 5,y: 5}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 0
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([false
                                                                                       ,true
                                                                                       ,false
@@ -13622,6 +13783,9 @@ Elm.Froggy.Levels.make = function (_elm) {
                                                               ,y: 7}}
                                              ,{_: {}
                                               ,frogPosition: {_: {},x: 7,y: 0}
+                                              ,keyboardHintPosition: {_: {}
+                                                                     ,x: 7
+                                                                     ,y: 0}
                                               ,leafMatrix: _L.fromArray([_L.fromArray([true
                                                                                       ,true
                                                                                       ,true
@@ -13693,11 +13857,13 @@ Elm.Froggy.Levels.make = function (_elm) {
       return $Array.getOrFail(levelNumber)(levels);
    };
    var numberOfLevels = $Array.length(levels);
-   var Level = F3(function (a,
+   var Level = F4(function (a,
    b,
-   c) {
+   c,
+   d) {
       return {_: {}
              ,frogPosition: a
+             ,keyboardHintPosition: d
              ,leafMatrix: b
              ,levelPosition: c};
    });
