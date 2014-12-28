@@ -20,7 +20,7 @@ view fontName (windowWidth, windowHeight) time game =
     Just lastSceneChange ->
       let viewSize = min windowWidth windowHeight
           scene = game.scene |> viewScene fontName viewSize time lastSceneChange
-          keyboardHint = game |> viewKeyboardHint fontName viewSize |> collage viewSize viewSize
+          keyboardHint = game |> viewKeyboardHint fontName viewSize time |> collage viewSize viewSize
           cover = lastSceneChange |> viewCover (windowWidth, windowHeight) time
       in [scene, keyboardHint, cover] |> map (container windowWidth windowHeight middle) |> layers
     Nothing ->
@@ -151,18 +151,22 @@ viewMessage fontName tileSize time scene =
 imagePath : String -> String
 imagePath filename = "images/" ++ filename
 
-viewKeyboardHint : String -> Int -> Game -> [Form]
-viewKeyboardHint fontName viewSize game =
+viewKeyboardHint : String -> Int -> Time -> Game -> [Form]
+viewKeyboardHint fontName viewSize time game =
   if game.usingKeyboard then
     let tileSize = viewSize |> getTileSize
         gridPosition = game.scene.levelNumber |> getLevel |> .keyboardHintPosition
         worldPosition = gridPosition |> toWorld tileSize
         background = sprite worldPosition tileSize (imagePath "key.svg")
         text string = string |> textSprite fontName gridPosition tileSize 
-    in if | (game.scene |> levelCompleted) && (game.scene.levelNumber == 0) -> [background, text "Enter"]
+        forms = if | (game.scene |> levelCompleted) && (game.scene.levelNumber == 0) -> [background, text "Enter"]
           | (game.scene |> stuck) && not (game.scene |> levelCompleted) -> [background, text "Esc"]
           | (game.scene |> onlyDoubleJump) && (game.scene.levelNumber == 0) -> [background, text "Shift"]
           | otherwise -> []
+        scaleFactor = case game.scene.frog.lastMove of
+          Just { startTime } -> ease easeInOutQuad float 0 1 moveDuration (time - startTime)
+          Nothing -> 1
+    in forms |> map (scale scaleFactor)
   else []
 
 viewCover : (Int, Int) -> Time -> TransitionInfo (Maybe Scene) -> Element
